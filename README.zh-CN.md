@@ -18,10 +18,10 @@ PatchXNote Agent 是 PatchXNote 的本地 AI 助手连接器。安装后，你�
 
 PatchXNote 服务端数据访问仍是只读的。Agent 不操作硬件绑定、不读取原始音频、不处理支付或 Admin API。webhook 配置和发送只发生在你的本机，并且只有你或 AI 明确调用发送命令时才会发出去。
 
-将以下一句话发送给支持本地命令执行的 AI 助手即可：
+将以下一句话发送给 AI 助手即可：
 
 ```text
-请帮我接入 PatchXNote MCP，并在客户端支持 Agent Skills 时安装 PatchXNote MCP Skill。首先，如果当前是支持本地命令执行的环境，请在本机执行 npx -y patchxnote-agent@latest skill install，让后续新会话或长上下文能记住 PatchXNote SOP；如果当前客户端不支持 Skill 安装，就直接继续 MCP setup。请识别你所在的 MCP 客户端，如果是 Codex、Cursor、VS Code、Claude Desktop、Claude Code、Windsurf 等本地 MCP 客户端，请在当前本机、并且在后续会启动 MCP 服务的同一个运行时执行 npx -y patchxnote-agent@latest setup --client <client-id>；如果不确定客户端 ID，就先执行 npx -y patchxnote-agent@latest mcp config 并使用打印出的通用 stdio 配置。登录时请打开浏览器让我完成 PatchXNote 手机号验证码授权，不要让我把验证码、OAuth code、授权码、access token、refresh token 或 webhook secret 粘贴到聊天里。完成后请调用 patchxnote_get_current_user 和 patchxnote_list_memories，参数 {"platform":"mobile","limit":5} 验证可用。参考资料：https://github.com/ZsTs119/patchxnote-agent 和 https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd。
+请帮我接入 PatchXNote MCP，并在客户端支持 Agent Skills 时安装 PatchXNote MCP Skill。首先，如果当前是支持本地命令执行的环境，请在本机执行 npx -y patchxnote-agent@latest skill install，让后续新会话或长上下文能记住 PatchXNote SOP；如果当前客户端不支持 Skill 安装，不要判定为不能接入，请继续按客户端能力完成 MCP 接入。请识别你所在的 MCP 客户端：如果是 Codex、Cursor、VS Code、Claude Desktop、Claude Code、Windsurf 等本地 MCP 客户端，请在当前本机、并且在后续会启动 MCP 服务的同一个运行时执行 npx -y patchxnote-agent@latest setup --client <client-id>；如果是不支持本机命令但支持 Remote MCP、自定义连接器、自定义 MCP 服务或工具插件的 AI 客户端/云平台，请创建名为 PatchXNote MCP 的自定义 MCP 连接器，并使用这个 PatchXNote Remote MCP URL 完成接入：https://ws-lab.patch-x.cn/patchnote-test-api/mcp。如果不确定客户端 ID 或配置格式，本地客户端先执行 npx -y patchxnote-agent@latest mcp config 并使用打印出的通用 stdio 配置，远程客户端则优先寻找 Remote MCP Server URL / MCP Server URL / Custom Connector 配置入口。登录时请打开浏览器让我完成 PatchXNote 手机号验证码授权，不要让我把验证码、OAuth code、授权码、access token、refresh token 或 webhook secret 粘贴到聊天里。完成后请调用 patchxnote_get_current_user 和 patchxnote_list_memories，参数 {"platform":"mobile","limit":5} 验证可用。参考资料：https://github.com/ZsTs119/patchxnote-agent 和 https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd。
 ```
 
 支持的客户端可以直接运行 setup：
