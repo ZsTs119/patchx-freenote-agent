@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "patchxnote": {
+      "type": "streamableHttp",
+      "url": "https://ws-lab.patch-x.cn/patchnote-test-api/mcp",
+      "timeout": 30000
+    }
+  }
+}

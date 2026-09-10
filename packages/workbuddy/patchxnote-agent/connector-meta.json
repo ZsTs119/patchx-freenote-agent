@@ -1,0 +1,22 @@
+{
+  "name": "PatchXNote",
+  "name_zh": "PatchXNote",
+  "name_en": "PatchXNote",
+  "description": "连接 PatchXNote 账号，查询录音总结、记忆、额度和 AI 整理结果，并在用户确认后处理 Markdown 与 webhook 工作流。",
+  "description_zh": "连接 PatchXNote 账号，查询录音总结、记忆、额度和 AI 整理结果，并在用户确认后处理 Markdown 与 webhook 工作流。",
+  "description_en": "Connect PatchXNote to query recording summaries, memories, quota, model results, and user-approved Markdown or webhook workflows.",
+  "source": "patchxnote-agent",
+  "type": "mcp",
+  "version": "0.1.0",
+  "minWorkbuddyVersion": "4.24.0",
+  "examples_zh": [
+    "帮我查看今天手机端的 PatchXNote 记录。",
+    "查一下这条记录的 AI 整理结果。",
+    "把这条 PatchXNote 总结渲染成 Markdown 草稿。"
+  ],
+  "examples_en": [
+    "Show my recent mobile PatchXNote records.",
+    "Find the AI result behind this PatchXNote record.",
+    "Create a Markdown draft from this PatchXNote summary."
+  ]
+}
