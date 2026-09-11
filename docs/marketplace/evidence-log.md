@@ -1,11 +1,14 @@
 # PatchXNote Skill And Marketplace Evidence Log
 
-Updated: 2026-09-04
+Updated: 2026-09-11
 
 This log tracks repository-side skill and marketplace distribution work. It does not claim public marketplace acceptance unless a channel has explicit evidence.
 
 | Channel | Artifact/version | Status | Evidence | Notes |
 | --- | --- | --- | --- | --- |
+| GitHub Release | `v0.2.12` | `published_smoked` | Workflow `34577306079` passed on 2026-09-11; six binaries, checksums and attestation published; sampled Linux/Windows signatures verified | Evidence: `docs/evidence/2026-09-11-release-0.2.12.zh-CN.md`. |
+| npm package | `patchxnote-agent@0.2.12` | `published_smoked` | Trusted Publishing workflow `34577650659` passed; registry latest `0.2.12` and SLSA provenance verified | Windows npm install, Skill install and macOS workflow `34578025372` passed. |
+| Production stdio MCP | `patchxnote-agent@0.2.12` | `published_smoked` | Real Chrome OAuth and native credential storage passed; installed release and npm stdio launcher returned 19 tools and successful current-user/mobile memories queries | 5 mobile items; content omitted. Test credentials and records are not migrated. |
 | GitHub Release | `v0.2.11` | `published_smoked` | Release workflow `33853658844` passed on 2026-09-04; release assets were verified: checksums plus Linux/macOS/Windows amd64 and arm64 binaries | Evidence: `docs/evidence/2026-09-04-release-0.2.11.zh-CN.md`. |
 | npm package | `patchxnote-agent@0.2.11` | `published_smoked` | npm Trusted Publishing workflow `33854304659` passed; npm registry reports latest `0.2.11`, `mcpName=io.github.zsts119/patchxnote-agent`, and published integrity `sha512-r1br...z5nCA==` | Published-package skill install, MCP config, Windows install, and stdio MCP smoke passed. |
 | Canonical Agent Skill | `skills/patchxnote-mcp` `0.1.1` | `locally_smoked` | `quick_validate.py skills/patchxnote-mcp` passed on 2026-09-04; sync validation confirms npm/OpenAI/Claude copies match canonical source | npm-bundled install is now the primary public install path. |

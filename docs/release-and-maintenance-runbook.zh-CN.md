@@ -21,11 +21,11 @@
 - GitHub Release workflow：`.github/workflows/release.yml`
 - macOS 安装冒烟 workflow：`.github/workflows/macos-install-smoke.yml`
 - 默认服务端：生产 API `https://freenote.patch-x.cn`，具体默认值以 `internal/config/config.go` 为准
-- 当前发布候选：`0.2.12`；状态见 `docs/evidence/2026-09-11-release-0.2.12.zh-CN.md`。
-- 当前已发布版本：`0.2.11`
-- 当前 `0.2.11` 能力：继承 `0.2.10` 的本地 MCP、浏览器 OAuth、客户端 setup、PatchXNote MCP Skill、marketplace 草稿包和 MCP Registry 元数据，并新增 npm-bundled skill 副本与 `patchxnote-agent skill install`。
-- 当前 `0.2.11` 发布证据：见 `docs/evidence/2026-09-04-release-0.2.11.zh-CN.md`。
-- 当前 `0.2.11` 本地候选验收事实：见 `docs/marketplace/evidence-log.md` 和发布后证据文档。它只代表本地包、stdio MCP、npm skill install 和仓库侧分发资料验收，不代表单个编辑器 UI、平台型客户端或公开 marketplace 已验收。
+- 当前已发布版本：`0.2.12`。
+- 当前能力：继承 `0.2.11`，默认 API 与 Remote MCP 切换到生产域名，补充测试环境配置迁移和生产重新登录说明。
+- 当前发布证据：`docs/evidence/2026-09-11-release-0.2.12.zh-CN.md`。
+- 当前验证事实：生产 Chrome OAuth、Windows 发布包 stdio 查询、Windows/macOS 安装和 Linux 制品校验通过；各编辑器 UI、第三方云平台控制台及公开 marketplace 状态单独跟踪。
+- 上一版 `0.2.11` 发布证据：`docs/evidence/2026-09-04-release-0.2.11.zh-CN.md`。
 
 历史兼容事实：
 
