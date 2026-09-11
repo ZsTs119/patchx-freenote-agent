@@ -1,6 +1,6 @@
 # PatchXNote 本地 MCP 与远程 MCP 交接文档
 
-**日期：** 2026-09-01
+**日期：** 2026-09-11
 
 **定位：** 给后续官网、安装入口、平台联调会话使用的事实入口。本文只沉淀当前边界和待办，不替代具体实现计划。
 
@@ -57,7 +57,9 @@ PatchXNote MCP 是 Hybrid MCP distribution：本地用 npm stdio launcher + brow
 - MCP 配置文件必须无密钥，不出现手机号、验证码、access token、refresh token、webhook secret。
 - 凭据跟运行时绑定。Windows 桌面、WSL、VS Code Remote、Dev Container、远端 Linux 不能默认共享同一份安全存储。
 
-当前状态：
+当前发布事实见 `docs/evidence/2026-09-11-release-0.2.12.zh-CN.md`。
+
+以下为 2026-09-01 的历史验收状态：
 
 - `patchxnote-agent` 已产品化正式 `mcp login/status/logout`，替代临时 Node 验收脚本。
 - `patchxnote-agent@0.2.9` 已发布到 npm 和 GitHub Releases。
@@ -92,11 +94,7 @@ PatchXNote MCP 是 Hybrid MCP distribution：本地用 npm stdio launcher + brow
 https://freenote.patch-x.cn/mcp
 ```
 
-长期可包装为独立域名：
-
-```text
-https://mcp.patchxnote.com/mcp
-```
+生产服务基地址为 `https://freenote.patch-x.cn/`，用户接入页面为 `https://freenote.patch-x.cn/mcp/setup/`，下载页为 `https://freenote.patch-x.cn/download/`。此前独立 MCP 域名设想已被上述生产入口替代。
 
 关键口径：
 

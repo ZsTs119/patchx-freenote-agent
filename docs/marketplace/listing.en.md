@@ -42,3 +42,10 @@ After setup, verify:
 - `patchxnote_list_memories` with `{"platform":"mobile","limit":5}`
 
 When tool names or count matter, use live MCP tool discovery.
+
+## Production Links
+
+- Service/API: `https://freenote.patch-x.cn/`
+- Setup page: `https://freenote.patch-x.cn/mcp/setup/`
+- Remote MCP: `https://freenote.patch-x.cn/mcp`
+- App download: `https://freenote.patch-x.cn/download/`

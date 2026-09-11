@@ -1,5 +1,7 @@
 # Context7-Style Setup And Client Platform MCP Implementation Plan
 
+> Current production entry (2026-09-11): API `https://freenote.patch-x.cn/`, Remote MCP `https://freenote.patch-x.cn/mcp`, setup page `https://freenote.patch-x.cn/mcp/setup/`. Test URLs and earlier domain proposals below are historical or path-prefix compatibility cases, not current production defaults. Current release evidence: `docs/evidence/2026-09-11-release-0.2.12.zh-CN.md`.
+
 **Goal:** Build a product-style PatchXNote MCP onboarding experience that closes both local desktop-agent setup and platform-agent access for the common domestic and global AI clients as of 2026-08-27.
 
 **Architecture:** Keep the existing npm universal stdio entrypoint as the local runtime base. Add a Context7-style setup wizard that reuses `patchxnote mcp login` browser OAuth, stores MCP connector credentials in OS-native secure storage, installs PatchXNote into selected local MCP clients, and verifies the connection. In parallel, design and implement a remote MCP gateway for platform agents that cannot run local `npx` commands.

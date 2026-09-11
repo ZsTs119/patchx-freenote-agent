@@ -194,11 +194,7 @@ npx -y patchxnote-agent@latest setup --client <client-id>
 https://freenote.patch-x.cn/mcp
 ```
 
-历史独立域名设想（未启用）：
-
-```text
-https://mcp.patchxnote.com/mcp
-```
+生产 API 基地址为 `https://freenote.patch-x.cn/`；用户接入页面为 `https://freenote.patch-x.cn/mcp/setup/`。此前独立 MCP 域名设想不再作为当前接入指引。
 
 云平台关键边界：
 

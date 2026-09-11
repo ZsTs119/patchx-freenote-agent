@@ -6,7 +6,7 @@
     "name": "PatchXNote",
     "url": "https://github.com/ZsTs119"
   },
-  "homepage": "https://github.com/ZsTs119/patchxnote-agent#readme",
+  "homepage": "https://freenote.patch-x.cn/mcp/setup/",
   "repository": "https://github.com/ZsTs119/patchxnote-agent",
   "license": "UNLICENSED",
   "keywords": [
@@ -28,7 +28,7 @@
       "Read",
       "Workflow"
     ],
-    "websiteURL": "https://github.com/ZsTs119/patchxnote-agent",
+    "websiteURL": "https://freenote.patch-x.cn/mcp/setup/",
     "brandColor": "#1F7A68",
     "defaultPrompt": [
       "Help me connect PatchXNote MCP.",

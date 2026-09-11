@@ -18,10 +18,12 @@ It helps your AI assistant search records synced from mobile or desktop, inspect
 
 PatchXNote server data access remains read-only. Agent does not operate hardware binding, read raw audio, handle payments, or expose Admin APIs. Webhook configuration and sending happen locally, and messages are sent only when you or your AI assistant explicitly call a send command.
 
+Production service: [https://freenote.patch-x.cn/](https://freenote.patch-x.cn/) · [MCP setup](https://freenote.patch-x.cn/mcp/setup/) · [Download App](https://freenote.patch-x.cn/download/)
+
 Give this one-line prompt to an AI assistant:
 
 ```text
-Help me connect PatchXNote MCP and install the PatchXNote MCP Skill when the client supports Agent Skills. First, if this is a local command-capable environment, run npx -y patchxnote-agent@latest skill install on this machine so future or long sessions remember the PatchXNote SOP; if the current client does not support Skill installation, do not treat that as a connection blocker and continue with MCP setup according to the client's capabilities. Identify the MCP client you are running in: if this is a local MCP client such as Codex, Cursor, VS Code, Claude Desktop, Claude Code, or Windsurf, run npx -y patchxnote-agent@latest setup --client <client-id> on this machine in the same OS/runtime that will later launch the MCP server. If this is an AI client or cloud platform that cannot run local commands but supports Remote MCP, custom connectors, custom MCP services, or tool plugins, create a custom MCP connector named PatchXNote MCP and connect it with this PatchXNote Remote MCP URL: https://freenote.patch-x.cn/mcp. If you are not sure which client ID or config format to use, local clients should first run npx -y patchxnote-agent@latest mcp config and use the printed generic stdio config, while remote clients should look for a Remote MCP Server URL, MCP Server URL, or Custom Connector setup entry. For login, open the browser and let me complete PatchXNote phone-code authorization there; do not ask me to paste OTP codes, OAuth codes, authorization codes, access tokens, refresh tokens, or webhook secrets into chat. After setup, call patchxnote_get_current_user and patchxnote_list_memories with {"platform":"mobile","limit":5} to verify it works. References: https://github.com/ZsTs119/patchxnote-agent and https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd
+Help me connect PatchXNote MCP and install the PatchXNote MCP Skill when the client supports Agent Skills. Use the production service at https://freenote.patch-x.cn/ and the setup page at https://freenote.patch-x.cn/mcp/setup/; if existing configuration explicitly points to the old test service, update the server address used for this connection to production first. First, if this is a local command-capable environment, run npx -y patchxnote-agent@latest skill install on this machine so future or long sessions remember the PatchXNote SOP; if the current client does not support Skill installation, do not treat that as a connection blocker and continue with MCP setup according to the client's capabilities. Identify the MCP client you are running in: if this is a local MCP client such as Codex, Cursor, VS Code, Claude Desktop, Claude Code, or Windsurf, run npx -y patchxnote-agent@latest setup --client <client-id> on this machine in the same OS/runtime that will later launch the MCP server. If this is an AI client or cloud platform that cannot run local commands but supports Remote MCP, custom connectors, custom MCP services, or tool plugins, create a custom MCP connector named PatchXNote MCP and connect it with this PatchXNote Remote MCP URL: https://freenote.patch-x.cn/mcp. If you are not sure which client ID or config format to use, local clients should first run npx -y patchxnote-agent@latest mcp config and use the printed generic stdio config, while remote clients should look for a Remote MCP Server URL, MCP Server URL, or Custom Connector setup entry. For login, open the browser and let me complete PatchXNote phone-code authorization there; do not ask me to paste OTP codes, OAuth codes, authorization codes, access tokens, refresh tokens, or webhook secrets into chat. After setup, call patchxnote_get_current_user and patchxnote_list_memories with {"platform":"mobile","limit":5} to verify it works. References: https://github.com/ZsTs119/patchxnote-agent and https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd
 ```
 
 For a supported client, start with setup:
@@ -68,7 +70,7 @@ npx -y patchxnote-agent@latest setup --client <client-id>
 For troubleshooting or rollback, pin the current published skill installer:
 
 ```sh
-npx -y patchxnote-agent@0.2.12 skill install
+npx -y patchxnote-agent@0.2.13 skill install
 ```
 
 ## At A Glance
@@ -83,11 +85,11 @@ npx -y patchxnote-agent@0.2.12 skill install
 | Data access | Shows account, recorder cards, quota, records, and AI-generated results. |
 | Webhook | Locally configures named targets and manually sends to Feishu, DingTalk, or another webhook. |
 | Safety boundary | Server data is read-only; raw audio, hardware, payment, and Admin APIs are not exposed. |
-| Package status | Current public beta release `0.2.12`, defaulting to the PatchXNote production API. |
+| Package status | Current public beta release `0.2.13`, defaulting to the PatchXNote production API. |
 
 ## Features
 
-| Capability | Available in `0.2.12` | Notes |
+| Capability | Available in `0.2.13` | Notes |
 | --- | --- | --- |
 | Browser OAuth MCP login | Yes | `patchxnote mcp login` opens the PatchXNote authorization page, completes phone OTP on the GoServer page, then stores MCP credentials locally. |
 | Terminal phone OTP Agent login | Yes | `patchxnote login` keeps the terminal login path for CLI-first users and fallback environments. |
@@ -115,7 +117,7 @@ npx -y patchxnote-agent@0.2.12 skill install
 - A PatchXNote account that can receive the phone OTP login code.
 - An MCP host that supports stdio MCP servers, such as Codex, Claude Desktop, Cursor, VS Code, or another compatible desktop agent.
 
-> `0.2.12` is the current public beta release. The default server is the PatchXNote production API. Credentials are stored in the OS-native keychain by default.
+> `0.2.13` is the current public beta release. The default server is the PatchXNote production API. Credentials are stored in the OS-native keychain by default.
 
 ## Login And MCP Modes
 
@@ -185,7 +187,7 @@ npx -y patchxnote-agent@latest install --print-config
 To pin the current published public beta version for troubleshooting or rollback:
 
 ```sh
-npx -y patchxnote-agent@0.2.12 install --print-config
+npx -y patchxnote-agent@0.2.13 install --print-config
 ```
 
 The public beta build defaults to the PatchXNote production API:
@@ -203,7 +205,7 @@ patchxnote mcp login
 
 ### Moving From The Test Environment
 
-Version `0.2.12` defaults to production. Existing explicit `--server-base-url` flags, `PATCHXNOTE_SERVER_BASE_URL` / legacy `PATCHNOTE_SERVER_BASE_URL` environment variables, and `server.base_url` config values override that default; update or remove test-server overrides in both the terminal and MCP host configuration.
+Version `0.2.12` and later default to production. Existing explicit `--server-base-url` flags, `PATCHXNOTE_SERVER_BASE_URL` / legacy `PATCHNOTE_SERVER_BASE_URL` environment variables, and `server.base_url` config values override that default; update or remove test-server overrides in both the terminal and MCP host configuration.
 
 Run `mcp login` in the same OS/runtime and profile that starts MCP, then check `mcp status --verify`. OAuth credentials are bound to the server address, so test login does not authenticate production. This update does not migrate test accounts or records. To keep both environments, use separate profiles and an explicit base URL for each.
 
@@ -287,7 +289,7 @@ MCP config never contains access tokens, refresh tokens, OTP codes, phone number
 
 ![PatchXNote Agent tools](./docs/assets/patchxnote-agent-tools.png)
 
-PatchXNote Agent `0.2.12` exposes the same **19 local MCP tools** as the current public local server. End users can think of them as three groups; exact tool names are for MCP hosts and AI assistants.
+PatchXNote Agent `0.2.13` exposes the same **19 local MCP tools** as the current public local server. End users can think of them as three groups; exact tool names are for MCP hosts and AI assistants.
 
 ### Account And Record Lookup
 
@@ -436,7 +438,7 @@ Do not paste access tokens, refresh tokens, OTP codes, raw phone numbers, full M
 
 ## Current Limitations
 
-`0.2.12` is the current public beta release.
+`0.2.13` is the current public beta release.
 
 - The default server points to the PatchXNote production API and does not imply a production SLA.
 - `mcp serve` never opens a browser during editor startup. Run `mcp login` first, or let `setup --client <id>` reuse that same OAuth flow.
@@ -478,6 +480,12 @@ patchxnote version
 ```
 
 The release binary should report the npm package version and the commit attached to the matching GitHub Release tag.
+
+## 0.2.13 Highlights
+
+- Unifies the English and Chinese setup prompts across README, npm, the bundled Skill, and marketplace copy.
+- Explicitly names the production service, Remote MCP endpoint, setup page, and App download URL; existing test-address overrides must be updated when switching.
+- Points npm and plugin homepage metadata to the production setup page and retires obsolete domain proposals in current guidance.
 
 ## 0.2.12 Highlights
 
@@ -549,7 +557,7 @@ The detailed release and documentation maintenance checklist lives in [docs/rele
 
 1. Confirm the target PatchXNote GoServer exposes the required `/v1/agent/**` routes.
 2. Confirm `packages/npm/package.json` version matches the release tag without the leading `v`.
-3. Push a clean tag, for example `v0.2.12`.
+3. Push a clean tag, for example `v0.2.13`.
 4. Wait for GitHub Release assets: `checksums.txt` plus Linux/macOS/Windows amd64 and arm64 binaries.
 5. Configure npm Trusted Publishing for this GitHub Actions workflow before npm publish:
    - owner/user: `ZsTs119`

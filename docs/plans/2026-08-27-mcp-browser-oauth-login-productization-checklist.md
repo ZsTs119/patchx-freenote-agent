@@ -1,5 +1,7 @@
 # MCP Browser OAuth Login Productization Implementation Plan
 
+> Current production entry (2026-09-11): API `https://freenote.patch-x.cn/`, Remote MCP `https://freenote.patch-x.cn/mcp`, setup page `https://freenote.patch-x.cn/mcp/setup/`. Test URLs and earlier domain proposals below are historical or path-prefix compatibility cases, not current production defaults. Current release evidence: `docs/evidence/2026-09-11-release-0.2.12.zh-CN.md`.
+
 **Goal:** Productize the verified browser OAuth flow into `patchnote-agent` so users can run `patchxnote mcp login` or `npx -y patchxnote-agent@latest mcp login`, finish PatchXNote login in the browser, store MCP connector credentials locally, and then use PatchXNote MCP from VS Code, Cursor, Codex, Claude Code, Claude Desktop, Windsurf, WorkBuddy, and other local stdio MCP clients.
 
 **Architecture:** GoServer remains the web and OAuth authority: it hosts `/v1/agent/oauth/authorize`, performs phone OTP login in the browser page, issues authorization codes, exchanges them for MCP connector tokens, refreshes tokens, revokes tokens, and serves the hosted `/mcp` JSON-RPC endpoint. `patchnote-agent` becomes the local native app part of the OAuth loop: it generates PKCE/state, listens on a temporary `127.0.0.1:<port>/callback`, opens the GoServer authorization page, exchanges the callback code, stores connector credentials in OS-native secure storage, and lets local stdio MCP clients use those credentials without placing secrets in their config files.

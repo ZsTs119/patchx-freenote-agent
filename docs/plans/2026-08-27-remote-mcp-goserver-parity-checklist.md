@@ -1,5 +1,7 @@
 # Remote MCP GoServer Parity Implementation Plan
 
+> Current production entry (2026-09-11): API `https://freenote.patch-x.cn/`, Remote MCP `https://freenote.patch-x.cn/mcp`, setup page `https://freenote.patch-x.cn/mcp/setup/`. Test URLs and earlier domain proposals below are historical or path-prefix compatibility cases, not current production defaults. Current release evidence: `docs/evidence/2026-09-11-release-0.2.12.zh-CN.md`.
+
 > **For Codex:** Execute this plan sequentially, task by task. Follow repository `AGENTS.md`: sub-agents and parallel task execution are disabled.
 
 **Goal:** Add a GoServer-hosted remote MCP gateway that gives platform agents the same PatchXNote MCP tool capabilities as the local npm/stdio Agent.
