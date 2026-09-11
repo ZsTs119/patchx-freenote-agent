@@ -6,6 +6,8 @@ This log tracks repository-side skill and marketplace distribution work. It does
 
 | Channel | Artifact/version | Status | Evidence | Notes |
 | --- | --- | --- | --- | --- |
+| GitHub Release | `v0.2.13` | `published_smoked` | Workflow `34579786530` passed; all six binaries and checksums published; Linux/Windows SHA and attestations verified | Evidence: `docs/evidence/2026-09-11-release-0.2.13.zh-CN.md`. |
+| npm package | `patchxnote-agent@0.2.13` | `published_smoked` | Trusted Publishing `34580083667` passed; registry latest/homepage/provenance correct; actual tarball README/Skill exactly match source | Skill install, Windows npm production stdio, Linux artifacts, and macOS `34580411989` passed. |
 | GitHub Release | `v0.2.12` | `published_smoked` | Workflow `34577306079` passed on 2026-09-11; six binaries, checksums and attestation published; sampled Linux/Windows signatures verified | Evidence: `docs/evidence/2026-09-11-release-0.2.12.zh-CN.md`. |
 | npm package | `patchxnote-agent@0.2.12` | `published_smoked` | Trusted Publishing workflow `34577650659` passed; registry latest `0.2.12` and SLSA provenance verified | Windows npm install, Skill install and macOS workflow `34578025372` passed. |
 | Production stdio MCP | `patchxnote-agent@0.2.12` | `published_smoked` | Real Chrome OAuth and native credential storage passed; installed release and npm stdio launcher returned 19 tools and successful current-user/mobile memories queries | 5 mobile items; content omitted. Test credentials and records are not migrated. |

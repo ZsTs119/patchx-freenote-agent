@@ -21,11 +21,11 @@
 - GitHub Release workflow：`.github/workflows/release.yml`
 - macOS 安装冒烟 workflow：`.github/workflows/macos-install-smoke.yml`
 - 默认服务端：生产 API `https://freenote.patch-x.cn`，具体默认值以 `internal/config/config.go` 为准
-- 当前已发布版本：`0.2.12`。
-- 当前能力：继承 `0.2.11`，默认 API 与 Remote MCP 切换到生产域名，补充测试环境配置迁移和生产重新登录说明。
-- 当前发布证据：`docs/evidence/2026-09-11-release-0.2.12.zh-CN.md`。
-- 当前验证事实：生产 Chrome OAuth、Windows 发布包 stdio 查询、Windows/macOS 安装和 Linux 制品校验通过；各编辑器 UI、第三方云平台控制台及公开 marketplace 状态单独跟踪。
-- 上一版 `0.2.11` 发布证据：`docs/evidence/2026-09-04-release-0.2.11.zh-CN.md`。
+- 当前已发布版本：`0.2.13`。
+- 当前能力：继承 `0.2.12`，统一中英文生产接入文案、Skill/marketplace 副本、服务链接和主页元数据。
+- 当前发布证据：`docs/evidence/2026-09-11-release-0.2.13.zh-CN.md`。
+- 当前验证事实：实际 npm README/Skill 与源码一致，Windows 发布包生产 stdio 查询、Windows/macOS 安装、Linux 制品校验通过；复用已完成的生产 OAuth 凭据，各编辑器/云平台 UI 和公开 marketplace 状态仍单独跟踪。
+- 上一版 `0.2.12` 发布证据：`docs/evidence/2026-09-11-release-0.2.12.zh-CN.md`。
 
 历史兼容事实：
 
@@ -35,7 +35,7 @@
 
 ## 0.2.13 地址文案发布（2026-09-11）
 
-用户已授权将 Agent 仓库的中英文一句话、Skill/marketplace 副本、生产入口资料与主页元数据提交并发布为 `0.2.13`。npm、server.json 和当前版本说明已同步；运行逻辑保持 `0.2.12`。状态与验证见 `docs/evidence/2026-09-11-release-0.2.13.zh-CN.md`。GoServer 仓库、服务器部署及飞书指南不在本次范围内。
+Agent 仓库的中英文一句话、Skill/marketplace 副本、生产入口资料与主页元数据已按用户授权提交并发布为 `0.2.13`。npm、server.json 和当前版本说明已同步；运行逻辑保持 `0.2.12`。状态与验证见 `docs/evidence/2026-09-11-release-0.2.13.zh-CN.md`。GoServer 仓库、服务器部署及飞书指南不在本次范围内。
 
 ## 文档事实源
 

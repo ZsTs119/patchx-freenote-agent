@@ -15,6 +15,8 @@
 
 ## 本地闭环
 
+`0.2.13` 已发布，统一了生产接入文案与链接；实际 npm 包 README/Skill 一致性、生产 stdio 读工具、Windows/macOS 安装和 Linux 制品验证通过。证据见 `docs/evidence/2026-09-11-release-0.2.13.zh-CN.md`。
+
 `0.2.12` 已发布到 npm 和 GitHub Releases，生产 OAuth、发布包 stdio 读工具、Windows/macOS 安装和 Linux 制品验证均通过；本次状态见 `docs/evidence/2026-09-11-release-0.2.12.zh-CN.md`。下文保留历史版本的实际验收记录。
 
 截至 `2026-09-04`，`patchxnote-agent@0.2.11` 已发布到 npm 和 GitHub Releases，并完成发布包 `skill install`、`mcp config`、Windows 安装、stdio MCP `tools/list/current-user/mobile memories` smoke；发布证据见 `docs/evidence/2026-09-04-release-0.2.11.zh-CN.md`。上一版 `patchxnote-agent@0.2.10` 已发布到 npm 和 GitHub Releases，发布包 `mcp config`、clean-profile `mcp status`、`setup --client cursor --dry-run --print-config`、Windows 安装、stdio MCP `tools/list/current-user/mobile memories` smoke 均已通过。`0.2.9` 曾完成发布包 install、`mcp config`、clean-profile `mcp status`、`setup --client cursor --dry-run --print-config`、Windows 安装、Linux checksum、macOS 安装/MCP smoke。`0.2.8` 本地候选曾通过 Windows-native 通用链路验收：浏览器 OAuth 自动打开、GoServer 页面登录、Windows 凭据保存、`mcp status --verify`、stdio `initialize/tools/list/current-user`、mobile 总结记录和 model-IO 字段读取、以及 npm wrapper `--from-local` 候选安装代理。历史证据见 `docs/evidence/2026-09-04-release-0.2.10.zh-CN.md`、`docs/evidence/2026-09-01-release-0.2.9.zh-CN.md` 和 `docs/evidence/2026-08-27-mcp-oauth-local-acceptance.zh-CN.md`。
