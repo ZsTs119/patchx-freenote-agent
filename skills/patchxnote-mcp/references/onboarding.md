@@ -72,6 +72,12 @@ npx -y patchxnote-agent@latest mcp login
 
 The user completes phone verification in the browser page. Do not ask for codes, token-shaped strings, or webhook secrets in chat.
 
+## Production Environment
+
+Agent `0.2.12` and later default to `https://freenote.patch-x.cn`; hosted clients use `https://freenote.patch-x.cn/mcp`. When upgrading from test, inspect explicit server flags, `PATCHXNOTE_SERVER_BASE_URL` / legacy `PATCHNOTE_SERVER_BASE_URL`, and `server.base_url` in the CLI and MCP host configuration. They override the default.
+
+After switching, run browser `mcp login` in the same OS/runtime and profile that launches MCP, then `mcp status --verify`. OAuth credentials match the server address; test login and records do not migrate to production. Use separate profiles with explicit base URLs when retaining both environments.
+
 ## Verification
 
 First verify the local CLI auth state:

@@ -230,7 +230,7 @@ Local WorkBuddy starts with the MCP + CLI manual path. Enterprise/platform mode 
 远程地址：
 
 ```text
-https://ws-lab.patch-x.cn/patchnote-test-api/mcp
+https://freenote.patch-x.cn/mcp
 ```
 
 中文说明：
@@ -250,7 +250,7 @@ This is a platform client. The platform loop needs a remote MCP gateway, platfor
 远程地址：
 
 ```text
-https://ws-lab.patch-x.cn/patchnote-test-api/mcp
+https://freenote.patch-x.cn/mcp
 ```
 
 中文说明：

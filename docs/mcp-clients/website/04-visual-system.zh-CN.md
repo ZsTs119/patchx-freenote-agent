@@ -300,7 +300,7 @@ Cloud Platform -> Remote MCP Gateway -> OAuth Connector Session -> PatchXNote to
 | Platform | Feishu Aily / Doubao Work Partner |
 | Transport | Streamable HTTP / SSE / unknown |
 | Auth | OAuth / pending |
-| Remote URL | `https://ws-lab.patch-x.cn/patchnote-test-api/mcp` |
+| Remote URL | `https://freenote.patch-x.cn/mcp` |
 | Acceptance | Pending / Accepted |
 | Next step | Platform console validation |
 

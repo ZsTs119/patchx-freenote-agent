@@ -6,12 +6,12 @@
     "url": "https://github.com/ZsTs119/patchxnote-agent",
     "source": "github"
   },
-  "version": "0.2.11",
+  "version": "0.2.12",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "patchxnote-agent",
-      "version": "0.2.11",
+      "version": "0.2.12",
       "transport": {
         "type": "stdio"
       }

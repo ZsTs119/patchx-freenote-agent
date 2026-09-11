@@ -40,7 +40,7 @@
   - AI 整理结果查看：5 个。
 - CLI 命令：按安装登录、AI 整理结果、webhook 配置发送分组。
 - 安全与风险提示：说明 Agent 会让 AI 访问账号、记录、原文文本和 AI 结果。
-- 当前限制：beta、公测 API、Linux headless keychain 可用性、无自动发送、无原始音频下载、无硬件/支付/Admin。
+- 当前限制：beta、生产 API 默认地址、Linux headless keychain 可用性、无自动发送、无原始音频下载、无硬件/支付/Admin。
 - Troubleshooting：PATH、credential storage、MCP host、platform、webhook provider error、checksum、server URL。
 - 验证安装：`npm view`、installer dry-run、`patchxnote version`。
 - 开发和发布维护入口。

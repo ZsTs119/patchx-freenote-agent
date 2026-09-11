@@ -20,7 +20,8 @@
 - npm 发布 workflow：`.github/workflows/publish-npm.yml`
 - GitHub Release workflow：`.github/workflows/release.yml`
 - macOS 安装冒烟 workflow：`.github/workflows/macos-install-smoke.yml`
-- 当前公测服务端：PatchXNote 公测 API，具体默认值以 `internal/config/config.go` 为准
+- 默认服务端：生产 API `https://freenote.patch-x.cn`，具体默认值以 `internal/config/config.go` 为准
+- 当前发布候选：`0.2.12`；状态见 `docs/evidence/2026-09-11-release-0.2.12.zh-CN.md`。
 - 当前已发布版本：`0.2.11`
 - 当前 `0.2.11` 能力：继承 `0.2.10` 的本地 MCP、浏览器 OAuth、客户端 setup、PatchXNote MCP Skill、marketplace 草稿包和 MCP Registry 元数据，并新增 npm-bundled skill 副本与 `patchxnote-agent skill install`。
 - 当前 `0.2.11` 发布证据：见 `docs/evidence/2026-09-04-release-0.2.11.zh-CN.md`。
@@ -198,7 +199,7 @@ MCP 浏览器 OAuth 变更还要确认：
 
 ```powershell
 $profile = "mcp-oauth-windows-acceptance"
-$baseUrl = "https://ws-lab.patch-x.cn/patchnote-test-api"
+$baseUrl = "https://freenote.patch-x.cn"
 patchxnote mcp logout --local-only --profile $profile --server-base-url $baseUrl
 patchxnote mcp login --profile $profile --server-base-url $baseUrl
 patchxnote mcp status --profile $profile --server-base-url $baseUrl --output json --verify
@@ -403,8 +404,8 @@ Windows registry 包真实 MCP 验收：
 $tmp = Join-Path $env:TEMP ("patchxnote-agent-registry-" + [guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Path $tmp | Out-Null
 Push-Location $tmp
-npx -y --registry https://registry.npmjs.org patchxnote-agent@X.Y.Z mcp login --profile mcp-oauth-registry-acceptance --server-base-url https://ws-lab.patch-x.cn/patchnote-test-api
-npx -y --registry https://registry.npmjs.org patchxnote-agent@X.Y.Z mcp status --profile mcp-oauth-registry-acceptance --server-base-url https://ws-lab.patch-x.cn/patchnote-test-api --output json --verify
+npx -y --registry https://registry.npmjs.org patchxnote-agent@X.Y.Z mcp login --profile mcp-oauth-registry-acceptance --server-base-url https://freenote.patch-x.cn
+npx -y --registry https://registry.npmjs.org patchxnote-agent@X.Y.Z mcp status --profile mcp-oauth-registry-acceptance --server-base-url https://freenote.patch-x.cn --output json --verify
 npx -y --registry https://registry.npmjs.org patchxnote-agent@X.Y.Z mcp config
 Pop-Location
 ```

@@ -21,7 +21,7 @@ PatchXNote 服务端数据访问仍是只读的。Agent 不操作硬件绑定、
 将以下一句话发送给 AI 助手即可：
 
 ```text
-请帮我接入 PatchXNote MCP，并在客户端支持 Agent Skills 时安装 PatchXNote MCP Skill。首先，如果当前是支持本地命令执行的环境，请在本机执行 npx -y patchxnote-agent@latest skill install，让后续新会话或长上下文能记住 PatchXNote SOP；如果当前客户端不支持 Skill 安装，不要判定为不能接入，请继续按客户端能力完成 MCP 接入。请识别你所在的 MCP 客户端：如果是 Codex、Cursor、VS Code、Claude Desktop、Claude Code、Windsurf 等本地 MCP 客户端，请在当前本机、并且在后续会启动 MCP 服务的同一个运行时执行 npx -y patchxnote-agent@latest setup --client <client-id>；如果是不支持本机命令但支持 Remote MCP、自定义连接器、自定义 MCP 服务或工具插件的 AI 客户端/云平台，请创建名为 PatchXNote MCP 的自定义 MCP 连接器，并使用这个 PatchXNote Remote MCP URL 完成接入：https://ws-lab.patch-x.cn/patchnote-test-api/mcp。如果不确定客户端 ID 或配置格式，本地客户端先执行 npx -y patchxnote-agent@latest mcp config 并使用打印出的通用 stdio 配置，远程客户端则优先寻找 Remote MCP Server URL / MCP Server URL / Custom Connector 配置入口。登录时请打开浏览器让我完成 PatchXNote 手机号验证码授权，不要让我把验证码、OAuth code、授权码、access token、refresh token 或 webhook secret 粘贴到聊天里。完成后请调用 patchxnote_get_current_user 和 patchxnote_list_memories，参数 {"platform":"mobile","limit":5} 验证可用。参考资料：https://github.com/ZsTs119/patchxnote-agent 和 https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd。
+请帮我接入 PatchXNote MCP，并在客户端支持 Agent Skills 时安装 PatchXNote MCP Skill。首先，如果当前是支持本地命令执行的环境，请在本机执行 npx -y patchxnote-agent@latest skill install，让后续新会话或长上下文能记住 PatchXNote SOP；如果当前客户端不支持 Skill 安装，不要判定为不能接入，请继续按客户端能力完成 MCP 接入。请识别你所在的 MCP 客户端：如果是 Codex、Cursor、VS Code、Claude Desktop、Claude Code、Windsurf 等本地 MCP 客户端，请在当前本机、并且在后续会启动 MCP 服务的同一个运行时执行 npx -y patchxnote-agent@latest setup --client <client-id>；如果是不支持本机命令但支持 Remote MCP、自定义连接器、自定义 MCP 服务或工具插件的 AI 客户端/云平台，请创建名为 PatchXNote MCP 的自定义 MCP 连接器，并使用这个 PatchXNote Remote MCP URL 完成接入：https://freenote.patch-x.cn/mcp。如果不确定客户端 ID 或配置格式，本地客户端先执行 npx -y patchxnote-agent@latest mcp config 并使用打印出的通用 stdio 配置，远程客户端则优先寻找 Remote MCP Server URL / MCP Server URL / Custom Connector 配置入口。登录时请打开浏览器让我完成 PatchXNote 手机号验证码授权，不要让我把验证码、OAuth code、授权码、access token、refresh token 或 webhook secret 粘贴到聊天里。完成后请调用 patchxnote_get_current_user 和 patchxnote_list_memories，参数 {"platform":"mobile","limit":5} 验证可用。参考资料：https://github.com/ZsTs119/patchxnote-agent 和 https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd。
 ```
 
 支持的客户端可以直接运行 setup：
@@ -68,7 +68,7 @@ npx -y patchxnote-agent@latest setup --client <client-id>
 排查或回滚时，可以固定当前已发布的 skill installer：
 
 ```sh
-npx -y patchxnote-agent@0.2.11 skill install
+npx -y patchxnote-agent@0.2.12 skill install
 ```
 
 ## 快速了解
@@ -83,11 +83,11 @@ npx -y patchxnote-agent@0.2.11 skill install
 | 数据访问 | 查看账号、录音卡、额度、记录列表、AI 整理结果。 |
 | Webhook | 本地配置别名，手动发送到飞书、钉钉或其他 webhook。 |
 | 安全边界 | 服务端数据只读；原始音频、硬件、支付和 Admin API 不开放。 |
-| 包状态 | 当前公测版本 `0.2.11`，默认连接 PatchXNote 公测 API。 |
+| 包状态 | 当前公测版本 `0.2.12`，默认连接 PatchXNote 生产 API。 |
 
 ## 功能
 
-| 能力 | `0.2.11` 是否支持 | 说明 |
+| 能力 | `0.2.12` 是否支持 | 说明 |
 | --- | --- | --- |
 | 浏览器 OAuth MCP 登录 | 支持 | `patchxnote mcp login` 打开 PatchXNote 授权页，在 GoServer 页面完成手机号验证码登录，并把 MCP 凭据保存到本机。 |
 | 终端手机号验证码 Agent 登录 | 支持 | `patchxnote login` 保留给 CLI 优先用户和 fallback 环境。 |
@@ -115,7 +115,7 @@ npx -y patchxnote-agent@0.2.11 skill install
 - 可以接收手机验证码的 PatchXNote 账号。
 - 支持 stdio MCP server 的 MCP Host，例如 Codex、Claude Desktop、Cursor、VS Code 或其他兼容桌面 Agent。
 
-> `0.2.11` 是当前公测版本。默认服务端是 PatchXNote 公测 API，凭据默认写入系统原生安全钥匙串。
+> `0.2.12` 是当前公测版本。默认服务端是 PatchXNote 生产 API，凭据默认写入系统原生安全钥匙串。
 
 ## 登录和 MCP 形态
 
@@ -126,7 +126,7 @@ PatchXNote Agent 现在有两种正式登录入口、两种 MCP 服务形态：
 | 浏览器弹窗登录 | `npx -y patchxnote-agent@latest mcp login` | 用户正在把 PatchXNote 接入桌面编辑器或本地 MCP Host。 | 打开浏览器进入 PatchXNote 授权页，在网页完成手机号验证码登录，Agent 接收本机 loopback callback、换取登录态，并保存到系统安全存储。 |
 | CLI 终端登录 | `npx -y patchxnote-agent@latest login` | 用户希望全程在终端操作、运行在 headless 环境，或需要旧的本地 Agent fallback。 | 手机号验证码输入留在终端里完成。不要把验证码、access token 或 refresh token 粘贴到 AI 对话里。 |
 | 本地 MCP 服务 | `npx -y patchxnote-agent@latest mcp serve` | VS Code、Cursor、Codex、Claude Desktop、Windsurf、Trae、Qoder、WorkBuddy 等本地 stdio MCP 客户端。 | MCP 配置保持无密钥；编辑器启动 `mcp serve` 时不会再弹浏览器。 |
-| 远程 MCP 网关 | `https://ws-lab.patch-x.cn/patchnote-test-api/mcp` | 飞书 Aily、豆包工作伙伴、腾讯 Agent 平台、企业版 WorkBuddy 等不能执行本地命令的平台型客户端。 | 这是服务端托管的 MCP 接入形态；平台控制台真实验收仍单独跟踪。 |
+| 远程 MCP 网关 | `https://freenote.patch-x.cn/mcp` | 飞书 Aily、豆包工作伙伴、腾讯 Agent 平台、企业版 WorkBuddy 等不能执行本地命令的平台型客户端。 | 这是服务端托管的 MCP 接入形态；平台控制台真实验收仍单独跟踪。 |
 
 ## 快速开始
 
@@ -185,13 +185,13 @@ npx -y patchxnote-agent@latest install --print-config
 如果需要固定当前已发布公测版本用于排障或回滚：
 
 ```sh
-npx -y patchxnote-agent@0.2.11 install --print-config
+npx -y patchxnote-agent@0.2.12 install --print-config
 ```
 
-公测版本默认连接 PatchXNote 公测 API：
+公测版本默认连接 PatchXNote 生产 API：
 
 ```text
-https://ws-lab.patch-x.cn/patchnote-test-api
+https://freenote.patch-x.cn
 ```
 
 如果要切换到其他 PatchXNote 环境：
@@ -200,6 +200,12 @@ https://ws-lab.patch-x.cn/patchnote-test-api
 PATCHXNOTE_SERVER_BASE_URL=<PatchXNote API base URL> \
 patchxnote mcp login
 ```
+
+### 从测试环境切换到生产环境
+
+`0.2.12` 默认连接生产环境。已有的 `--server-base-url` 参数、`PATCHXNOTE_SERVER_BASE_URL` / 兼容变量 `PATCHNOTE_SERVER_BASE_URL`、配置文件中的 `server.base_url` 会覆盖默认值；请同时检查终端和 MCP 客户端配置，修改或移除测试地址覆盖项。
+
+在启动 MCP 的同一个运行时和 profile 下执行 `mcp login`，再执行 `mcp status --verify`。OAuth 凭据与服务地址绑定，测试环境登录态不能直接用于生产；此次升级不会迁移测试账号或记录。如需同时使用两套环境，请使用不同 profile 并分别指定服务地址。
 
 ## 常用场景
 
@@ -281,7 +287,7 @@ MCP 配置中不会保存 access token、refresh token、验证码、手机号�
 
 ![PatchXNote Agent 工具能力](./docs/assets/patchxnote-agent-tools.png)
 
-PatchXNote Agent `0.2.11` 暴露和当前本地服务一致的 **19 个本地 MCP 工具**。普通用户可以先理解成三类能力，下面的英文工具名是给 MCP Host 和 AI 助手调用用的。
+PatchXNote Agent `0.2.12` 暴露和当前本地服务一致的 **19 个本地 MCP 工具**。普通用户可以先理解成三类能力，下面的英文工具名是给 MCP Host 和 AI 助手调用用的。
 
 ### 账号和记录查询
 
@@ -430,9 +436,9 @@ PatchXNote Agent 会让 AI Agent 访问当前登录 PatchXNote 用户的账号�
 
 ## 当前限制
 
-`0.2.11` 是当前公测版本。
+`0.2.12` 是当前公测版本。
 
-- 默认服务端指向 PatchXNote 公测 API，不代表生产 SLA。
+- 默认服务端指向 PatchXNote 生产 API，不代表生产 SLA。
 - `mcp serve` 在编辑器启动时不会自动弹浏览器。请先运行 `mcp login`，或让 `setup --client <id>` 复用同一套 OAuth 流程。
 - GoServer 官网和授权页负责手机验证码输入；本地 Agent 负责 loopback callback、token 交换、安全存储和 stdio 桥接。
 - 飞书 Aily、豆包工作伙伴、腾讯 Agent 平台、企业版 WorkBuddy 的平台 MCP 需要完成平台控制台里的远程 MCP 验收；本地 `npx` setup 只闭环桌面/终端客户端。
@@ -472,6 +478,12 @@ patchxnote version
 ```
 
 发布二进制应报告 npm 包版本，commit 应为对应 GitHub Release tag 的提交。
+
+## 0.2.12 更新重点
+
+- 默认连接生产 API `https://freenote.patch-x.cn`；远程 MCP 入口为 `https://freenote.patch-x.cn/mcp`。
+- 保留命令行、环境变量和配置文件覆盖地址的能力，方便继续使用测试环境。
+- 补充已有测试环境配置的迁移和生产重新登录说明。
 
 ## 0.2.11 更新重点
 
@@ -537,7 +549,7 @@ MVP smoke 会构建 CLI，执行安装器 dry-run，检查 npm 通用 MCP 启动
 
 1. 确认目标 PatchXNote GoServer 已暴露所需 `/v1/agent/**` 路由。
 2. 确认 `packages/npm/package.json` 版本与 release tag 一致，tag 不带前缀 `v` 时要匹配包版本。
-3. 推送干净 tag，例如 `v0.2.11`。
+3. 推送干净 tag，例如 `v0.2.12`。
 4. 等待 GitHub Release 产物：`checksums.txt`，以及 Linux/macOS/Windows 的 amd64 和 arm64 二进制。
 5. npm publish 前确认 npm Trusted Publishing 已配置：
    - owner/user：`ZsTs119`
