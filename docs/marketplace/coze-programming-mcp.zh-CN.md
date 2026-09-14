@@ -2,7 +2,7 @@
 
 本指南用于“扣子编程 → 资源库 → 新建插件 → MCP → OAuth standard”。现有 `coze` ZIP 面向另一种插件包导入入口，此处直接填写服务地址和 OAuth 字段。Agent 安装命令、运行时和渠道生成器保持现状。
 
-截至 2026-09-14，用户已部署新测试域名 `https://note-test.patch-x.cn`；插件 `7685350351754543144` 已创建、实际回调已补录，客户端为 `active`，扣子页面已显示“已授权”。工具同步因服务端错误声明 MCP `2026-07-28` 而失败；改为 `2025-06-18` 的修复已通过定向测试，并以 GoServer 提交 `e26743c` 推送到 `codex/backend-implementation`，远端 SHA 已核验。维护者部署该提交后，在现有插件点击“更新”，再试运行当前用户和手机端记忆查询。当前不代表工具试运行或上架通过，生产客户端尚未准备。
+截至 2026-09-14，用户已将 GoServer `e26743c` 部署到 `https://note-test.patch-x.cn`；插件 `7685350351754543144` 已创建、实际回调已补录，客户端为 `active`，扣子页面已显示“已授权”，工具列表同步成功。账号与手机端记忆试运行发现第二处兼容遗漏：服务端拒绝 `tools/call.params._meta`。该字段的修复已以 `d459b63` 推送到 GoServer 的 `codex/backend-implementation`，提交后的定向测试通过，远端 SHA 已核验。维护者部署 `d459b63` 后在原插件重试实际调用。当前不代表工具试运行或上架通过，生产客户端尚未准备。
 
 ## 1. 已准备的测试填写资料
 
@@ -82,6 +82,20 @@ GOMAXPROCS=1 ~/.local/go1.26.5/bin/go run -p 1 ./cmd/agentoauthclient bind \
 - `patchxnote_list_memories`：参数 `{"platform":"mobile","limit":5}`，确认该账号手机端记录可读。
 
 工作流继续使用已确认的“单独授权”，每位用户授权自己的账号。授权失效时在扣子断开/重新授权；服务端保留原有 refresh_token 能力，本地数据库测试已覆盖刷新，扣子是否实际自动刷新仍以联调记录为准。
+
+### 原文与总结相关的已有工具
+
+以下工具已在当前扣子插件列表中逐项确认存在；此处记录目录与数据含义，不代表正文调用已验收。
+
+| 需求 | 工具 | 返回内容 |
+| --- | --- | --- |
+| 查找总结记录 | `patchxnote_list_memories`、`patchxnote_search_memories` | 记录入口、短标题/摘要和标识；不直接返回总结全文。 |
+| 按模型任务或录音定位记录 | `patchxnote_list_model_io_traces` | 模型记录及 request_id，可按 platform、task_type、recording_id 等筛选。 |
+| 读取原文/转写 | `patchxnote_get_model_io_source_text` | 从服务端保存的模型请求中提取的 source_text；只在 App 本地、未上传的转写不在此接口的数据源中。 |
+| 读取模型解析后的总结 | `patchxnote_get_model_io_parsed_result` | parsed_result_json。 |
+| 读取最终结构化总结 | `patchxnote_get_model_io_packaged_result` | packaged_result_json。 |
+
+先查列表取得 memory_id 或 request_id，再给单字段工具传入其中一个标识和对应 platform。原文是否可用以 `source_text.availability` 为准；模型记录未保存相应内容时可能缺失或截断，不应把列表中的短摘要当作全文。
 
 ## 5. 切换生产与发布
 

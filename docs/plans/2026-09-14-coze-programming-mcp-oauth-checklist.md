@@ -2,7 +2,7 @@
 
 **日期：** 2026-09-14
 
-**状态：** 新测试服插件已创建、回调已补录，扣子已授权；MCP 版本声明修复与定向测试通过，GoServer 提交 `e26743c` 已推送并核验远端，待用户部署后继续工具同步和实际调用验证。
+**状态：** GoServer `e26743c` 已由用户部署，扣子授权与工具同步通过；`_meta` 解码兼容修复 `d459b63` 已提交推送，提交后的定向测试和远端 SHA 核验通过，待用户部署后重试账号与记录查询。
 
 **目标：** 服务端准备好 OAuth 后，维护者能填写扣子新建 MCP 插件，取得插件 ID、补录回调，再完成用户授权和真实工具查询。测试通过后切生产，最后发布/上架。
 
@@ -174,7 +174,7 @@ GOMAXPROCS=1 go test -p 1 -parallel 1 -tags=integration ./internal/agentoauth -r
 
 - [x] 主体实现和上述限定用例通过后，在获授权的测试环境部署，给维护者填写资料。用户已部署 `note-test.patch-x.cn`，资料已按此新测试环境重配。
 - [x] 维护者创建扣子 MCP 插件并取得 ID/实际回调；服务端补录并启用同一客户端。实际插件 ID `7685350351754543144`，客户端 `patchxfreenote-coze-note-test`。
-- [ ] 在扣子完成一次浏览器授权，核对必要请求字段和格式，确认换 token 与工具同步成功。
+- [x] 在扣子完成一次浏览器授权，核对必要请求字段和格式，确认换 token 与工具同步成功。部署 `e26743c` 后 Chrome 实际同步成功，后续请求已进入通过认证的工具调用处理。
 - [ ] 调用 `patchxnote_get_current_user` 与 `patchxnote_list_memories`（`{"platform":"mobile","limit":5}`），确认对应当前授权账号。
 - [ ] 说明授权失效后的现有重连方式；如扣子实际使用 refresh_token，则只核对该实际链路。
 - [ ] 测试通过后使用生产客户端/地址/实际回调完成必要接入检查，再按授权发布和上架。
@@ -221,7 +221,7 @@ GOMAXPROCS=1 go test -p 1 -parallel 1 -tags=integration ./internal/agentoauth -r
 
 ### 待完成的平台步骤
 
-以下最初交接状态已由第 6 节实际联调记录更新；G5 仅将已有实际证据的步骤勾选，工具同步、真实工具查询、生产和上架继续待完成。
+以下最初交接状态已由第 6、7 节实际联调记录更新；G5 仅将已有实际证据的步骤勾选，真实工具查询、生产和上架继续待完成。
 
 用户随后已授权本批两仓改动先提交并普通推送，本轮不部署；提交结果以 Git 记录和远端分支 SHA 核验为准。后续取得部署授权后，部署到本计划测试环境，再由维护者创建扣子 MCP 插件；拿到实际回调后执行 bind，用户在浏览器完成授权，再核对当前账号与最近 5 条手机端记录。主体、自审和本地测试通过，不等同于扣子真实接入闭环通过。
 
@@ -243,7 +243,22 @@ https://www.coze.cn/api/plugin_oauth/7685350351754543144/authorization_code
 - [x] 仅把服务端声明改为实现支持的 `2025-06-18`；保持单一支持版本，其他请求版本返回这个支持版本，不直接回显任意客户端字符串。符合 [MCP 初始化/版本协商规范](https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle)。
 - [x] `GOMAXPROCS=1 go test -p 1 -parallel 1 ./internal/remotemcp -run TestCozeMCPProtocolAndToolDiscovery -count=1 -v` PASS；仅验证本次初始化、支持版本回退和带版本 Header 的工具发现，未重跑旧业务测试。
 - [x] 将协议声明修复提交并普通推送。GoServer `e26743c8f79260beaa174ed856d0b29e952f1398` 已推送到 `codex/backend-implementation`，本地 HEAD、origin 引用和远端分支 SHA 一致；提交后的上述定向用例通过，服务端工作区干净。
-- [ ] 用户将该提交部署到新测试服，然后在现有扣子插件点击“更新”重新同步工具。
+- [x] 用户将该提交部署到新测试服，然后在现有扣子插件点击“更新”重新同步工具。用户提供 `note_test_deployment=PASS`；Chrome 实际工具同步成功。
 - [ ] 工具同步成功后，试运行当前账号和最近 5 条手机端记录，确认本次真实接入完整闭环。
 
-本次协议修复已按用户授权提交推送；部署由用户执行，目前仍未部署或完成真实工具调用验收。主代理自审确认：协议声明与目标客户端匹配，新增测试独立断言协议版本，不复用实现常量作为预期值，未改 OAuth 或业务工具。Agent 本次仅同步指南与计划，已核对域名、客户端、真实回调和剩余验收步骤，无运行时代码改动，无需 Agent 运行时测试。没有创建重复插件、修改账号授权范围、跳过授权或发布到商店。
+本次协议版本修复已按用户授权提交推送，并由用户部署；实际工具调用发现的后续问题见第 7 节。主代理自审确认：协议声明与目标客户端匹配，新增测试独立断言协议版本，不复用实现常量作为预期值，未改 OAuth 或业务工具。Agent 本次仅同步指南与计划，已核对域名、客户端、真实回调和剩余验收步骤，无运行时代码改动，无需 Agent 运行时测试。没有创建重复插件、修改账号授权范围、跳过授权或发布到商店。
+
+## 7. tools/call 元数据兼容与工具目录核对（2026-09-14）
+
+部署依据为用户提供的 `deployment_gate=PASS`、`note_test_deployment=PASS`，run_id 为 `20260914T115829Z-95457`，revision 为 `e26743c8f79260beaa174ed856d0b29e952f1398`。随后主代理通过 Chrome 实测：已有授权有效，工具列表同步成功；账号与手机端记忆查询均在 HTTP 200 内返回 JSON-RPC `-32602 / tools/call params are invalid`，尚未执行到业务查询。
+
+只读查询本次 Coze 请求的字段名、类型、HTTP/RPC 状态，确认两次请求均携带 `params._meta: {}`。该字段属于 [MCP 标准元数据](https://modelcontextprotocol.io/specification/2025-06-18/basic/index#meta)，现有 `callToolParams` 漏接此字段，而解码器拒绝未知字段，导致失败。
+
+- [x] 在现有 `handler_test.go` 补充 `TestCozeToolCallMetadata`。只覆盖账号和 `platform=mobile, limit=5` 记忆查询，各验证无元数据、空元数据和带进度/扩展元数据；有效 RED 为带 `_meta` 的 4 个子用例返回 `-32602`，不带的 2 个对照通过。
+- [x] 在 `callToolParams` 接收可选 `_meta` 对象；不将其传给业务参数，不修改 OAuth、业务查询或工具目录。
+- [x] `GOMAXPROCS=1 go test -p 1 -parallel 1 ./internal/remotemcp -run TestCoze -count=1 -v` PASS：2 个顶层用例，覆盖既有初始化/发现与本次 6 个调用子用例。只使用合成 fixture，不运行全仓、数据库、App/PC 或其他渠道测试。
+- [x] Chrome 实际核对当前插件中的原文、总结记录和模型结果工具：`patchxnote_list_memories`、`patchxnote_search_memories`、`patchxnote_list_model_io_traces`、`patchxnote_get_model_io_source_text`、`patchxnote_get_model_io_parsed_result`、`patchxnote_get_model_io_packaged_result` 均存在；使用方法与数据来源已补入接入指南。
+- [x] 提交并普通推送此增量。GoServer `d459b63fe44d4b509c52323b5ebfd97e6082149f` 已推送到 `codex/backend-implementation`，本地 HEAD、origin 引用及远端分支 SHA 一致；提交后的干净工作区再次执行上述 `-run TestCoze` 定向用例，全部通过。
+- [ ] 用户部署 `d459b63`，再在原插件重试当前账号和手机端记忆查询。工具列表已同步，无需重复创建插件。
+
+主代理自审通过，本次 `_meta` 修复已提交推送，部署由用户执行；上述工具的目录存在性已确认，原文/总结正文仍未在扣子完成实际读取验证。原文来自服务端模型请求中的文本投影，不能据此承诺可读取所有 App 本地完整转写；保留 availability/field_status 的实际数据状态。
