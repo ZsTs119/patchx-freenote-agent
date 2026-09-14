@@ -15,10 +15,10 @@ Check the zip first:
 
 ## Remote MCP Unreachable
 
-The first review endpoint is:
+The {{ENVIRONMENT}} endpoint for this package is:
 
 ```text
-https://ws-lab.patch-x.cn/patchnote-test-api/mcp
+{{MCP_URL}}
 ```
 
 If WorkBuddy cannot reach it, record HTTP status, stable error code, and timing only. Do not include tokens, raw content, phone numbers, or secrets in evidence.

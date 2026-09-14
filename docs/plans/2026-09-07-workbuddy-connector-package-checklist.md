@@ -4,6 +4,8 @@
 
 **Status:** draft plan
 
+> 2026-09-14 接续说明：本文件保留最初测试环境审核草稿。后续工作已按 `docs/plans/2026-09-14-unified-channel-package-checklist.md` 完成统一生成入口，原专用打包脚本已移除。生产包使用 `node scripts/package-channel.mjs --channel workbuddy`；复现测试包使用同一命令加 `--env test`。当前产物位于 `dist/channels/workbuddy/<env>/<version>/`；以下旧路径、命令及未勾选审核项属于历史设计，不代表当前上架或验收状态。
+
 **Branch:** `codex/workbuddy-connector-package`
 
 **Goal:** Prepare a small WorkBuddy connector `.zip` package for PatchXNote using the WorkBuddy **MCP + Skill** connector path. The package should be suitable for first upload/parse review in the WorkBuddy connector platform, using the current PatchXNote test remote MCP endpoint:

@@ -29,6 +29,21 @@
 - [ ] `node scripts/sync-patchxnote-skill-packages.mjs --check` 通过。
 - [ ] `node scripts/validate-patchxnote-skill-packages.mjs` 通过。
 
+## 2.1 统一渠道生成入口
+
+仅修改渠道包装时，以本节为本地交付检查范围；上面安装/SOP 的全链路检查仅在对应内容实际改动时执行。
+
+- [ ] 使用 `node scripts/package-channel.mjs --channel workbuddy`；其他渠道将参数值换为 `codex`、`claude-code` 或 `coze`。
+- [ ] 默认生产环境；测试构建显式加 `--env test`，取用命令打印的当前产物路径。
+- [ ] 渠道展示文案与 ZIP 文件名前缀为 `PatchXFreeNote`，插件机器标识与 marketplace 引用为 `patchxfreenote`；现有安装命令与 MCP 工具名保持原值。新建 WorkBuddy 连接器的 `source` 为 `patchxfreenote`，授权前确认目标 GoServer 已部署对应回调支持。
+- [ ] WorkBuddy ZIP 可打开，根目录、MCP 端点、metadata 与 Skill 正确。
+- [ ] Codex / Claude Code bundle 包含 marketplace 清单及其引用的插件目录；生产公共 Skill 来自当前源文件。
+- [ ] 扣子 ZIP 包含根目录 `plugin.json`、`mcp.json` 和 `skills/`，符合 Agent Plugins 1.0.0；使用“扩展 → 插件 → 上传插件包”入口，平台导入与授权结果单独记录。
+- [ ] 只验证本次生成模块及直接修改的打包函数，不重新运行未改动的 Go/npm/OAuth/MCP 流程。
+- [ ] 按平台要求提交对应材料；构建结果与提交、审核状态分别记录。
+
+配置入口：`packages/distribution/channels.json`；完整生成命令和材料取用说明见 `docs/release-and-maintenance-runbook.zh-CN.md` 的“统一渠道上架包生成”。
+
 ## 3. MCP Registry And Directories
 
 - [ ] `server.json` 与 `packages/npm/package.json#mcpName` 一致。

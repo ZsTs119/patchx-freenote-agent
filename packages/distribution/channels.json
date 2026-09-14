@@ -1,0 +1,79 @@
+{
+  "common": {
+    "branding": {
+      "displayName": "PatchXFreeNote",
+      "pluginName": "patchxfreenote"
+    },
+    "skillSource": "skills/patchxnote-mcp",
+    "skillDestination": "skills/patchxnote-mcp"
+  },
+  "environments": {
+    "production": {
+      "apiBaseURL": "https://freenote.patch-x.cn",
+      "mcpURL": "https://freenote.patch-x.cn/mcp"
+    },
+    "test": {
+      "apiBaseURL": "https://ws-lab.patch-x.cn/patchnote-test-api",
+      "mcpURL": "https://ws-lab.patch-x.cn/patchnote-test-api/mcp",
+      "localOnboarding": "packages/distribution/test-onboarding.md"
+    }
+  },
+  "channels": {
+    "workbuddy": {
+      "format": "workbuddy-zip",
+      "connectorSource": "patchxfreenote",
+      "manifest": "packages/workbuddy/patchxnote-agent/connector-meta.json",
+      "manifestDestination": "connector-meta.json",
+      "archiveName": "{{DISPLAY_NAME}}-workbuddy-connector",
+      "files": {
+        "mcp.json": "packages/workbuddy/patchxnote-agent/mcp.json",
+        "icon.svg": "packages/workbuddy/patchxnote-agent/icon.svg"
+      },
+      "skillOverrides": {
+        "SKILL.md": "packages/workbuddy/patchxnote-agent/skills/patchxnote-mcp/SKILL.md",
+        "references/onboarding.md": "packages/workbuddy/patchxnote-agent/skills/patchxnote-mcp/references/onboarding.md",
+        "references/workflows.md": "packages/workbuddy/patchxnote-agent/skills/patchxnote-mcp/references/workflows.md",
+        "references/troubleshooting.md": "packages/workbuddy/patchxnote-agent/skills/patchxnote-mcp/references/troubleshooting.md",
+        "references/security-and-evidence.md": "packages/workbuddy/patchxnote-agent/skills/patchxnote-mcp/references/security-and-evidence.md",
+        "references/source-of-truth.md": "packages/workbuddy/patchxnote-agent/skills/patchxnote-mcp/references/source-of-truth.md"
+      }
+    },
+    "codex": {
+      "format": "skill-plugin",
+      "manifest": "packages/plugins/openai/patchxnote-agent/.codex-plugin/plugin.json",
+      "manifestDestination": ".codex-plugin/plugin.json",
+      "pluginDirectory": "packages/plugins/openai/patchxnote-agent",
+      "marketplace": ".agents/plugins/marketplace.json"
+    },
+    "claude-code": {
+      "format": "skill-plugin",
+      "manifest": "packages/plugins/claude/patchxnote-agent/.claude-plugin/plugin.json",
+      "manifestDestination": ".claude-plugin/plugin.json",
+      "pluginDirectory": "packages/plugins/claude/patchxnote-agent",
+      "marketplace": ".claude-plugin/marketplace.json"
+    },
+    "coze": {
+      "format": "agent-plugin-zip",
+      "manifest": "packages/plugins/coze/patchxnote-agent/plugin.json",
+      "manifestDestination": "plugin.json",
+      "archiveName": "{{DISPLAY_NAME}}-coze-plugin",
+      "maxPackageBytes": 500000000,
+      "files": {
+        "mcp.json": "packages/plugins/coze/patchxnote-agent/mcp.json",
+        "assets/icon.svg": "packages/workbuddy/patchxnote-agent/icon.svg"
+      },
+      "skillOverrides": {
+        "SKILL.md": "packages/workbuddy/patchxnote-agent/skills/patchxnote-mcp/SKILL.md",
+        "references/onboarding.md": "packages/workbuddy/patchxnote-agent/skills/patchxnote-mcp/references/onboarding.md",
+        "references/workflows.md": "packages/workbuddy/patchxnote-agent/skills/patchxnote-mcp/references/workflows.md",
+        "references/troubleshooting.md": "packages/workbuddy/patchxnote-agent/skills/patchxnote-mcp/references/troubleshooting.md",
+        "references/security-and-evidence.md": "packages/workbuddy/patchxnote-agent/skills/patchxnote-mcp/references/security-and-evidence.md",
+        "references/source-of-truth.md": "packages/plugins/coze/patchxnote-agent/source-of-truth.md"
+      },
+      "skillReplacements": {
+        "WorkBuddy": "Coze",
+        "workbuddy": "coze"
+      }
+    }
+  }
+}

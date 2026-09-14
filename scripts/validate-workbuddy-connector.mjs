@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..");
-const connectorRoot = path.join(repoRoot, "packages", "workbuddy", "patchxnote-agent");
+const defaultConnectorRoot = path.join(repoRoot, "packages", "workbuddy", "patchxnote-agent");
 const maxZipBytes = 20 * 1024 * 1024;
 
 function fail(message) {
@@ -21,7 +21,7 @@ function readJSON(filePath) {
   }
 }
 
-function assertFile(relativePath) {
+function assertFile(connectorRoot, relativePath) {
   const filePath = path.join(connectorRoot, relativePath);
   if (!fs.existsSync(filePath) || !fs.statSync(filePath).isFile()) {
     fail(`missing required file: ${relativePath}`);
@@ -29,7 +29,7 @@ function assertFile(relativePath) {
   return filePath;
 }
 
-function assertNoFile(relativePath) {
+function assertNoFile(connectorRoot, relativePath) {
   const filePath = path.join(connectorRoot, relativePath);
   if (fs.existsSync(filePath)) {
     fail(`unexpected file in WorkBuddy MCP + Skill package: ${relativePath}`);
@@ -63,7 +63,7 @@ function walkFiles(root) {
   return files;
 }
 
-function readTextPackageFiles() {
+function readTextPackageFiles(connectorRoot) {
   return walkFiles(connectorRoot)
     .filter(filePath => [".json", ".md", ".svg", ".txt"].includes(path.extname(filePath).toLowerCase()))
     .map(filePath => ({
@@ -106,7 +106,7 @@ function validateConnectorMeta(meta) {
   }
 }
 
-function validateMCPConfig(config) {
+function validateMCPConfig(config, expectedURL) {
   if (!config || typeof config !== "object" || Array.isArray(config)) {
     fail("mcp.json must be an object");
   }
@@ -128,8 +128,8 @@ function validateMCPConfig(config) {
   if (typeof server.url !== "string" || !server.url.startsWith("https://")) {
     fail("mcp.json server url must be HTTPS");
   }
-  if (server.url !== "https://ws-lab.patch-x.cn/patchnote-test-api/mcp") {
-    fail("mcp.json server url must stay on the approved WorkBuddy review endpoint");
+  if (server.url !== expectedURL) {
+    fail("mcp.json server url must match the selected environment");
   }
   if (server.timeout !== 30000) {
     fail("mcp.json server timeout must be 30000");
@@ -185,7 +185,7 @@ function validateSkill(skillPath) {
   }
 }
 
-function validateSensitiveContent() {
+function validateSensitiveContent(connectorRoot) {
   const patterns = [
     [/Bearer\s+[A-Za-z0-9._~+/-]{20,}/i, "bearer token"],
     [/\baccess_token\b\s*[:=]\s*["'][^"']{12,}["']/i, "access token value"],
@@ -199,7 +199,7 @@ function validateSensitiveContent() {
     [/\\\\wsl\.localhost\\/i, "WSL UNC local path"],
     [/\/home\/[A-Za-z0-9._-]+\//, "Linux local home path"]
   ];
-  for (const { relativePath, text } of readTextPackageFiles()) {
+  for (const { relativePath, text } of readTextPackageFiles(connectorRoot)) {
     for (const [pattern, label] of patterns) {
       if (pattern.test(text)) {
         fail(`${relativePath} appears to contain ${label}`);
@@ -208,9 +208,9 @@ function validateSensitiveContent() {
   }
 }
 
-function validateNoUnexpectedFiles() {
-  assertNoFile("cli.json");
-  assertNoFile("token-schema.json");
+function validateNoUnexpectedFiles(connectorRoot) {
+  assertNoFile(connectorRoot, "cli.json");
+  assertNoFile(connectorRoot, "token-schema.json");
   const forbiddenNames = new Set([".git", "node_modules", "dist", ".env", ".patchnote"]);
   for (const filePath of walkFiles(connectorRoot)) {
     const relativeParts = path.relative(connectorRoot, filePath).split(path.sep);
@@ -267,9 +267,8 @@ function readZipEntries(zipPath) {
   return entries;
 }
 
-function validateZipIfPresent() {
-  const zipPath = path.join(repoRoot, "dist", "workbuddy", "patchxnote-workbuddy-connector-0.1.0.zip");
-  if (!fs.existsSync(zipPath)) {
+function validateZipIfPresent(zipPath) {
+  if (!zipPath) {
     return;
   }
   const size = fs.statSync(zipPath).size;
@@ -320,24 +319,28 @@ function validateZipIfPresent() {
   }
 }
 
-export function validateWorkBuddyConnector() {
+export function validateWorkBuddyConnector({
+  connectorRoot = defaultConnectorRoot,
+  expectedURL = "https://freenote.patch-x.cn/mcp",
+  zipPath
+} = {}) {
   if (!fs.existsSync(connectorRoot) || !fs.statSync(connectorRoot).isDirectory()) {
     fail(`missing connector directory: ${path.relative(repoRoot, connectorRoot)}`);
   }
-  const meta = readJSON(assertFile("connector-meta.json"));
-  const mcpConfig = readJSON(assertFile("mcp.json"));
-  const iconPath = assertFile("icon.svg");
-  const skillPath = assertFile(path.join("skills", "patchxnote-mcp", "SKILL.md"));
+  const meta = readJSON(assertFile(connectorRoot, "connector-meta.json"));
+  const mcpConfig = readJSON(assertFile(connectorRoot, "mcp.json"));
+  const iconPath = assertFile(connectorRoot, "icon.svg");
+  const skillPath = assertFile(connectorRoot, path.join("skills", "patchxnote-mcp", "SKILL.md"));
   for (const reference of ["onboarding.md", "workflows.md", "troubleshooting.md", "security-and-evidence.md", "source-of-truth.md"]) {
-    assertFile(path.join("skills", "patchxnote-mcp", "references", reference));
+    assertFile(connectorRoot, path.join("skills", "patchxnote-mcp", "references", reference));
   }
   validateConnectorMeta(meta);
-  validateMCPConfig(mcpConfig);
+  validateMCPConfig(mcpConfig, expectedURL);
   validateIcon(iconPath);
   validateSkill(skillPath);
-  validateNoUnexpectedFiles();
-  validateSensitiveContent();
-  validateZipIfPresent();
+  validateNoUnexpectedFiles(connectorRoot);
+  validateSensitiveContent(connectorRoot);
+  validateZipIfPresent(zipPath);
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

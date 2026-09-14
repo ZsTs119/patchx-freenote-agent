@@ -517,7 +517,7 @@ docs/assets/
 - OpenAI / Codex、Claude Code、Agent Skills、MCP Registry、Smithery 等渠道各自有独立规范；一个平台通过不代表其他平台通过。
 - 当前仓库没有开源许可证时，发布文案和 manifest 必须继续标注 `UNLICENSED`，不要写成 MIT/Apache 等许可证。
 
-每次修改后至少执行：
+以下检查用于安装流程、公共 Skill/SOP 或原有分发链路的修改。仅修改渠道生成模块时，执行下一节的限定验证，不连带运行这些未改动模块：
 
 ```sh
 node scripts/sync-patchxnote-skill-packages.mjs --check
@@ -541,6 +541,51 @@ git diff --check
 - Smithery：按 `docs/marketplace/platform-matrix.zh-CN.md` 决定是保留 stdio 草稿，还是补 Streamable HTTP / OAuth 后发布远程入口。
 
 完成验证后更新 `docs/marketplace/evidence-log.md`。没有真实安装、审核、发布或账号授权证据时，保持对应渠道为待验收。
+
+## 统一渠道上架包生成
+
+这是维护者使用的构建入口，用户继续沿用现有安装、登录和 MCP 使用方式。配置源为 `packages/distribution/channels.json`；版本读取各渠道现有 manifest，生成命令不修改版本或执行上架。
+
+```sh
+node scripts/package-channel.mjs --help
+node scripts/package-channel.mjs --channel workbuddy
+node scripts/package-channel.mjs --channel codex
+node scripts/package-channel.mjs --channel claude-code
+node scripts/package-channel.mjs --channel coze
+```
+
+默认使用生产 API `https://freenote.patch-x.cn` 与 Remote MCP `https://freenote.patch-x.cn/mcp`。测试包显式添加 `--env test`，例如：
+
+```sh
+node scripts/package-channel.mjs --channel workbuddy --env test
+```
+
+每次成功输出渠道、环境、版本和产物路径，失败返回非零退出码。统一输出在 `dist/channels/<channel>/<env>/<version>/`，不同渠道、环境、版本互不覆盖。
+
+| 渠道 | 取用方式 |
+| --- | --- |
+| `workbuddy` | 使用输出目录中的 `PatchXFreeNote-workbuddy-connector-<version>.zip` 上传；ZIP 根目录包含 metadata、MCP 配置、图标和 Skill。旁边的 `bundle/` 供查看生成内容。 |
+| `codex` | 取用输出的 `bundle/`，其中包含 `.agents/plugins/marketplace.json` 与 `packages/plugins/openai/patchxfreenote/`。按平台提交方式选取插件目录或保留清单与目录关系。 |
+| `claude-code` | 取用输出的 `bundle/`，其中包含 `.claude-plugin/marketplace.json` 与 `packages/plugins/claude/patchxfreenote/`。按平台提交方式选取插件目录或保留清单与目录关系。 |
+| `coze` | 上传 `PatchXFreeNote-coze-plugin-<version>.zip` 到扣子“扩展 → 插件 → 上传插件包”；包根目录为 Agent Plugins 1.0.0 的 `plugin.json`、`mcp.json`、`skills/`，图标在 `assets/icon.svg`。 |
+
+渠道展示名称统一为 `PatchXFreeNote`，由配置中的 `common.branding.displayName` 控制，同时用于 ZIP 文件名前缀；插件 manifest 与 marketplace 的机器标识使用 `common.branding.pluginName`（当前为 `patchxfreenote`），生成目录和 marketplace 引用同步调整。生成副本的标题、描述、示例和图标说明使用新名称。`patchxnote-agent` npm 包、`patchxnote` CLI/MCP 服务标识、`patchxnote_*` 工具名和 `patchxnote-mcp` Skill 标识保持现有值。
+
+新建 WorkBuddy 连接器时，生成 metadata 的 `source` 读取 `channels.workbuddy.connectorSource`，当前为 `patchxfreenote`。WorkBuddy 以此区分连接器身份，仅改展示名称或 ZIP 文件名不会创建新身份。对应 OAuth 回调为 `workbuddy://workbuddy/mcp/connector%3Apatchxfreenote/oauth/callback`；目标 GoServer 必须部署支持该回调的版本，旧 `patchxnote-agent` 回调继续兼容。仅重新生成包不会更新在线服务器。Skill 中的 `{{CONNECTOR_SOURCE}}` 在构建时同步替换。
+
+生成器直接读取公共 Skill 源，不要求先执行副本同步。生产插件的公共 Skill 仅替换展示名称；WorkBuddy 使用配置中列出的已有渠道说明覆盖。测试插件额外调整生成副本中的环境提示、接入 reference 和现有命令的 `--server-base-url`，不会修改用户配置或公共源。生产服务的公开主页/下载链接仍保留其原用途。
+
+新增同类渠道时，在配置中声明现有 manifest、资源/说明来源和 marketplace 清单（适用时），选择已有包格式。遇到新格式再添加相应适配，不复制整套打包程序。WorkBuddy 说明中的 `{{MCP_URL}}`、`{{ENVIRONMENT}}`、`{{PACKAGE_VERSION}}` 在构建时替换，源目录中的说明是打包模板。
+
+原 `scripts/package-workbuddy-connector.mjs` 已由统一入口替代；其 ZIP 写入代码复用在 `scripts/lib/package-zip.mjs`，不再维护第二个打包命令。旧 `dist/workbuddy/` 产物不代表新入口的结果，取用本次命令打印的路径。
+
+扣子 ZIP 依据[扣子导入说明](https://docs.coze.cn/create-plugin)与[Agent Plugins 1.0.0](https://agent-plugins.org/specification)生成。它使用标准 `streamable-http`，两个 JSON 分别声明对应的 `$schema`；不沿用 WorkBuddy 的 `streamableHttp` 和 `timeout` 字段。该渠道复用现有远程 Skill 说明，通过配置中的 `skillReplacements` 仅替换 Markdown 的渠道名称，并覆盖扣子专用事实源。生产端点仍为 `https://freenote.patch-x.cn/mcp`，身份认证由扣子客户端处理，包内没有凭据。
+
+扣子编程的 API/OpenAPI 插件创建属于另一入口，本 ZIP 面向上述“扩展 → 插件”导入。2026-09-14 已验证扣子生产包结构和官方 schema 使用的约束，尚未进行扣子平台导入、授权或上架；后续只变更某一渠道时，仅生成和检查对应产物，无需重新跑其他渠道或业务模块。
+
+仅修改本模块时，按本次改动涉及的渠道串行生成和检查；新增或修改环境处理时，再检查对应测试包。使用现有 JSON/解压工具读取实际产物，核对该格式的根目录、端点或 marketplace 引用。参数处理变更时，检查一个未知渠道和未知环境返回非零即可。不要连带运行未改动的 Go、npm 安装器、OAuth、MCP 业务或浏览器验收，也不新增独立测试/校验脚本。
+
+本地生成与检查完成后记录结果；平台提交、审核和真实账号使用另外记录。实施和验证证据见 `docs/plans/2026-09-14-unified-channel-package-checklist.md`。
 
 ## 安全检查清单
 

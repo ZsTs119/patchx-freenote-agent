@@ -1,18 +1,6 @@
-#!/usr/bin/env node
-
+// ZIP writer reused from the original WorkBuddy packager (stored entries).
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
-import { validateWorkBuddyConnector } from "./validate-workbuddy-connector.mjs";
-
-const scriptDir = path.dirname(fileURLToPath(import.meta.url));
-const repoRoot = path.resolve(scriptDir, "..");
-const connectorRoot = path.join(repoRoot, "packages", "workbuddy", "patchxnote-agent");
-const outDir = path.join(repoRoot, "dist", "workbuddy");
-const stageDir = path.join(outDir, "stage");
-const stageRoot = path.join(stageDir, "patchxnote-workbuddy-connector");
-const zipPath = path.join(outDir, "patchxnote-workbuddy-connector-0.1.0.zip");
-const maxZipBytes = 20 * 1024 * 1024;
 
 const crcTable = new Uint32Array(256);
 for (let n = 0; n < 256; n += 1) {
@@ -44,18 +32,6 @@ function dosDateTime(date) {
   };
 }
 
-function assertInside(parent, target) {
-  const relative = path.relative(parent, target);
-  if (relative.startsWith("..") || path.isAbsolute(relative)) {
-    throw new Error(`refusing to operate outside ${parent}: ${target}`);
-  }
-}
-
-function removeControlledDirectory(target) {
-  assertInside(outDir, target);
-  fs.rmSync(target, { recursive: true, force: true });
-}
-
 function walkFiles(root) {
   const files = [];
   const entries = fs.readdirSync(root, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name));
@@ -70,20 +46,6 @@ function walkFiles(root) {
   return files;
 }
 
-function copyDirectory(source, target) {
-  fs.mkdirSync(target, { recursive: true });
-  const entries = fs.readdirSync(source, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name));
-  for (const entry of entries) {
-    const sourcePath = path.join(source, entry.name);
-    const targetPath = path.join(target, entry.name);
-    if (entry.isDirectory()) {
-      copyDirectory(sourcePath, targetPath);
-    } else if (entry.isFile()) {
-      fs.copyFileSync(sourcePath, targetPath);
-    }
-  }
-}
-
 function u16(value) {
   const buffer = Buffer.alloc(2);
   buffer.writeUInt16LE(value);
@@ -96,7 +58,7 @@ function u32(value) {
   return buffer;
 }
 
-function createZipFromDirectory(sourceRoot, outputPath) {
+export function createZipFromDirectory(sourceRoot, outputPath) {
   const chunks = [];
   const central = [];
   let offset = 0;
@@ -158,31 +120,4 @@ function createZipFromDirectory(sourceRoot, outputPath) {
     u16(0)
   ]);
   fs.writeFileSync(outputPath, Buffer.concat([...chunks, ...central, eocd]));
-}
-
-function main() {
-  fs.mkdirSync(outDir, { recursive: true });
-  removeControlledDirectory(stageDir);
-  assertInside(outDir, zipPath);
-  fs.rmSync(zipPath, { force: true });
-  validateWorkBuddyConnector();
-  copyDirectory(connectorRoot, stageRoot);
-  createZipFromDirectory(stageRoot, zipPath);
-  const size = fs.statSync(zipPath).size;
-  if (size > maxZipBytes) {
-    throw new Error(`WorkBuddy zip exceeds 20MB: ${size}`);
-  }
-  validateWorkBuddyConnector();
-  removeControlledDirectory(stageDir);
-  console.log(JSON.stringify({
-    artifact: path.relative(repoRoot, zipPath).split(path.sep).join("/"),
-    bytes: size
-  }, null, 2));
-}
-
-try {
-  main();
-} catch (error) {
-  console.error(error.message);
-  process.exitCode = 1;
 }

@@ -12,15 +12,16 @@ Use this reference when links, versions, endpoint claims, or publishing status m
 
 - Connector docs: `https://open.workbuddy.cn/docs/connector`
 
-## Current WorkBuddy Draft
+## WorkBuddy Package
 
-- Connector package version: `0.1.0`
-- Source: `patchxnote-agent`
+- Connector package version: `{{PACKAGE_VERSION}}`
+- Source: `{{CONNECTOR_SOURCE}}`
 - Transport: `streamableHttp`
-- Test MCP URL: `https://ws-lab.patch-x.cn/patchnote-test-api/mcp`
+- Environment: `{{ENVIRONMENT}}`
+- MCP URL: `{{MCP_URL}}`
 - Package source directory: `packages/workbuddy/patchxnote-agent/`
 
-The test MCP URL is for first upload and review. Do not describe it as production marketplace acceptance.
+The selected endpoint identifies this package's environment. Package generation does not establish marketplace acceptance.
 
 ## Status Rules
 

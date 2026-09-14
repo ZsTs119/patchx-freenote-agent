@@ -1,0 +1,14 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "patchxnote-agent",
+  "version": "0.1.0",
+  "description": "连接 PatchXNote，查询录音总结、记忆、额度和 AI 整理结果，生成 Markdown 草稿，并按用户明确请求执行现有工作流。",
+  "author": {
+    "name": "PatchXNote",
+    "url": "https://github.com/ZsTs119"
+  },
+  "homepage": "https://freenote.patch-x.cn/mcp/setup/",
+  "repository": "https://github.com/ZsTs119/patchxnote-agent",
+  "license": "UNLICENSED",
+  "keywords": ["patchxnote", "mcp", "coze", "notes", "recordings", "memory"]
+}

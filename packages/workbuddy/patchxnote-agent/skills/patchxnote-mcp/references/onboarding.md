@@ -14,10 +14,10 @@ Do not switch this connector into CLI + Skill behavior unless a future package r
 
 ## Remote MCP Endpoint
 
-The first review package uses the PatchXNote test remote MCP endpoint:
+This package uses the PatchXNote {{ENVIRONMENT}} remote MCP endpoint:
 
 ```text
-https://ws-lab.patch-x.cn/patchnote-test-api/mcp
+{{MCP_URL}}
 ```
 
 This is a platform connector endpoint, not a local stdio command. Do not ask the user to run `npx` while using this WorkBuddy connector.
