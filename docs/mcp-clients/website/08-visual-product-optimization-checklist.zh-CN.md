@@ -4,6 +4,8 @@
 
 本文基于已认可参考图与当前 GoServer `web/mcp/` HTML 的 Chrome 实测对比整理。目标不是重新发散官网方向，而是把首页、客户端选择、详情安装、手机号登录、授权成功这条 V1 闭环调到可交付状态。
 
+> 2026-09-11 当前地址：生产服务 `https://freenote.patch-x.cn/`，接入页面 `https://freenote.patch-x.cn/mcp/setup/`，下载页 `https://freenote.patch-x.cn/download/`。下方 2026-08-29 执行记录保留当时测试环境事实；当前验收项使用生产入口。
+
 ## 2026-08-29 执行记录
 
 - 已实现 GoServer `web/mcp/` 首屏、客户端选择、统一详情页、手机号登录页、授权成功/失败页的 P0 闭环优化。
@@ -37,9 +39,9 @@
 
 ## P0. 产品闭环与跳转
 
-- [ ] 先确认正式入口到底是 `/mcp/` 还是 `/mcp/setup/`；允许测试期兼容，但页面内部链接必须只认一个 canonical base。
+- [ ] 用户接入页面统一为 `/mcp/setup/`；`/mcp` 是协议端点，页面内部导航和接口请求分别使用对应入口。
 - [ ] 所有内部链接使用可在 GoServer 子路径下工作的相对/基准路径，不能硬编码 `localhost`、临时端口或错误前缀。
-- [ ] 顶部 `Download App` 跳转到 `https://ws-lab.patch-x.cn/patchnote-test-api/download/`，页脚同名入口也保持一致。
+- [ ] 顶部 `Download App` 跳转到 `https://freenote.patch-x.cn/download/`，页脚同名入口也保持一致。
 - [ ] 顶部 `Get started` 跳转到客户端选择区 `#clients`，不默认进入 Cursor 详情页。
 - [ ] 首页主 CTA `连接我的 AI 工具` 跳转到 `#clients`，让用户先选择编辑器、云平台或本地 MCP。
 - [ ] 首页次 CTA `查看支持的编辑器` 可保留为 `#clients`，但文案要和主 CTA 形成层级，不重复抢焦点。

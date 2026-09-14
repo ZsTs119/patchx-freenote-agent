@@ -71,7 +71,7 @@ func NewRootCommandWithDeps(deps Deps) *cobra.Command {
 	flags.String("config", "", "Path to a non-secret config file")
 	flags.String("profile", "default", "Config profile name")
 	flags.StringP("output", "o", "plain", "Output format: plain or json")
-	flags.String("server-base-url", "", "PatchXNote API base URL; defaults to the PatchXNote test API")
+	flags.String("server-base-url", "", "PatchXNote API base URL; defaults to the PatchXNote production API")
 
 	mustBind(state.viper, "config", flags.Lookup("config"))
 	mustBind(state.viper, "profile", flags.Lookup("profile"))

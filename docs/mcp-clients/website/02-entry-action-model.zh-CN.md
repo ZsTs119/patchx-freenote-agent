@@ -188,17 +188,13 @@ npx -y patchxnote-agent@latest setup --client <client-id>
  -> 验证 initialize、tools/list 和一个安全只读 tools/call
 ```
 
-测试服 remote MCP URL：
+生产 remote MCP URL：
 
 ```text
-https://ws-lab.patch-x.cn/patchnote-test-api/mcp
+https://freenote.patch-x.cn/mcp
 ```
 
-正式域名候选：
-
-```text
-https://mcp.patchxnote.com/mcp
-```
+生产 API 基地址为 `https://freenote.patch-x.cn/`；用户接入页面为 `https://freenote.patch-x.cn/mcp/setup/`。此前独立 MCP 域名设想不再作为当前接入指引。
 
 云平台关键边界：
 

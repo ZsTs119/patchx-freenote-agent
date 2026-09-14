@@ -1,5 +1,7 @@
 # Remote MCP Platform Gateway Design
 
+> Current production entry (2026-09-11): API `https://freenote.patch-x.cn/`, Remote MCP `https://freenote.patch-x.cn/mcp`, setup page `https://freenote.patch-x.cn/mcp/setup/`. Test URLs and earlier domain proposals below are historical or path-prefix compatibility cases, not current production defaults. Current release evidence: `docs/evidence/2026-09-11-release-0.2.12.zh-CN.md`.
+
 **Status:** background design. The implementation checklist is now superseded by `docs/plans/2026-08-27-remote-mcp-goserver-parity-checklist.md`, which changes the V1 target from a reduced read-only subset to 19-tool functional parity with the local MCP server.
 
 **V1 decision:** build the first remote MCP gateway as a GoServer-integrated route, fronted by `https://mcp.patchxnote.com/mcp`. This keeps account auth, quotas, rate limits, audit IDs, and existing Agent API authorization in one service boundary. A separate gateway service can come later if traffic or deployment isolation requires it.

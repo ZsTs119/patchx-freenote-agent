@@ -20,6 +20,9 @@ jobs:
   smoke:
     runs-on: macos-14
     timeout-minutes: 10
+    env:
+      GOMAXPROCS: "1"
+      GOFLAGS: "-p=1"
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -36,7 +39,7 @@ jobs:
           package-manager-cache: false
 
       - name: Native keychain integration smoke
-        run: go test ./internal/keychain -run TestNativeStoreIntegration -count=1
+        run: go test -p 1 -parallel 1 ./internal/keychain -run TestNativeStoreIntegration -count=1
         env:
           PATCHXNOTE_KEYCHAIN_INTEGRATION: "1"
 

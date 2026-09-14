@@ -6,7 +6,9 @@
 
 - [ ] `git status --short --branch` 只包含本次变更或已确认的用户变更。
 - [ ] `npm view patchxnote-agent version dist-tags.latest repository.url --registry https://registry.npmjs.org` 与计划版本一致。
-- [ ] README、中文 README、npm README 的 setup 一句话一致。
+- [ ] README、中文 README、npm README、Skill onboarding 和 starter-prompts 的同语言 setup 一句话一致。
+- [ ] 生产服务根地址、`/mcp` 协议端点、`/mcp/setup/` 页面和 `/download/` 下载入口按用途对应；当前对外文案不再使用测试地址或未启用域名。
+- [ ] npm homepage 与插件 homepage/websiteURL 指向实际接入页面；repository 与第三方官方文档链接保持各自用途。
 - [ ] `docs/mcp-clients/clients.json` 的 P0/P0.5 状态已经复核。
 - [ ] OpenAI、Claude、Agent Skills、MCP Registry、Smithery 官方文档在本次发布窗口内复核过。
 

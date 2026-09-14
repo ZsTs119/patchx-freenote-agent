@@ -21,7 +21,7 @@ npx -y patchxnote-agent@latest skill install
 Pin a published release for troubleshooting or rollback:
 
 ```sh
-npx -y patchxnote-agent@0.2.11 skill install
+npx -y patchxnote-agent@0.2.13 skill install
 ```
 
 Install into an agent-specific local skill directory only after that client path has been verified:

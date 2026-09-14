@@ -22,7 +22,7 @@ type ServerConfig struct {
 	BaseURL string `mapstructure:"base_url" json:"base_url"`
 }
 
-const DefaultServerBaseURL = "https://ws-lab.patch-x.cn/patchnote-test-api"
+const DefaultServerBaseURL = "https://freenote.patch-x.cn"
 
 type AuthConfig struct {
 	InsecureFileKeychain bool `mapstructure:"insecure_file_keychain" json:"insecure_file_keychain"`

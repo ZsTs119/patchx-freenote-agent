@@ -20,17 +20,22 @@
 - npm 发布 workflow：`.github/workflows/publish-npm.yml`
 - GitHub Release workflow：`.github/workflows/release.yml`
 - macOS 安装冒烟 workflow：`.github/workflows/macos-install-smoke.yml`
-- 当前公测服务端：PatchXNote 公测 API，具体默认值以 `internal/config/config.go` 为准
-- 当前已发布版本：`0.2.11`
-- 当前 `0.2.11` 能力：继承 `0.2.10` 的本地 MCP、浏览器 OAuth、客户端 setup、PatchXNote MCP Skill、marketplace 草稿包和 MCP Registry 元数据，并新增 npm-bundled skill 副本与 `patchxnote-agent skill install`。
-- 当前 `0.2.11` 发布证据：见 `docs/evidence/2026-09-04-release-0.2.11.zh-CN.md`。
-- 当前 `0.2.11` 本地候选验收事实：见 `docs/marketplace/evidence-log.md` 和发布后证据文档。它只代表本地包、stdio MCP、npm skill install 和仓库侧分发资料验收，不代表单个编辑器 UI、平台型客户端或公开 marketplace 已验收。
+- 默认服务端：生产 API `https://freenote.patch-x.cn`，具体默认值以 `internal/config/config.go` 为准
+- 当前已发布版本：`0.2.13`。
+- 当前能力：继承 `0.2.12`，统一中英文生产接入文案、Skill/marketplace 副本、服务链接和主页元数据。
+- 当前发布证据：`docs/evidence/2026-09-11-release-0.2.13.zh-CN.md`。
+- 当前验证事实：实际 npm README/Skill 与源码一致，Windows 发布包生产 stdio 查询、Windows/macOS 安装、Linux 制品校验通过；复用已完成的生产 OAuth 凭据，各编辑器/云平台 UI 和公开 marketplace 状态仍单独跟踪。
+- 上一版 `0.2.12` 发布证据：`docs/evidence/2026-09-11-release-0.2.12.zh-CN.md`。
 
 历史兼容事实：
 
 - 旧 npm 包 `patchnote-agent` 已被新包名替代。
 - 旧二进制名 `patchnote` 已被 `patchxnote` 替代。
 - `PATCHNOTE_` 环境变量只允许作为兼容 fallback 存在，不应再出现在公开文档的新命令中。
+
+## 0.2.13 地址文案发布（2026-09-11）
+
+Agent 仓库的中英文一句话、Skill/marketplace 副本、生产入口资料与主页元数据已按用户授权提交并发布为 `0.2.13`。npm、server.json 和当前版本说明已同步；运行逻辑保持 `0.2.12`。状态与验证见 `docs/evidence/2026-09-11-release-0.2.13.zh-CN.md`。GoServer 仓库、服务器部署及飞书指南不在本次范围内。
 
 ## 文档事实源
 
@@ -198,7 +203,7 @@ MCP 浏览器 OAuth 变更还要确认：
 
 ```powershell
 $profile = "mcp-oauth-windows-acceptance"
-$baseUrl = "https://ws-lab.patch-x.cn/patchnote-test-api"
+$baseUrl = "https://freenote.patch-x.cn"
 patchxnote mcp logout --local-only --profile $profile --server-base-url $baseUrl
 patchxnote mcp login --profile $profile --server-base-url $baseUrl
 patchxnote mcp status --profile $profile --server-base-url $baseUrl --output json --verify
@@ -403,8 +408,8 @@ Windows registry 包真实 MCP 验收：
 $tmp = Join-Path $env:TEMP ("patchxnote-agent-registry-" + [guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Path $tmp | Out-Null
 Push-Location $tmp
-npx -y --registry https://registry.npmjs.org patchxnote-agent@X.Y.Z mcp login --profile mcp-oauth-registry-acceptance --server-base-url https://ws-lab.patch-x.cn/patchnote-test-api
-npx -y --registry https://registry.npmjs.org patchxnote-agent@X.Y.Z mcp status --profile mcp-oauth-registry-acceptance --server-base-url https://ws-lab.patch-x.cn/patchnote-test-api --output json --verify
+npx -y --registry https://registry.npmjs.org patchxnote-agent@X.Y.Z mcp login --profile mcp-oauth-registry-acceptance --server-base-url https://freenote.patch-x.cn
+npx -y --registry https://registry.npmjs.org patchxnote-agent@X.Y.Z mcp status --profile mcp-oauth-registry-acceptance --server-base-url https://freenote.patch-x.cn --output json --verify
 npx -y --registry https://registry.npmjs.org patchxnote-agent@X.Y.Z mcp config
 Pop-Location
 ```

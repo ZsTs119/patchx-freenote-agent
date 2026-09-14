@@ -42,3 +42,10 @@ setup 后验证：
 - `patchxnote_list_memories`，参数 `{"platform":"mobile","limit":5}`
 
 涉及当前工具数量或名称时，以实时 MCP tool discovery 为准。
+
+## 生产入口
+
+- 服务/API：`https://freenote.patch-x.cn/`
+- 接入页面：`https://freenote.patch-x.cn/mcp/setup/`
+- Remote MCP：`https://freenote.patch-x.cn/mcp`
+- 下载 App：`https://freenote.patch-x.cn/download/`

@@ -43,7 +43,7 @@ Helpful report details:
 
 ## Beta Security Notes
 
-The beta release defaults to the PatchXNote test API. Credential material is stored in the OS-native keychain when available:
+The beta release defaults to the PatchXNote production API at `https://freenote.patch-x.cn`. Credential material is stored in the OS-native keychain when available:
 
 - macOS Keychain
 - Windows Credential Manager
