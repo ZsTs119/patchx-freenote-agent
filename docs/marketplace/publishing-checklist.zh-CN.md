@@ -44,6 +44,8 @@
 
 配置入口：`packages/distribution/channels.json`；完整生成命令和材料取用说明见 `docs/release-and-maintenance-runbook.zh-CN.md` 的“统一渠道上架包生成”。
 
+扣子编程 MCP OAuth 的填写、回调补录、授权和上架步骤另见[专用指南](coze-programming-mcp.zh-CN.md)；该流程不使用 `coze` ZIP。按对应计划仅验证新增接入模块，平台验收单独记录。
+
 ## 3. MCP Registry And Directories
 
 - [ ] `server.json` 与 `packages/npm/package.json#mcpName` 一致。

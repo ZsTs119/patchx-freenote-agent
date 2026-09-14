@@ -2,7 +2,7 @@
 
 **日期：** 2026-09-14
 
-**状态：** 已完成功能优先的计划自审与收敛，待实施；本次仅优化文档。
+**状态：** 主体实现、限定测试及实际测试客户端准备完成；等待测试部署、真实回调补录和扣子平台联调，完整平台闭环尚未完成。
 
 **目标：** 服务端准备好 OAuth 后，维护者能填写扣子新建 MCP 插件，取得插件 ID、补录回调，再完成用户授权和真实工具查询。测试通过后切生产，最后发布/上架。
 
@@ -10,7 +10,7 @@
 
 **路径约定：** 本文位于 Agent 仓库。两个部分的文件路径分别以 `patchnote-agent`、`patchxNoteGoServer` 根目录为准。
 
-**执行约定：** 主代理串行完成工作，按实际授权进行 Git、部署和平台操作。本次只修改计划，不实施代码或创建凭据。
+**执行约定：** 主代理串行完成工作，按实际授权进行 Git、部署和平台操作。用户已授权按本计划实施，后续明确客户端密钥可由服务端维护命令生成，不要求维护者预先准备。
 
 ## 1. 自审后的调整
 
@@ -63,9 +63,9 @@ OAuth 文档用“调用扣子 API”举例，我们的服务提供方应替换�
 
 Agent 只补维护资料，不改运行时或渠道生成器。将来确有多平台重复生成需求，再把资料纳入统一入口。
 
-- [ ] 新增 `docs/marketplace/coze-programming-mcp.zh-CN.md`，明确与现有 Coze ZIP 的区别、填写字段和操作顺序。
-- [ ] 在现有维护 runbook 和上架 checklist 中增加该指南入口，不改原有安装与打包命令。
-- [ ] 将 GoServer 交付的实际 client_id、scope 和环境地址与指南对照，确保维护者无需猜测字段来源。
+- [x] 新增 `docs/marketplace/coze-programming-mcp.zh-CN.md`，明确与现有 Coze ZIP 的区别、填写字段和操作顺序。
+- [x] 在现有维护 runbook 和上架 checklist 中增加该指南入口，不改原有安装与打包命令。
+- [x] 将 GoServer 交付的实际 client_id、scope 和环境地址与指南对照，确保维护者无需猜测字段来源。
 
 ### A2. 填表清单
 
@@ -83,9 +83,9 @@ Agent 只补维护资料，不改运行时或渠道生成器。将来确有多�
 
 测试环境使用既有 `https://ws-lab.patch-x.cn/patchnote-test-api` 基地址及对应端点。指南同时列出两套地址，但不保存真实密钥或 token。
 
-- [ ] 说明 client_id 和插件 ID 的区别，client_url 与 authorization_url 的不同用途，以及截图中的 JSON 默认值需要改为表单编码。
-- [ ] 说明从插件详情取得固定回调地址，补录后再授权；提醒测试与生产使用各自客户端和配置。
-- [ ] 说明“创建 → 授权 → 工具试运行 → 发布 → 上架”的取用步骤。
+- [x] 说明 client_id 和插件 ID 的区别，client_url 与 authorization_url 的不同用途，以及截图中的 JSON 默认值需要改为表单编码。
+- [x] 说明从插件详情取得固定回调地址，补录后再授权；提醒测试与生产使用各自客户端和配置。
+- [x] 说明“创建 → 授权 → 工具试运行 → 发布 → 上架”的取用步骤。
 
 ### A3. 文件与验证
 
@@ -108,37 +108,38 @@ Agent 只补维护资料，不改运行时或渠道生成器。将来确有多�
 
 | 操作 | 输入 | 结果 |
 | --- | --- | --- |
-| 准备客户端 | 环境、客户端身份、现有权限范围和维护者提供的客户端密钥。 | 登记 confidential 客户端，输出不含密钥的字段清单。 |
+| 准备客户端 | 环境、客户端身份、现有权限范围和本机私密交接文件路径。 | 首次自动生成客户端密钥并保存到私密交接文件，登记 confidential 客户端，普通输出提供不含密钥的字段清单。 |
 | 补录并启用 | 原 client_id、实际固定回调地址。 | 更新并启用同一个客户端，client_id、密钥及已确认 scope 不变。 |
 
-密钥由维护者通过已有私密配置或无回显输入传入，服务端复用现有哈希存储；同一密钥由维护者直接回填扣子。首期不另做发密钥页面或密钥分发服务。
+按用户执行中确认，密钥由服务端维护命令自动生成，数据库复用现有哈希存储；原值只写入本机权限受限的交接文件，由维护者直接复制到扣子后台，不进入聊天、普通输出或 Git。重复操作从原交接文件复用同一密钥；已登记客户端丢失交接文件时报告需要找回原密钥，不自动轮换。首期不另做发密钥页面或密钥分发服务。
 
-- [ ] 核对现有 `client_type`、`source_client`、`status` 与回调字段，复用它们识别扣子和表示待配置状态；无需新增“待审核”等状态。
-- [ ] 实现准备客户端和补录回调；初始可复用 disabled，按实际约束支持回调待填，避免填写假地址。
-- [ ] 提供实际 client_id、scope、MCP/授权/token URL 清单；重复操作不重复创建或自动轮换密钥。
-- [ ] 补录使用扣子给出的固定回调地址，例如 `https://www.coze.cn/api/plugin_oauth/<插件ID>/authorization_code`，保留两阶段交接结果。
+- [x] 核对现有 `client_type`、`source_client`、`status` 与回调字段，复用它们识别扣子和表示待配置状态；无需新增“待审核”等状态。
+- [x] 实现准备客户端和补录回调；初始可复用 disabled，按实际约束支持回调待填，避免填写假地址。
+- [x] 提供实际 client_id、scope、MCP/授权/token URL 清单；重复操作不重复创建或自动轮换密钥。
+- [x] 补录使用扣子给出的固定回调地址，例如 `https://www.coze.cn/api/plugin_oauth/<插件ID>/authorization_code`，保留两阶段交接结果。
 
 ### G2. standard OAuth 的最小兼容
 
-- [ ] 复用 `/v1/agent/oauth/authorize`、`token`、既有浏览器登录与 `/mcp`，保留现有用户登录过程。
-- [ ] 让已登记的扣子 confidential 客户端能够走文档展示的授权码加 client_secret 流程，包括省略 PKCE 的请求。兼容判断首先使用既有客户端类型/来源，只有确实不够表达才增加一个字段。
-- [ ] 现有 PKCE 客户端保持原行为；新客户端如携带 PKCE，复用原 S256/verifier 校验。不要抽象出规则引擎或一套可配置的鉴权平台。
-- [ ] 将所需变化贯穿 HTTP、service、repository；如需存储无 PKCE 授权码，再新增最小 migration，不修改历史 migration。
-- [ ] 优先通过扣子表单编码配置对齐现有 token 接口。实际请求字段不一致时再做对应兼容，不提前增加 JSON、Basic 或其他未需要的认证模式。
-- [ ] 沿用密钥、客户端/回调/用户绑定及授权码一次性使用，返回现有 token 字段；不复制账号查询或 MCP 工具实现。
-- [ ] 首期复用已有刷新或重新授权能力；扣子是否自动刷新作为联调记录，不新建续期服务、不要求等待真实 token 长时间过期才算开发完成。
+- [x] 复用 `/v1/agent/oauth/authorize`、`token`、既有浏览器登录与 `/mcp`，保留现有用户登录过程。
+- [x] 让已登记的扣子 confidential 客户端能够走文档展示的授权码加 client_secret 流程，包括省略 PKCE 的请求。兼容判断首先使用既有客户端类型/来源，只有确实不够表达才增加一个字段。
+- [x] 现有 PKCE 客户端保持原行为；新客户端如携带 PKCE，复用原 S256/verifier 校验。不要抽象出规则引擎或一套可配置的鉴权平台。
+- [x] 将所需变化贯穿 HTTP、service、repository；如需存储无 PKCE 授权码，再新增最小 migration，不修改历史 migration。
+- [x] 优先通过扣子表单编码配置对齐现有 token 接口。实际请求字段不一致时再做对应兼容，不提前增加 JSON、Basic 或其他未需要的认证模式。
+- [x] 沿用密钥、客户端/回调/用户绑定及授权码一次性使用，返回现有 token 字段；不复制账号查询或 MCP 工具实现。
+- [x] 首期复用已有刷新或重新授权能力；扣子是否自动刷新作为联调记录，不新建续期服务、不要求等待真实 token 长时间过期才算开发完成。
 
 ### G3. 预计改动位置
 
 | 位置 | 按需改动 |
 | --- | --- |
 | `internal/agentoauth/service.go`、`http.go` | 新客户端的授权/换码兼容。 |
-| `internal/agentoauth/repository.go`、`domain.go` | 两阶段登记与必要授权码表示。 |
+| `internal/agentoauth/repository.go`、`domain.go`、`client_management.go` | 两阶段登记与必要授权码表示。 |
 | `internal/agentoauth/authorize_page.go` | 只有页面的 PKCE 参数处理确实受影响时修改。 |
 | `migrations/<新编号>_coze_agent_oauth_compat.{up,down}.sql` | 只新增本功能实际需要的约束/存储变化。 |
 | `cmd/agentoauthclient/` | 无合适维护入口时才新增。 |
 | 现有 `http_test.go`、`service_test.go`、`repository_integration_test.go` | 补充 `TestCoze...` 用例，不新增独立测试模块或脚本。 |
 | 现有 Agent 接入说明与相关契约 | 只同步此次实际变更，不扩大成全仓文档重整。 |
+| `scripts/release/check-m3-rollback-compat.sh` | 执行中发现的必要接点：识别新增 migration 000069，避免误入历史硬件检查；仅用既有夹具做本增量定向验证。 |
 
 默认不修改 `internal/remotemcp`、App/PC、硬件、额度、模型执行和 Agent 运行时。公开契约若有实际变化，再同步对应 OpenAPI/Apifox/smoke 条目。
 
@@ -158,6 +159,8 @@ Agent 只补维护资料，不改运行时或渠道生成器。将来确有多�
 ```sh
 GOMAXPROCS=1 go test -p 1 -parallel 1 ./internal/agentoauth -run '^TestCoze'
 ```
+
+实际测试时 `PATCHNOTE_SMOKE_CONFIG` 必须是绝对路径，因为 Go 用例在 package 目录内运行。
 
 有数据库改动时，将对应新增用例命名为 `TestCozeRepository...`，复用现有 `PATCHNOTE_SMOKE_CONFIG` 和隔离数据库 helper，仅执行这些数据库用例：
 
@@ -182,11 +185,42 @@ GOMAXPROCS=1 go test -p 1 -parallel 1 -tags=integration ./internal/agentoauth -r
 
 ## 4. 完成条件
 
-- [ ] **可填写表单：** 主体实现、客户端准备和新增逻辑验证完成，维护者已能取得全部字段。
-- [ ] **回调可补录：** 创建扣子插件后，用配置操作登记真实回调，无需再次改代码或重新生成密钥。
+- [x] **可填写表单：** 主体实现、客户端准备和新增逻辑验证完成，维护者已能取得全部字段。
+- [x] **回调可补录：** 创建扣子插件后，用配置操作登记真实回调，无需再次改代码或重新生成密钥。
 - [ ] **功能已闭环：** 扣子授权、换 token、MCP 发现与账号/记录查询通过。
-- [ ] **发布状态明确：** 测试/生产接入及发布/上架状态按实际结果说明，不相互代替。
+- [x] **发布状态明确：** 测试/生产接入及发布/上架状态按实际结果说明，不相互代替。
 
 如果尚无插件 ID，可记录“主体完成，等待回调补录和平台联调”，保留已完成工作。准备实现时先检查本计划涉及的文件，不因缺少插件 ID 扩大前置开发范围。
 
-**本次文档交付：** 仅自审并优化这份计划，没有修改实现、创建客户端或凭据、运行 OAuth 测试、提交、部署或上架。
+## 5. 实施与验证记录（2026-09-14）
+
+本轮基于 Agent `1f5f6a1` 与 GoServer `c7332b6` 实施。主代理串行完成；原有 Agent 未跟踪文件保留。用户在实施中确认密钥由服务端生成，已同步替换原计划中的“维护者预先提供密钥”。
+
+### 已完成主体
+
+- Agent 新增 `docs/marketplace/coze-programming-mcp.zh-CN.md` 并在维护 runbook、上架 checklist 增加入口；没有修改 Agent Go/Node 运行时、渠道生成器或重新打包。
+- GoServer 新增 `cmd/agentoauthclient prepare|bind` 和同一 OAuth 模块内的两阶段维护方法。首次生成随机 client_secret 到指定 `0600` 私密文件，数据库只保存哈希；重复准备复用原凭据，补录仅更新回调和 active 状态。
+- 实际测试客户端已在 `.config.test-deploy.yaml` 对应数据库创建：`client_id=patchxfreenote-coze-test`、`status=disabled`、回调为空。真实 prepare 重复执行返回 `created=false`，没有轮换密钥或覆盖已配置内容。
+- 私密交接文件为 GoServer `volumes/patchx-note-server/.secrets/coze-programming-test.json`，已核对权限 `600` 且被 Git 忽略。资料表中的端点与实际命令输出一致，scope 为当前 10 项既有 Agent 权限；文档与输出不包含密钥原值。
+- 仅预配的 Coze confidential 客户端可省略 PKCE；显式 PKCE 继续按 S256 校验。既有浏览器页只传递查询参数，无需改动；HTTP、service 与 repository 已贯通。
+- 新增 migration `000069_coze_agent_oauth_compat` 表示无 PKCE 授权码，未修改历史 migration。空回调数组已由原字段/约束容纳，初始使用既有 disabled，无新状态或策略字段。
+- 回退 migration 只移除旧版本无法使用的无 PKCE 授权码，保留客户端、连接会话、token 与 S256 授权码；回退后 Coze 无 PKCE 新授权需要恢复兼容版本。
+- 同步当前 OpenAPI/Apifox 的协议说明与 shared 指南，operation 数仍为 246；没有新增公开注册/API 工具或扩大 WorkBuddy DCR。
+
+### 限定验证结果
+
+| 范围 | 实际验证 | 结果 |
+| --- | --- | --- |
+| OAuth HTTP/service | `./internal/agentoauth -run TestCoze`，3 个顶层用例；无 PKCE/带 PKCE、错误密钥与回调、一次性用码、MCP principal 绑定、旧客户端仍需 PKCE。 | PASS；有效 RED 为浏览器授权 400 和无 PKCE invalid request，修复后 GREEN。 |
+| 维护命令 | `./cmd/agentoauthclient -run TestCoze`，2 个顶层用例；私密交接文件、字段清单、重复复用、启用、数据库错误退出码、丢失原文件不自动换密钥。 | PASS。 |
+| 实际隔离数据库 | `-tags=integration ./internal/agentoauth -run TestCozeRepository`，1 个顶层用例；两阶段登记、无/有 PKCE 授权码读写、换 token、绑定当前账号、刷新、回滚/重新应用迁移。 | PASS，未 skip；使用既有数据库 helper，结束调用既有清理流程。 |
+| 必要发布接点 | 复用现有回滚夹具，在内存中改为仅测 000069；覆盖新迁移、同 revision 和未知迁移。 | 3 项 PASS；历史 Go 命令为 stub，没有执行硬件/其他业务测试；不代表真实部署通过。 |
+| 契约/文档/迁移清单 | `openapi-check`、`apifox-bundle`、`docs-check`、`migration-check`。 | PASS；138 个 migration 文件清单一致。 |
+
+所有 Go 命令均使用本机 Go 1.26.5、`GOMAXPROCS=1 -p 1 -parallel 1`，只选择上述 `TestCoze` 用例。首次数据库命令用了相对配置路径而失败，改为 `/home/zsts_119/patchxNoteGoServer/volumes/patchx-note-server/.config.smoke.yaml` 后通过；该路径错误不作为有效 RED 或成功证据。没有运行整包旧 OAuth、全仓、npm、Agent 运行时、App/PC、负载或攻防测试，也没有新增独立测试脚本。
+
+### 待完成的平台步骤
+
+G5 的真实部署与平台步骤保持未勾选。当前没有真实扣子插件 ID/回调，测试客户端不会用示例地址启用。尚未部署 migration 000069 或新 runtime，未创建生产客户端、发布插件或上架。
+
+用户随后已授权本批两仓改动先提交并普通推送，本轮不部署；提交结果以 Git 记录和远端分支 SHA 核验为准。后续取得部署授权后，部署到本计划测试环境，再由维护者创建扣子 MCP 插件；拿到实际回调后执行 bind，用户在浏览器完成授权，再核对当前账号与最近 5 条手机端记录。主体、自审和本地测试通过，不等同于扣子真实接入闭环通过。

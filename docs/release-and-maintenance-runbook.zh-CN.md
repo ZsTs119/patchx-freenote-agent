@@ -544,6 +544,8 @@ git diff --check
 
 ## 统一渠道上架包生成
 
+扣子编程“资源库 → MCP → OAuth standard”的维护资料与两阶段客户端准备见[扣子编程 MCP OAuth 接入](marketplace/coze-programming-mcp.zh-CN.md)。该入口直接填写远程服务/OAuth 字段，沿用下文原有 `coze` ZIP 之外的独立创建流程，不增加渠道生成参数或用户安装命令。
+
 这是维护者使用的构建入口，用户继续沿用现有安装、登录和 MCP 使用方式。配置源为 `packages/distribution/channels.json`；版本读取各渠道现有 manifest，生成命令不修改版本或执行上架。
 
 ```sh
