@@ -2,7 +2,7 @@
 
 **日期：** 2026-09-14
 
-**状态：** GoServer `e26743c` 已由用户部署，扣子授权与工具同步通过；`_meta` 解码兼容修复 `d459b63` 已提交推送，提交后的定向测试和远端 SHA 核验通过，待用户部署后重试账号与记录查询。
+**状态：** GoServer `d459b63` 已由用户部署，扣子授权、账号、记忆及结构化总结真实读取通过；原文提取的 `raw_body` 封装修复 `88c7f56` 已提交推送并完成定向验证，待用户部署后验证原文正文。生产和插件发布仍未完成。
 
 **目标：** 服务端准备好 OAuth 后，维护者能填写扣子新建 MCP 插件，取得插件 ID、补录回调，再完成用户授权和真实工具查询。测试通过后切生产，最后发布/上架。
 
@@ -175,7 +175,7 @@ GOMAXPROCS=1 go test -p 1 -parallel 1 -tags=integration ./internal/agentoauth -r
 - [x] 主体实现和上述限定用例通过后，在获授权的测试环境部署，给维护者填写资料。用户已部署 `note-test.patch-x.cn`，资料已按此新测试环境重配。
 - [x] 维护者创建扣子 MCP 插件并取得 ID/实际回调；服务端补录并启用同一客户端。实际插件 ID `7685350351754543144`，客户端 `patchxfreenote-coze-note-test`。
 - [x] 在扣子完成一次浏览器授权，核对必要请求字段和格式，确认换 token 与工具同步成功。部署 `e26743c` 后 Chrome 实际同步成功，后续请求已进入通过认证的工具调用处理。
-- [ ] 调用 `patchxnote_get_current_user` 与 `patchxnote_list_memories`（`{"platform":"mobile","limit":5}`），确认对应当前授权账号。
+- [x] 调用 `patchxnote_get_current_user` 与 `patchxnote_list_memories`（`{"platform":"mobile","limit":5}`），确认对应当前授权账号。部署 `d459b63` 后通过 Chrome 实际试运行，返回有效账号和 5 条手机端记录。
 - [ ] 说明授权失效后的现有重连方式；如扣子实际使用 refresh_token，则只核对该实际链路。
 - [ ] 测试通过后使用生产客户端/地址/实际回调完成必要接入检查，再按授权发布和上架。
 
@@ -187,7 +187,8 @@ GOMAXPROCS=1 go test -p 1 -parallel 1 -tags=integration ./internal/agentoauth -r
 
 - [x] **可填写表单：** 主体实现、客户端准备和新增逻辑验证完成，维护者已能取得全部字段。
 - [x] **回调可补录：** 创建扣子插件后，用配置操作登记真实回调，无需再次改代码或重新生成密钥。
-- [ ] **功能已闭环：** 扣子授权、换 token、MCP 发现与账号/记录查询通过。
+- [x] **基础接入已闭环：** 扣子授权、换 token、MCP 发现与账号/记录查询通过。
+- [ ] **原文读取扩展：** 用户后续要求核对原文/总结工具；总结正文已通过，原文提取修复需部署后再做真实正文验证。
 - [x] **发布状态明确：** 测试/生产接入及发布/上架状态按实际结果说明，不相互代替。
 
 如果尚无插件 ID，可记录“主体完成，等待回调补录和平台联调”，保留已完成工作。准备实现时先检查本计划涉及的文件，不因缺少插件 ID 扩大前置开发范围。
@@ -221,7 +222,7 @@ GOMAXPROCS=1 go test -p 1 -parallel 1 -tags=integration ./internal/agentoauth -r
 
 ### 待完成的平台步骤
 
-以下最初交接状态已由第 6、7 节实际联调记录更新；G5 仅将已有实际证据的步骤勾选，真实工具查询、生产和上架继续待完成。
+以下最初交接状态已由第 6–8 节实际联调记录更新；G5 仅将已有实际证据的步骤勾选，原文正文验证、生产和上架继续待完成。
 
 用户随后已授权本批两仓改动先提交并普通推送，本轮不部署；提交结果以 Git 记录和远端分支 SHA 核验为准。后续取得部署授权后，部署到本计划测试环境，再由维护者创建扣子 MCP 插件；拿到实际回调后执行 bind，用户在浏览器完成授权，再核对当前账号与最近 5 条手机端记录。主体、自审和本地测试通过，不等同于扣子真实接入闭环通过。
 
@@ -244,7 +245,7 @@ https://www.coze.cn/api/plugin_oauth/7685350351754543144/authorization_code
 - [x] `GOMAXPROCS=1 go test -p 1 -parallel 1 ./internal/remotemcp -run TestCozeMCPProtocolAndToolDiscovery -count=1 -v` PASS；仅验证本次初始化、支持版本回退和带版本 Header 的工具发现，未重跑旧业务测试。
 - [x] 将协议声明修复提交并普通推送。GoServer `e26743c8f79260beaa174ed856d0b29e952f1398` 已推送到 `codex/backend-implementation`，本地 HEAD、origin 引用和远端分支 SHA 一致；提交后的上述定向用例通过，服务端工作区干净。
 - [x] 用户将该提交部署到新测试服，然后在现有扣子插件点击“更新”重新同步工具。用户提供 `note_test_deployment=PASS`；Chrome 实际工具同步成功。
-- [ ] 工具同步成功后，试运行当前账号和最近 5 条手机端记录，确认本次真实接入完整闭环。
+- [x] 工具同步成功后，试运行当前账号和最近 5 条手机端记录，确认基础接入闭环；`d459b63` 部署后通过。原文正文扩展见第 8 节。
 
 本次协议版本修复已按用户授权提交推送，并由用户部署；实际工具调用发现的后续问题见第 7 节。主代理自审确认：协议声明与目标客户端匹配，新增测试独立断言协议版本，不复用实现常量作为预期值，未改 OAuth 或业务工具。Agent 本次仅同步指南与计划，已核对域名、客户端、真实回调和剩余验收步骤，无运行时代码改动，无需 Agent 运行时测试。没有创建重复插件、修改账号授权范围、跳过授权或发布到商店。
 
@@ -259,6 +260,28 @@ https://www.coze.cn/api/plugin_oauth/7685350351754543144/authorization_code
 - [x] `GOMAXPROCS=1 go test -p 1 -parallel 1 ./internal/remotemcp -run TestCoze -count=1 -v` PASS：2 个顶层用例，覆盖既有初始化/发现与本次 6 个调用子用例。只使用合成 fixture，不运行全仓、数据库、App/PC 或其他渠道测试。
 - [x] Chrome 实际核对当前插件中的原文、总结记录和模型结果工具：`patchxnote_list_memories`、`patchxnote_search_memories`、`patchxnote_list_model_io_traces`、`patchxnote_get_model_io_source_text`、`patchxnote_get_model_io_parsed_result`、`patchxnote_get_model_io_packaged_result` 均存在；使用方法与数据来源已补入接入指南。
 - [x] 提交并普通推送此增量。GoServer `d459b63fe44d4b509c52323b5ebfd97e6082149f` 已推送到 `codex/backend-implementation`，本地 HEAD、origin 引用及远端分支 SHA 一致；提交后的干净工作区再次执行上述 `-run TestCoze` 定向用例，全部通过。
-- [ ] 用户部署 `d459b63`，再在原插件重试当前账号和手机端记忆查询。工具列表已同步，无需重复创建插件。
+- [x] 用户部署 `d459b63`，再在原插件重试当前账号和手机端记忆查询。部署 run `20260914T123922Z-44517` 由用户提供 PASS，Chrome 两项真实调用通过；工具列表已同步，无需重复创建插件。
 
-主代理自审通过，本次 `_meta` 修复已提交推送，部署由用户执行；上述工具的目录存在性已确认，原文/总结正文仍未在扣子完成实际读取验证。原文来自服务端模型请求中的文本投影，不能据此承诺可读取所有 App 本地完整转写；保留 availability/field_status 的实际数据状态。
+主代理自审通过，本次 `_meta` 修复已提交推送并由用户部署，账号/记录调用已通过。随后原文和总结的实际验证与原文提取跟进见第 8 节。原文来自服务端模型请求中的文本投影，不能据此承诺可读取所有 App 本地完整转写；保留 availability/field_status 的实际数据状态。
+
+## 8. 真实内容读取与通用原文提取修复（2026-09-14）
+
+部署 `d459b63` 后，主代理在同一扣子插件实际点击运行并解析响应结构，不以工具列表默认的“通过”标签代替调用证据：
+
+| 工具 | 实测结果 |
+| --- | --- |
+| `patchxnote_get_current_user` | PASS，返回有效账号，status=active。 |
+| `patchxnote_list_memories` | PASS，mobile/limit=5，返回 5 条记录，包含 structured_result 和 model_io_trace。 |
+| `patchxnote_get_model_io_packaged_result` | PASS，event_summary 对应结果 available，返回 1458 字节且未截断，request_id 与所选记录匹配。 |
+| `patchxnote_list_model_io_traces` | PASS，mobile/completed/limit=5，返回 5 条已完成记录。 |
+| `patchxnote_get_model_io_source_text` | 请求 PASS，所选转写记录返回 not_recorded；原文正文验收尚未通过。 |
+
+随后只读检查本次使用的两条 9 月 10 日样本，确认原文仍存在于 `client_request_json.raw_body.payload.segments[].text`，分别有 54/55 字符的非空片段，请求未标记截断。`not_recorded` 在此处是原文提取器遗漏封装层的结果，不能推断为日期过期或数据库没有原文。没有输出或保存样本正文、账号私密字段和凭据。
+
+- [x] 在 GoServer `collectAgentSourceSegments` 的既有遍历入口中加入 `raw_body`；保留原 segments/public_segments、payload、event_revisions、events、items 格式，仍不提取 provider_body 或用户指令。
+- [x] 在既有 `internal/agentaccess/service_test.go` 加入两个 `TestAgentSourceTextRawBody...` 定向用例，合成 fixture 复现有效 RED，再验证 GREEN。覆盖旧格式、新封装、原文不重复、缺失/截断状态，及按 memory/request 读取、原文可用状态、Markdown 原文章节和总结结果保持不变。
+- [x] `GOMAXPROCS=1 go test -p 1 -parallel 1 ./internal/agentaccess -run TestAgentSourceTextRawBody -count=1 -v` PASS；提交后在干净工作区复核同一范围通过。未跑无关模块或新增独立测试脚本。
+- [x] GoServer `88c7f569d10e7abe74929e3f78df679967109054` 已普通推送到 `codex/backend-implementation`；本地 HEAD、origin 引用及远端分支 SHA 一致。
+- [ ] 用户部署 `88c7f56` 后，用本次已有记录在扣子重新运行原文工具，确认 availability=available、正文非空且记录对应。
+
+这是 Agent API、CLI、本地 MCP 和远程 MCP 共用的原文读取修复，不是 Coze 专用分支。没有修改数据存储、OAuth、工具参数、模型执行或总结生成，无需重录这两条样本或重跑模型。只有连接到更新环境的客户端会看到修正后的原文及其可用状态，生产环境不会随测试部署改变。主代理自审通过；原文在线正文验证仍待部署，插件发布与生产接入未执行。
