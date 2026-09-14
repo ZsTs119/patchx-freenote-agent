@@ -2,7 +2,7 @@
 
 **日期：** 2026-09-14
 
-**状态：** 主体实现、限定测试及实际测试客户端准备完成；等待测试部署、真实回调补录和扣子平台联调，完整平台闭环尚未完成。
+**状态：** 新测试服插件已创建、回调已补录，扣子已授权；MCP 版本声明修复与定向测试通过，GoServer 提交 `e26743c` 已推送并核验远端，待用户部署后继续工具同步和实际调用验证。
 
 **目标：** 服务端准备好 OAuth 后，维护者能填写扣子新建 MCP 插件，取得插件 ID、补录回调，再完成用户授权和真实工具查询。测试通过后切生产，最后发布/上架。
 
@@ -81,7 +81,7 @@ Agent 只补维护资料，不改运行时或渠道生成器。将来确有多�
 | authorization_content_type | `application/x-www-form-urlencoded` |
 | Header 列表 | 保留适用默认值；用户 token 由扣子携带。 |
 
-测试环境使用既有 `https://ws-lab.patch-x.cn/patchnote-test-api` 基地址及对应端点。指南同时列出两套地址，但不保存真实密钥或 token。
+本轮测试环境按用户指定使用 `https://note-test.patch-x.cn` 基地址及对应端点；早期旧测试环境的准备记录保留在第 5 节。指南列出当前测试与生产地址，但不保存真实密钥或 token。
 
 - [x] 说明 client_id 和插件 ID 的区别，client_url 与 authorization_url 的不同用途，以及截图中的 JSON 默认值需要改为表单编码。
 - [x] 说明从插件详情取得固定回调地址，补录后再授权；提醒测试与生产使用各自客户端和配置。
@@ -172,8 +172,8 @@ GOMAXPROCS=1 go test -p 1 -parallel 1 -tags=integration ./internal/agentoauth -r
 
 ### G5. 一次真实接入闭环
 
-- [ ] 主体实现和上述限定用例通过后，在获授权的测试环境部署，给维护者填写资料。
-- [ ] 维护者创建扣子 MCP 插件并取得 ID/实际回调；服务端补录并启用同一客户端。
+- [x] 主体实现和上述限定用例通过后，在获授权的测试环境部署，给维护者填写资料。用户已部署 `note-test.patch-x.cn`，资料已按此新测试环境重配。
+- [x] 维护者创建扣子 MCP 插件并取得 ID/实际回调；服务端补录并启用同一客户端。实际插件 ID `7685350351754543144`，客户端 `patchxfreenote-coze-note-test`。
 - [ ] 在扣子完成一次浏览器授权，核对必要请求字段和格式，确认换 token 与工具同步成功。
 - [ ] 调用 `patchxnote_get_current_user` 与 `patchxnote_list_memories`（`{"platform":"mobile","limit":5}`），确认对应当前授权账号。
 - [ ] 说明授权失效后的现有重连方式；如扣子实际使用 refresh_token，则只核对该实际链路。
@@ -221,6 +221,29 @@ GOMAXPROCS=1 go test -p 1 -parallel 1 -tags=integration ./internal/agentoauth -r
 
 ### 待完成的平台步骤
 
-G5 的真实部署与平台步骤保持未勾选。当前没有真实扣子插件 ID/回调，测试客户端不会用示例地址启用。尚未部署 migration 000069 或新 runtime，未创建生产客户端、发布插件或上架。
+以下最初交接状态已由第 6 节实际联调记录更新；G5 仅将已有实际证据的步骤勾选，工具同步、真实工具查询、生产和上架继续待完成。
 
 用户随后已授权本批两仓改动先提交并普通推送，本轮不部署；提交结果以 Git 记录和远端分支 SHA 核验为准。后续取得部署授权后，部署到本计划测试环境，再由维护者创建扣子 MCP 插件；拿到实际回调后执行 bind，用户在浏览器完成授权，再核对当前账号与最近 5 条手机端记录。主体、自审和本地测试通过，不等同于扣子真实接入闭环通过。
+
+## 6. 新测试域名的实际授权与 MCP 版本修复（2026-09-14）
+
+用户将本轮扣子测试目标明确改为 `https://note-test.patch-x.cn`，并告知已部署服务器。使用 `.config.note-test.yaml` 单独准备 `patchxfreenote-coze-note-test`，私密交接文件为 `coze-programming-note-test.json`；旧测试域名的客户端保留，当前指南已切换到用户指定的新测试环境。
+
+Chrome 实际创建的插件 ID 为 `7685350351754543144`。已通过既有维护命令补录并启用：
+
+```text
+https://www.coze.cn/api/plugin_oauth/7685350351754543144/authorization_code
+```
+
+实际 OAuth 请求的 client_id 与回调完全匹配，未携带 PKCE。用户在浏览器完成验证码登录后，扣子插件详情明确显示“已授权”，授权步骤通过；没有读取或输出验证码、用户 token 或密钥原值。
+
+工具同步仍报 `Prompts=unsupported protocol version: "2026-07-28"`，页面“暂无工具”。只读取新测试库中 Coze initialize 请求的协议版本统计，确认 3 次请求均为 `2025-06-18`；独立无鉴权初始化探测也确认，请求该版本时服务器却返回 `2026-07-28`。根因是 `internal/remotemcp/jsonrpc.go` 中错误的固定协议声明，与已通过的 OAuth 无关。
+
+- [x] 补充 `TestCozeMCPProtocolAndToolDiscovery`，有效 RED 为返回 `2026-07-28`。
+- [x] 仅把服务端声明改为实现支持的 `2025-06-18`；保持单一支持版本，其他请求版本返回这个支持版本，不直接回显任意客户端字符串。符合 [MCP 初始化/版本协商规范](https://modelcontextprotocol.io/specification/2025-06-18/basic/lifecycle)。
+- [x] `GOMAXPROCS=1 go test -p 1 -parallel 1 ./internal/remotemcp -run TestCozeMCPProtocolAndToolDiscovery -count=1 -v` PASS；仅验证本次初始化、支持版本回退和带版本 Header 的工具发现，未重跑旧业务测试。
+- [x] 将协议声明修复提交并普通推送。GoServer `e26743c8f79260beaa174ed856d0b29e952f1398` 已推送到 `codex/backend-implementation`，本地 HEAD、origin 引用和远端分支 SHA 一致；提交后的上述定向用例通过，服务端工作区干净。
+- [ ] 用户将该提交部署到新测试服，然后在现有扣子插件点击“更新”重新同步工具。
+- [ ] 工具同步成功后，试运行当前账号和最近 5 条手机端记录，确认本次真实接入完整闭环。
+
+本次协议修复已按用户授权提交推送；部署由用户执行，目前仍未部署或完成真实工具调用验收。主代理自审确认：协议声明与目标客户端匹配，新增测试独立断言协议版本，不复用实现常量作为预期值，未改 OAuth 或业务工具。Agent 本次仅同步指南与计划，已核对域名、客户端、真实回调和剩余验收步骤，无运行时代码改动，无需 Agent 运行时测试。没有创建重复插件、修改账号授权范围、跳过授权或发布到商店。

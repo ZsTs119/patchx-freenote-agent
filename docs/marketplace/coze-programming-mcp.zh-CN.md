@@ -2,21 +2,21 @@
 
 本指南用于“扣子编程 → 资源库 → 新建插件 → MCP → OAuth standard”。现有 `coze` ZIP 面向另一种插件包导入入口，此处直接填写服务地址和 OAuth 字段。Agent 安装命令、运行时和渠道生成器保持现状。
 
-截至 2026-09-14，主体和限定测试已完成，实际测试客户端已准备；客户端仍为 `disabled`、回调待填。在线服务器尚未部署本次兼容代码，扣子插件尚未创建/授权，生产客户端尚未准备。不要把下方可填写资料视为在线授权已经通过。
+截至 2026-09-14，用户已部署新测试域名 `https://note-test.patch-x.cn`；插件 `7685350351754543144` 已创建、实际回调已补录，客户端为 `active`，扣子页面已显示“已授权”。工具同步因服务端错误声明 MCP `2026-07-28` 而失败；改为 `2025-06-18` 的修复已通过定向测试，并以 GoServer 提交 `e26743c` 推送到 `codex/backend-implementation`，远端 SHA 已核验。维护者部署该提交后，在现有插件点击“更新”，再试运行当前用户和手机端记忆查询。当前不代表工具试运行或上架通过，生产客户端尚未准备。
 
 ## 1. 已准备的测试填写资料
 
-这些值来自 GoServer 维护命令实际执行结果，配置为 `volumes/patchx-note-server/.config.test-deploy.yaml`。
+这些值来自 GoServer 维护命令实际执行结果，配置为 `volumes/patchx-note-server/.config.note-test.yaml`。
 
 | 扣子字段 | 测试填写值 |
 | --- | --- |
 | 名称 | `PatchXFreeNote` |
 | 类型 / 授权方式 | `MCP` / `OAuth → standard` |
-| 插件 URL | `https://ws-lab.patch-x.cn/patchnote-test-api/mcp` |
-| client_id | `patchxfreenote-coze-test` |
+| 插件 URL | `https://note-test.patch-x.cn/mcp` |
+| client_id | `patchxfreenote-coze-note-test` |
 | client_secret | 从本机私密交接文件复制对应值到扣子后台，见下一节。 |
-| client_url | `https://ws-lab.patch-x.cn/patchnote-test-api/v1/agent/oauth/authorize` |
-| authorization_url | `https://ws-lab.patch-x.cn/patchnote-test-api/v1/agent/oauth/token` |
+| client_url | `https://note-test.patch-x.cn/v1/agent/oauth/authorize` |
+| authorization_url | `https://note-test.patch-x.cn/v1/agent/oauth/token` |
 | authorization_content_type | `application/x-www-form-urlencoded`，将页面默认 JSON 改为此项。 |
 | Header 列表 | 保留适用的 `User-Agent: Coze/1.0`；用户 Bearer token 由扣子在授权后携带。 |
 
@@ -33,7 +33,7 @@ agent:account.read agent:content.read:desktop agent:content.read:mobile agent:ha
 密钥是服务端维护命令自动生成的随机应用凭据，数据库只保存 SHA-256 哈希。原值保存在 GoServer 仓库下的私密文件：
 
 ```text
-volumes/patchx-note-server/.secrets/coze-programming-test.json
+volumes/patchx-note-server/.secrets/coze-programming-note-test.json
 ```
 
 文件权限为 `0600`，已被 Git 忽略，包含 `client_id` 与 `client_secret`。维护者在本机私密编辑器查看并直接填入扣子后台；不要把文件内容交给聊天、公共文档、上架 ZIP 或终端日志。它不是用户短信验证码，也不是用户 access token。
@@ -42,12 +42,12 @@ volumes/patchx-note-server/.secrets/coze-programming-test.json
 
 ```sh
 GOMAXPROCS=1 ~/.local/go1.26.5/bin/go run -p 1 ./cmd/agentoauthclient prepare \
-  --config volumes/patchx-note-server/.config.test-deploy.yaml \
-  --client-id patchxfreenote-coze-test \
-  --handoff-file volumes/patchx-note-server/.secrets/coze-programming-test.json
+  --config volumes/patchx-note-server/.config.note-test.yaml \
+  --client-id patchxfreenote-coze-note-test \
+  --handoff-file volumes/patchx-note-server/.secrets/coze-programming-note-test.json
 ```
 
-首次创建返回 `created: true`、`status: disabled`、`callback_pending: true`。本次已实际执行；重复执行返回 `created: false`，复用原 client_id、密钥、scope 及现有回调，不会把已启用客户端重新停用。
+首次创建返回 `created: true`、`status: disabled`、`callback_pending: true`；当前实例已在取得插件 ID 后补录回调并启用。重复 prepare 返回 `created: false`，复用原 client_id、密钥、scope 及现有回调，不会把已启用客户端重新停用。
 
 已登记客户端若丢失交接文件，需要找回原文件/密钥；命令不会自动生成一个无法匹配旧哈希的新密钥。`--name` 可指定展示名，`--scope` 可指定已有 Agent 权限的子集；已登记的 scope 或密钥与输入不一致时会提示失败，不静默改写。
 
@@ -61,12 +61,12 @@ GOMAXPROCS=1 ~/.local/go1.26.5/bin/go run -p 1 ./cmd/agentoauthclient prepare \
 
 ```sh
 GOMAXPROCS=1 ~/.local/go1.26.5/bin/go run -p 1 ./cmd/agentoauthclient bind \
-  --config volumes/patchx-note-server/.config.test-deploy.yaml \
-  --client-id patchxfreenote-coze-test \
-  --redirect-uri 'https://www.coze.cn/api/plugin_oauth/<实际插件ID>/authorization_code'
+  --config volumes/patchx-note-server/.config.note-test.yaml \
+  --client-id patchxfreenote-coze-note-test \
+  --redirect-uri 'https://www.coze.cn/api/plugin_oauth/7685350351754543144/authorization_code'
 ```
 
-上面的占位符必须替换为实际值，不能直接执行。成功返回 `status: active`、`callback_pending: false`；client_id、密钥、scope 保持不变，不需要再次修改或编译服务端代码。重复补录同一地址可直接复用。
+上面是当前测试插件的实际回调，已执行补录。重新创建其他插件时需要替换为对应的真实插件 ID。成功返回 `status: active`、`callback_pending: false`；client_id、密钥、scope 保持不变，不需要再次修改或编译服务端代码。重复补录同一地址可直接复用。
 
 若当前扣子页面要求先完成授权才能保存并取得 ID，记录实际页面要求后调整交接顺序；不要填入假的回调或把测试用的示例插件 ID 当成真实值。
 
