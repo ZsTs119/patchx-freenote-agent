@@ -21,11 +21,11 @@
 - GitHub Release workflow：`.github/workflows/release.yml`
 - macOS 安装冒烟 workflow：`.github/workflows/macos-install-smoke.yml`
 - 默认服务端：生产 API `https://freenote.patch-x.cn`，具体默认值以 `internal/config/config.go` 为准
-- 当前修正版：`0.2.14`；发布状态以本版证据为准。
+- 当前已发布版本：`0.2.14`；npm、GitHub Release 和官方 Registry 已可查。
 - 当前能力：继承 `0.2.13`，修正 Registry 账号大小写、版本关联与 stdio 启动元数据；运行逻辑与 Skill 许可不变。
 - 当前发布证据：`docs/evidence/2026-09-15-release-0.2.14.zh-CN.md`。
 - 0.2.13 已有验证：实际 npm README/Skill 与源码一致，Windows 发布包生产 stdio 查询、Windows/macOS 安装、Linux 制品校验通过。本次修正版按对应证据补验，既有业务结果不冒充新版验收；平台 UI 单列。
-- 上一版 `0.2.12` 发布证据：`docs/evidence/2026-09-11-release-0.2.12.zh-CN.md`。
+- 上一版 `0.2.13` 发布证据：`docs/evidence/2026-09-11-release-0.2.13.zh-CN.md`。
 
 历史兼容事实：
 
