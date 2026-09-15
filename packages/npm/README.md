@@ -6,7 +6,7 @@ This npm package is the installer and thin launcher wrapper for PatchXNote Agent
 
 PatchXNote Agent is the local AI assistant connector for PatchXNote. It lets an MCP-capable AI assistant find PatchXNote records, inspect AI-generated results, create Markdown drafts, and manually send user-approved messages to Feishu, DingTalk, or another webhook.
 
-Version `0.2.13` defaults to the production API at `https://freenote.patch-x.cn`. When upgrading from test, update or remove explicit server-address overrides in your CLI and MCP host configuration, then run `mcp login` in the same runtime and profile that launches MCP. Test credentials and records do not migrate to production.
+Version `0.2.14` defaults to the production API at `https://freenote.patch-x.cn`. When upgrading from test, update or remove explicit server-address overrides in your CLI and MCP host configuration, then run `mcp login` in the same runtime and profile that launches MCP. Test credentials and records do not migrate to production.
 
 Production service: [https://freenote.patch-x.cn/](https://freenote.patch-x.cn/) · [MCP setup](https://freenote.patch-x.cn/mcp/setup/) · [Download App](https://freenote.patch-x.cn/download/)
 

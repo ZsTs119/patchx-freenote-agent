@@ -21,10 +21,10 @@
 - GitHub Release workflow：`.github/workflows/release.yml`
 - macOS 安装冒烟 workflow：`.github/workflows/macos-install-smoke.yml`
 - 默认服务端：生产 API `https://freenote.patch-x.cn`，具体默认值以 `internal/config/config.go` 为准
-- 当前已发布版本：`0.2.13`。
-- 当前能力：继承 `0.2.12`，统一中英文生产接入文案、Skill/marketplace 副本、服务链接和主页元数据。
-- 当前发布证据：`docs/evidence/2026-09-11-release-0.2.13.zh-CN.md`。
-- 当前验证事实：实际 npm README/Skill 与源码一致，Windows 发布包生产 stdio 查询、Windows/macOS 安装、Linux 制品校验通过；复用已完成的生产 OAuth 凭据，各编辑器/云平台 UI 和公开 marketplace 状态仍单独跟踪。
+- 当前修正版：`0.2.14`；发布状态以本版证据为准。
+- 当前能力：继承 `0.2.13`，修正 Registry 账号大小写、版本关联与 stdio 启动元数据；运行逻辑与 Skill 许可不变。
+- 当前发布证据：`docs/evidence/2026-09-15-release-0.2.14.zh-CN.md`。
+- 0.2.13 已有验证：实际 npm README/Skill 与源码一致，Windows 发布包生产 stdio 查询、Windows/macOS 安装、Linux 制品校验通过。本次修正版按对应证据补验，既有业务结果不冒充新版验收；平台 UI 单列。
 - 上一版 `0.2.12` 发布证据：`docs/evidence/2026-09-11-release-0.2.12.zh-CN.md`。
 
 历史兼容事实：
@@ -32,6 +32,12 @@
 - 旧 npm 包 `patchnote-agent` 已被新包名替代。
 - 旧二进制名 `patchnote` 已被 `patchxnote` 替代。
 - `PATCHNOTE_` 环境变量只允许作为兼容 fallback 存在，不应再出现在公开文档的新命令中。
+
+## 0.2.14 Registry 修正版（2026-09-15）
+
+GitHub 个人 Registry 权限为 `io.github.ZsTs119/*`，旧发行物使用小写名称造成发布权限不匹配。本次同步修正 npm 与 server.json，并补齐描述长度和 `mcp serve` 参数。发布后回读记录见本版 evidence。
+
+纯元数据修正版先运行 `node scripts/validate-release-metadata.mjs` 和 npm pack，按前一 tag 与发行提交的模块差异选择测试。Go／安装器没有变化时不重复全仓 Go 或完整安装器测试；对应模块变化或基线不可得时保留原有测试。新版制品、Windows 实际安装、initialize/tools/list 和 Registry 回读仍逐项验证。此规则只细化发行检查，不放宽运行时变更的验证要求。
 
 ## 0.2.13 地址文案发布（2026-09-11）
 

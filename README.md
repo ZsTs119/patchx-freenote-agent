@@ -70,7 +70,7 @@ npx -y patchxnote-agent@latest setup --client <client-id>
 For troubleshooting or rollback, pin the current published skill installer:
 
 ```sh
-npx -y patchxnote-agent@0.2.13 skill install
+npx -y patchxnote-agent@0.2.14 skill install
 ```
 
 ## At A Glance
@@ -85,11 +85,11 @@ npx -y patchxnote-agent@0.2.13 skill install
 | Data access | Shows account, recorder cards, quota, records, and AI-generated results. |
 | Webhook | Locally configures named targets and manually sends to Feishu, DingTalk, or another webhook. |
 | Safety boundary | Server data is read-only; raw audio, hardware, payment, and Admin APIs are not exposed. |
-| Package status | Current public beta release `0.2.13`, defaulting to the PatchXNote production API. |
+| Package status | Current public beta release `0.2.14`, defaulting to the PatchXNote production API. |
 
 ## Features
 
-| Capability | Available in `0.2.13` | Notes |
+| Capability | Available in `0.2.14` | Notes |
 | --- | --- | --- |
 | Browser OAuth MCP login | Yes | `patchxnote mcp login` opens the PatchXNote authorization page, completes phone OTP on the GoServer page, then stores MCP credentials locally. |
 | Terminal phone OTP Agent login | Yes | `patchxnote login` keeps the terminal login path for CLI-first users and fallback environments. |
@@ -117,7 +117,7 @@ npx -y patchxnote-agent@0.2.13 skill install
 - A PatchXNote account that can receive the phone OTP login code.
 - An MCP host that supports stdio MCP servers, such as Codex, Claude Desktop, Cursor, VS Code, or another compatible desktop agent.
 
-> `0.2.13` is the current public beta release. The default server is the PatchXNote production API. Credentials are stored in the OS-native keychain by default.
+> `0.2.14` is the current public beta release. The default server is the PatchXNote production API. Credentials are stored in the OS-native keychain by default.
 
 ## Login And MCP Modes
 
@@ -187,7 +187,7 @@ npx -y patchxnote-agent@latest install --print-config
 To pin the current published public beta version for troubleshooting or rollback:
 
 ```sh
-npx -y patchxnote-agent@0.2.13 install --print-config
+npx -y patchxnote-agent@0.2.14 install --print-config
 ```
 
 The public beta build defaults to the PatchXNote production API:
@@ -289,7 +289,7 @@ MCP config never contains access tokens, refresh tokens, OTP codes, phone number
 
 ![PatchXNote Agent tools](./docs/assets/patchxnote-agent-tools.png)
 
-PatchXNote Agent `0.2.13` exposes the same **19 local MCP tools** as the current public local server. End users can think of them as three groups; exact tool names are for MCP hosts and AI assistants.
+PatchXNote Agent `0.2.14` exposes the same **19 local MCP tools** as the current public local server. End users can think of them as three groups; exact tool names are for MCP hosts and AI assistants.
 
 ### Account And Record Lookup
 
@@ -438,7 +438,7 @@ Do not paste access tokens, refresh tokens, OTP codes, raw phone numbers, full M
 
 ## Current Limitations
 
-`0.2.13` is the current public beta release.
+`0.2.14` is the current public beta release.
 
 - The default server points to the PatchXNote production API and does not imply a production SLA.
 - `mcp serve` never opens a browser during editor startup. Run `mcp login` first, or let `setup --client <id>` reuse that same OAuth flow.
@@ -480,6 +480,12 @@ patchxnote version
 ```
 
 The release binary should report the npm package version and the commit attached to the matching GitHub Release tag.
+
+## 0.2.14 Highlights
+
+- Corrects the MCP Registry namespace to preserve GitHub owner casing: `io.github.ZsTs119/patchxnote-agent`.
+- Adds the `mcp serve` launch arguments and validates release metadata before publication.
+- Keeps the existing runtime behavior and Skill license.
 
 ## 0.2.13 Highlights
 
@@ -557,7 +563,7 @@ The detailed release and documentation maintenance checklist lives in [docs/rele
 
 1. Confirm the target PatchXNote GoServer exposes the required `/v1/agent/**` routes.
 2. Confirm `packages/npm/package.json` version matches the release tag without the leading `v`.
-3. Push a clean tag, for example `v0.2.13`.
+3. Push a clean tag, for example `v0.2.14`.
 4. Wait for GitHub Release assets: `checksums.txt` plus Linux/macOS/Windows amd64 and arm64 binaries.
 5. Configure npm Trusted Publishing for this GitHub Actions workflow before npm publish:
    - owner/user: `ZsTs119`

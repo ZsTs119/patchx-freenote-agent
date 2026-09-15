@@ -9,6 +9,9 @@ on:
     paths:
       - ".github/workflows/release.yml"
       - ".goreleaser.yaml"
+      - "server.json"
+      - "packages/npm/package.json"
+      - "scripts/validate-release-metadata.mjs"
       - "cmd/**"
       - "internal/**"
       - "go.mod"
@@ -36,7 +39,18 @@ jobs:
         with:
           go-version-file: go.mod
 
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          package-manager-cache: false
+
+      - name: Validate release metadata and select affected tests
+        id: validation
+        run: node scripts/validate-release-metadata.mjs
+
       - name: Test
+        if: ${{ steps.validation.outputs.runtime_changed == 'true' }}
         run: go test -p 1 -parallel 1 ./...
 
       - name: Check GoReleaser config

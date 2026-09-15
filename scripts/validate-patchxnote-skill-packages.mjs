@@ -212,8 +212,8 @@ function validateRegistryMetadata() {
   if (!packageJson || !serverJson) {
     return;
   }
-  if (packageJson.mcpName !== "io.github.zsts119/patchxnote-agent") {
-    fail("packages/npm/package.json: mcpName must be io.github.zsts119/patchxnote-agent");
+  if (packageJson.mcpName !== "io.github.ZsTs119/patchxnote-agent") {
+    fail("packages/npm/package.json: mcpName must be io.github.ZsTs119/patchxnote-agent");
   }
   if (!Array.isArray(packageJson.files) || !packageJson.files.includes("skills")) {
     fail("packages/npm/package.json: files must include skills");

@@ -1,7 +1,7 @@
 {
   "name": "patchxnote-agent",
-  "version": "0.2.13",
-  "mcpName": "io.github.zsts119/patchxnote-agent",
+  "version": "0.2.14",
+  "mcpName": "io.github.ZsTs119/patchxnote-agent",
   "description": "Installer wrapper for the PatchXNote Agent CLI, local MCP server, and PatchXNote MCP Skill.",
   "repository": {
     "type": "git",
