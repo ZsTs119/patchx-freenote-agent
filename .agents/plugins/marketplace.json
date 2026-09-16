@@ -1,7 +1,7 @@
 {
   "name": "patchxnote-agent",
   "interface": {
-    "displayName": "PatchXNote Agent"
+    "displayName": "PatchX Freenote Agent"
   },
   "plugins": [
     {

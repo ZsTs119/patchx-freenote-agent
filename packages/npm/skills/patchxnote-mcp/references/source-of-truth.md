@@ -1,15 +1,15 @@
-# PatchXNote MCP Source Of Truth
+# PatchX Freenote MCP Source Of Truth
 
 Use this reference when links, versions, marketplace claims, or platform-specific publishing steps matter.
 
-## PatchXNote Links
+## PatchX Freenote Links
 
 - Production API base URL: `https://freenote.patch-x.cn/`
 - MCP setup page: `https://freenote.patch-x.cn/mcp/setup/`
 - Remote MCP endpoint: `https://freenote.patch-x.cn/mcp`
 - App download: `https://freenote.patch-x.cn/download/`
 
-- GitHub repository: `https://github.com/ZsTs119/patchxnote-agent`
+- GitHub repository: `https://github.com/ZsTs119/patchx-freenote-agent`
 - npm package: `https://www.npmjs.com/package/patchxnote-agent`
 - Feishu public guide: `https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd`
 

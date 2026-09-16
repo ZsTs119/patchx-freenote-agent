@@ -1,6 +1,6 @@
-# PatchXNote MCP Test Environment Onboarding
+# PatchX Freenote MCP Test Environment Onboarding
 
-This generated package targets the test API `{{API_BASE_URL}}` and Remote MCP endpoint `{{MCP_URL}}`. Keep the normal PatchXNote installation and browser authorization flow, with an explicit test server address. Installing this Skill does not change an existing client configuration or login.
+This generated package targets the test API `{{API_BASE_URL}}` and Remote MCP endpoint `{{MCP_URL}}`. Keep the normal PatchX Freenote installation and browser authorization flow, with an explicit test server address. Installing this Skill does not change an existing client configuration or login.
 
 ## Local Clients
 
@@ -24,7 +24,7 @@ If the client ID is unknown or setup returns manual steps, print the existing ge
 npx -y patchxnote-agent@latest mcp config --server-base-url {{API_BASE_URL}}
 ```
 
-Apply the printed configuration to the intended client. Preserve unrelated MCP entries; replace an existing PatchXNote entry only when requested. Check that its startup command/environment retains the test address instead of falling back to the CLI's production default.
+Apply the printed configuration to the intended client. Preserve unrelated MCP entries; replace an existing PatchX Freenote entry only when requested. Check that its startup command/environment retains the test address instead of falling back to the CLI's production default.
 
 ## Browser Login And Verification
 

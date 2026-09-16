@@ -27,9 +27,9 @@ function jsonBuffer(value) {
 }
 
 function brandText(text, branding) {
-  // Display copy only; lowercase CLI, npm, MCP and OAuth identifiers stay intact.
-  return text.replaceAll("PatchXNote Agent", branding.displayName)
-    .replaceAll("PatchXNote", branding.displayName);
+  // Source copy already uses the confirmed brand. Keep legacy name explanations
+  // and real PatchXNote Agent paths intact; normalize only the former draft spelling.
+  return text.replaceAll("PatchXFreeNote", branding.displayName);
 }
 
 function brandJSON(value, branding) {

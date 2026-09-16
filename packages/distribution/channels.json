@@ -1,7 +1,7 @@
 {
   "common": {
     "branding": {
-      "displayName": "PatchXFreeNote",
+      "displayName": "PatchX Freenote",
       "pluginName": "patchxfreenote"
     },
     "skillSource": "skills/patchxnote-mcp",

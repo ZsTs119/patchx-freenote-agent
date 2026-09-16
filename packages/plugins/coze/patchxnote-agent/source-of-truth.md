@@ -1,4 +1,4 @@
-# PatchXNote Coze Source Of Truth
+# PatchX Freenote Coze Source Of Truth
 
 Use this reference when links, package versions, connection settings, or publishing status matter.
 
@@ -16,9 +16,9 @@ Coze discovers the MCP connection from the package. Complete account authorizati
 ## Maintained Links
 
 - Production setup page: `https://freenote.patch-x.cn/mcp/setup/`
-- Repository: `https://github.com/ZsTs119/patchxnote-agent`
+- Repository: `https://github.com/ZsTs119/patchx-freenote-agent`
 - npm package for separate local clients: `https://www.npmjs.com/package/patchxnote-agent`
-- PatchXNote guide: `https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd`
+- PatchX Freenote guide: `https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd`
 - Coze plugin import: `https://docs.coze.cn/create-plugin`
 - Agent Plugins specification: `https://agent-plugins.org/specification`
 

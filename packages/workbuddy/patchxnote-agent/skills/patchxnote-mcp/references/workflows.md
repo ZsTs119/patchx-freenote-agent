@@ -1,6 +1,6 @@
-# PatchXNote WorkBuddy Workflows
+# PatchX Freenote WorkBuddy Workflows
 
-Use this reference when the user wants WorkBuddy to use PatchXNote data after connector setup.
+Use this reference when the user wants WorkBuddy to use PatchX Freenote data after connector setup.
 
 ## Account And Record Lookup
 
@@ -61,7 +61,7 @@ In WorkBuddy, do not assume access to the user's local filesystem. If the tool r
 
 ## Webhook Workflow
 
-PatchXNote webhook workflows are user-approved, manual side effects:
+PatchX Freenote webhook workflows are user-approved, manual side effects:
 
 - `patchxnote_configure_webhook_target` stores webhook URL/secret material through the approved connector flow and returns only masked metadata.
 - `patchxnote_list_webhook_targets` lists aliases and safe metadata.

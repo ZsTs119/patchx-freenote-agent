@@ -1,6 +1,6 @@
-# PatchXNote WorkBuddy Troubleshooting
+# PatchX Freenote WorkBuddy Troubleshooting
 
-Use this reference when WorkBuddy upload, auth, tool discovery, or PatchXNote tool calls fail.
+Use this reference when WorkBuddy upload, auth, tool discovery, or PatchX Freenote tool calls fail.
 
 ## Upload Or Parse Failure
 
@@ -33,10 +33,10 @@ Possible causes:
 - Authorization server metadata is unavailable.
 - Dynamic client registration is not accepted.
 - PKCE validation fails.
-- WorkBuddy callback URI is not accepted by the PatchXNote server.
+- WorkBuddy callback URI is not accepted by the PatchX Freenote server.
 - User closes the browser or authorization expires.
 
-Ask the user to reconnect PatchXNote in WorkBuddy and complete phone-code authorization in the browser. Never ask for OTP, OAuth code, authorization code, access token, refresh token, or webhook secret in chat.
+Ask the user to reconnect PatchX Freenote in WorkBuddy and complete phone-code authorization in the browser. Never ask for OTP, OAuth code, authorization code, access token, refresh token, or webhook secret in chat.
 
 ## Tools Not Listed
 
@@ -58,7 +58,7 @@ Check:
 - Is pagination needed?
 - Does the user actually have records for the chosen platform?
 
-Do not infer that no PatchXNote data exists across every platform unless both platforms were queried and accepted by the user.
+Do not infer that no PatchX Freenote data exists across every platform unless both platforms were queried and accepted by the user.
 
 ## Webhook Safety
 

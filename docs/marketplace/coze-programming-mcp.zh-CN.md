@@ -1,4 +1,4 @@
-# PatchXFreeNote：扣子编程 MCP OAuth 接入
+# PatchX Freenote：扣子编程 MCP OAuth 接入
 
 本指南用于“扣子编程 → 资源库 → 新建插件 → MCP → OAuth standard”。现有 `coze` ZIP 面向另一种插件包导入入口，此处直接填写服务地址和 OAuth 字段。Agent 安装命令、运行时和渠道生成器保持现状。
 
@@ -10,7 +10,7 @@
 
 | 扣子字段 | 测试填写值 |
 | --- | --- |
-| 名称 | `PatchXFreeNote` |
+| 名称 | `PatchX Freenote` |
 | 类型 / 授权方式 | `MCP` / `OAuth → standard` |
 | 插件 URL | `https://note-test.patch-x.cn/mcp` |
 | client_id | `patchxfreenote-coze-note-test` |

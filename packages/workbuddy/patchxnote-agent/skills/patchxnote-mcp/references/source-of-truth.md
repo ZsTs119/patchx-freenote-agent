@@ -1,10 +1,10 @@
-# PatchXNote WorkBuddy Source Of Truth
+# PatchX Freenote WorkBuddy Source Of Truth
 
 Use this reference when links, versions, endpoint claims, or publishing status matter.
 
-## PatchXNote Links
+## PatchX Freenote Links
 
-- GitHub repository: `https://github.com/ZsTs119/patchxnote-agent`
+- GitHub repository: `https://github.com/ZsTs119/patchx-freenote-agent`
 - npm package: `https://www.npmjs.com/package/patchxnote-agent`
 - Feishu public guide: `https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd`
 
@@ -28,4 +28,4 @@ The selected endpoint identifies this package's environment. Package generation 
 - npm package publication does not prove WorkBuddy marketplace acceptance.
 - Local stdio MCP smoke does not prove WorkBuddy remote MCP auth acceptance.
 - WorkBuddy zip upload does not prove browser auth, `tools/list`, or tool-call success.
-- Claim `platform_accepted` only after the actual WorkBuddy connector has uploaded, parsed, authenticated, listed tools, and completed at least one safe real PatchXNote tool call.
+- Claim `platform_accepted` only after the actual WorkBuddy connector has uploaded, parsed, authenticated, listed tools, and completed at least one safe real PatchX Freenote tool call.
