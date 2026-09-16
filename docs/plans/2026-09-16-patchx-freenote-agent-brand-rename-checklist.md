@@ -2,7 +2,7 @@
 
 **日期：** 2026-09-16
 
-**状态：** 执行中；用户已于 2026-09-16 授权按计划完成改名、Git 提交／推送、发行和渠道更新。
+**状态：** 品牌、发行、目录与相关兼容验收已完成；旧 npm 发布绑定清理待安全密钥验证。
 
 **Goal：** 将 Agent 的品牌展示统一为 **PatchX Freenote**，将 GitHub 仓库改为 `ZsTs119/patchx-freenote-agent`，完成对应发行和渠道更新，并验证现有安装命令、配置、登录态及 Skill 仍可使用。
 
@@ -115,14 +115,14 @@ npm view patchxnote-agent version mcpName repository.url --registry https://regi
 - `packages/distribution/channels.json`、`scripts/package-channel.mjs`
 - `packages/workbuddy/patchxnote-agent/`、`packages/plugins/coze/patchxnote-agent/`
 
-- [ ] 先更新 canonical Skill，再用现有同步脚本更新 npm／OpenAI／Claude 副本；检查副本一致性和引用文件完整性。
-- [ ] 保留 `.patchxnote-agent-skill.json`、`managed_by`、skill slug 和既有安装目录，使已托管 Skill 正常更新，而不是安装出第二份 Skill。
-- [ ] 只同步 workbuddy 分支现有渠道材料的品牌与仓库引用；保留其 connector source、pluginName、OAuth 和环境差异。使用针对性提交，避免把无关渠道功能带入公共发行。
-- [ ] 检查 `brandText`／`brandJSON` 等转换只修改展示文案，避免生成重复的 “PatchX Freenote Freenote” 或把技术字段、真实路径、旧品牌识别说明一起替换。
-- [ ] 按“源码材料／生成包”分别固定身份基线：公开插件源码目前使用 `patchxnote-agent`，workbuddy 分支的生成器会用 `branding.pluginName=patchxfreenote` 改写 manifest、marketplace 和目录，WorkBuddy 的生成 source 也是 `patchxfreenote`。本次只改显示名，不将两套现有分发身份强行统一；对生成后的字段逐一比对，不能仅检查源 JSON。
-- [ ] 对本次受影响的现有渠道和 production／test 配置串行生成并解包检查：品牌、六文件、marketplace 相对路径、plugin／connector 身份、原服务地址和占位符均正确；复用既有生成／校验脚本，不做平台上架、登录或业务调用。
-- [ ] 同步 workbuddy 材料时，以公开 main 已修正的发行事实为准，避免将该分支旧的 `0.2.13` 或小写 `io.github.zsts119/...` 回写公共发行；只带入本次品牌所需变更，不整体合并分支。
-- [ ] 未上架的平台只更新 Agent 仓库中的材料，不新增腾讯／ClawHub 等正式提交任务。
+- [x] 先更新 canonical Skill，再用现有同步脚本更新 npm／OpenAI／Claude 副本；检查副本一致性和引用文件完整性。
+- [x] 保留 `.patchxnote-agent-skill.json`、`managed_by`、skill slug 和既有安装目录，使已托管 Skill 正常更新，而不是安装出第二份 Skill。
+- [x] 只同步 workbuddy 分支现有渠道材料的品牌与仓库引用；保留其 connector source、pluginName、OAuth 和环境差异。使用针对性提交，避免把无关渠道功能带入公共发行。
+- [x] 检查 `brandText`／`brandJSON` 等转换只修改展示文案，避免生成重复的 “PatchX Freenote Freenote” 或把技术字段、真实路径、旧品牌识别说明一起替换。
+- [x] 按“源码材料／生成包”分别固定身份基线：公开插件源码目前使用 `patchxnote-agent`，workbuddy 分支的生成器会用 `branding.pluginName=patchxfreenote` 改写 manifest、marketplace 和目录，WorkBuddy 的生成 source 也是 `patchxfreenote`。本次只改显示名，不将两套现有分发身份强行统一；对生成后的字段逐一比对，不能仅检查源 JSON。
+- [x] 对本次受影响的现有渠道和 production／test 配置串行生成并解包检查：品牌、六文件、marketplace 相对路径、plugin／connector 身份、原服务地址和占位符均正确；复用既有生成／校验脚本，不做平台上架、登录或业务调用。
+- [x] 同步 workbuddy 材料时，以公开 main 已修正的发行事实为准，避免将该分支旧的 `0.2.13` 或小写 `io.github.zsts119/...` 回写公共发行；只带入本次品牌所需变更，不整体合并分支。
+- [x] 未上架的平台只更新 Agent 仓库中的材料，不新增腾讯／ClawHub 等正式提交任务。
 
 命令（在具备对应脚本的工作区执行）：
 
@@ -146,17 +146,18 @@ node scripts/validate-patchxnote-skill-packages.mjs
 - `.goreleaser.yaml` 的仓库关联引用；module、binary 与制品名保持不变
 - npm 现有包的 Trusted Publisher 设置、GitHub repository name、各相关 clone 的 Git remote
 
-- [ ] npm 保留 `name=patchxnote-agent` 和 `mcpName=io.github.ZsTs119/patchxnote-agent`；更新 repository URL、描述、关键词与发行版本。
-- [ ] 安装器默认 release 下载地址指向新仓库；保留旧制品文件名、安装目录、版本校验、HTTPS 重定向与 checksum 行为。
-- [ ] 修正发行校验中的 `pkg.name === repository basename` 和从包名推导所有身份的假设。分别验证“新仓库 URL”“旧 npm 包名”“旧 MCP ID”，不能误把 Registry ID 改成新仓库名。
-- [ ] 验证这种分离后，错误 owner 大小写、npm/mcpName 不一致、错误版本和丢失 `mcp serve` 参数仍会被拒绝。
-- [ ] npm Trusted Publisher 增加新仓库与现有 `publish-npm.yml` 的绑定，核对 owner／仓库／workflow 大小写、已有 environment 约束，以及允许当前工作流使用直接 `npm publish`；保留现有发布方式。能预配时在改名前完成，否则改名后、发布前完成。实际账号登录需要本人操作时，仅交接该平台步骤，不重复确认整个改名范围。
-- [ ] 绑定“保存成功”只作为配置证据；新仓库 OIDC 实际发布成功并有对应 provenance 后，才确认发布链路迁移完成，再移除失效的旧仓库绑定。保留现有 Node／npm 支持版本和 `id-token: write`。
-- [ ] 本地材料与相关测试通过、执行所需账号环节可完成后，再原地重命名 GitHub 仓库为 `patchx-freenote-agent`；不新建替代仓库，不迁移 GitHub owner。
-- [ ] 回读 repository ID 与改名前相同，确认历史 commit、tag、Release、Stars 等仍属于同一仓库；不重新创建同 owner 下的旧仓库名。
-- [ ] 改名后立即从旧地址读取仓库与旧版 Release 下载地址，下载旧版二进制及 checksums 并比对改名前散列；同时检查当前文档实际使用的 raw 图片／文件和 badge 链接。网页能跳转不能替代安装器下载成功。
-- [ ] 更新相关 clone 的 origin URL，并识别同一 Git 仓库下共享 remote 配置的 worktree；本地目录名、Go module/import、版本 ldflags 路径不必随之改变。
-- [ ] 在新仓库地址提交／推送本次兼容变更，核对公开 main 已包含新品牌、canonical Skill 和新发布 workflow；再让发行 tag 指向同一已验证提交。原标签与原 Release 文件保持不变。
+- [x] npm 保留 `name=patchxnote-agent` 和 `mcpName=io.github.ZsTs119/patchxnote-agent`；更新 repository URL、描述、关键词与发行版本。
+- [x] 安装器默认 release 下载地址指向新仓库；保留旧制品文件名、安装目录、版本校验、HTTPS 重定向与 checksum 行为。
+- [x] 修正发行校验中的 `pkg.name === repository basename` 和从包名推导所有身份的假设。分别验证“新仓库 URL”“旧 npm 包名”“旧 MCP ID”，不能误把 Registry ID 改成新仓库名。
+- [x] 验证这种分离后，错误 owner 大小写、npm/mcpName 不一致、错误版本和丢失 `mcp serve` 参数仍会被拒绝。
+- [x] npm Trusted Publisher 增加新仓库与现有 `publish-npm.yml` 的绑定，核对 owner／仓库／workflow 大小写、已有 environment 约束，以及允许当前工作流使用直接 `npm publish`；保留现有发布方式。能预配时在改名前完成，否则改名后、发布前完成。实际账号登录需要本人操作时，仅交接该平台步骤，不重复确认整个改名范围。
+- [x] 新仓库 OIDC 实际发布成功，provenance 对应新仓库与发行提交；Node／npm 与 `id-token: write` 保持可用。
+- [ ] 清理旧仓库 Trusted Publisher：已发起删除，npm要求维护者完成安全密钥验证，当前等待账号步骤；未影响已验证的新绑定。
+- [x] 本地材料与相关测试通过、执行所需账号环节可完成后，再原地重命名 GitHub 仓库为 `patchx-freenote-agent`；不新建替代仓库，不迁移 GitHub owner。
+- [x] 回读 repository ID 与改名前相同，确认历史 commit、tag、Release、Stars 等仍属于同一仓库；不重新创建同 owner 下的旧仓库名。
+- [x] 改名后立即从旧地址读取仓库与旧版 Release 下载地址，下载旧版二进制及 checksums 并比对改名前散列；同时检查当前文档实际使用的 raw 图片／文件和 badge 链接。网页能跳转不能替代安装器下载成功。
+- [x] 更新相关 clone 的 origin URL，并识别同一 Git 仓库下共享 remote 配置的 worktree；本地目录名、Go module/import、版本 ldflags 路径不必随之改变。
+- [x] 在新仓库地址提交／推送本次兼容变更，核对公开 main 已包含新品牌、canonical Skill 和新发布 workflow；再让发行 tag 指向同一已验证提交。原标签与原 Release 文件保持不变。
 
 预期 identity 示例（描述等字段省略）：
 
@@ -176,15 +177,15 @@ node scripts/validate-patchxnote-skill-packages.mjs
 
 ### Task 5：发布同包名兼容更新
 
-- [ ] Release、npm 和 server.json 使用一致的本次版本；Skill 自身版本单独递增，不要求与二进制版本一致。
-- [ ] 检查本次 CLI／callback 文案和安装地址变更只触发第 6 节相关检查。现有 release 工作流遇到任何 Go 改动会跑全仓测试，需要在本次发行前处理此选测问题，不能忽略远端执行范围。
-- [ ] 如调整选测，限于明确可识别的本次品牌／发布变更；对其他运行逻辑变化保留原有验证。验证“本次品牌改动走相关检查”和“普通逻辑变化不会被误跳过”，不做全局无条件跳过。
-- [ ] 核对现有其他自动触发项：`macos-install-smoke.yml` 在 npm 文件 PR 变动时会安装默认旧版 `0.2.6`，该结果不能当作新版验收。如使用此 smoke，显式传本次已发布版本，并与其他验证串行；不以修正默认值为由扩展整套 CI 改造。
-- [ ] 串行完成六平台制品构建、checksums／attestation；从确定的发行提交执行 `npm pack`，检查真实 tarball 中的 launcher、package.json、README 和完整 Skill，再在隔离目录安装该 tarball，确认能从新仓库下载并启动本次 Windows 二进制。`npm pack --dry-run` 不能替代这一步。
-- [ ] 真实 tarball 预装通过后，触发原 npm 包的 Trusted Publishing；等待其结束，明确核对 `dist-tags.latest` 已指向本次版本。当前流程直接更新 latest，因此把实际包预装放在公开 npm 发布之前，不另加暂存发布或人工审批流程。
-- [ ] 回读 npm 版本、原包名、原 mcpName、新仓库 URL 和 provenance；检查下载的真实 tarball 与 integrity 一致。
-- [ ] 核对全部发行资产及 checksum／来源证明；Windows 做一次实际安装与旧命令启动。其他平台对未变的行为复用既有结果，不因名称更新重做业务回归。
-- [ ] 老版本 `patchxnote-agent@0.2.14` 仍能通过旧仓库路径取得其固定版本制品；旧包 `@latest` 能获取新版，两个入口均保留。隔离安装目录和下载缓存，防止因命中已有二进制而误判旧下载入口可用；其中一个隔离样本按“旧版 → 新版”复用同一路径完成真实升级。
+- [x] Release、npm 和 server.json 使用一致的本次版本；Skill 自身版本单独递增，不要求与二进制版本一致。
+- [x] 检查本次 CLI／callback 文案和安装地址变更只触发第 6 节相关检查。现有 release 工作流遇到任何 Go 改动会跑全仓测试，需要在本次发行前处理此选测问题，不能忽略远端执行范围。
+- [x] 如调整选测，限于明确可识别的本次品牌／发布变更；对其他运行逻辑变化保留原有验证。验证“本次品牌改动走相关检查”和“普通逻辑变化不会被误跳过”，不做全局无条件跳过。
+- [x] 核对现有其他自动触发项：`macos-install-smoke.yml` 在 npm 文件 PR 变动时会安装默认旧版 `0.2.6`，该结果不能当作新版验收。如使用此 smoke，显式传本次已发布版本，并与其他验证串行；不以修正默认值为由扩展整套 CI 改造。
+- [x] 串行完成六平台制品构建、checksums／attestation；从确定的发行提交执行 `npm pack`，检查真实 tarball 中的 launcher、package.json、README 和完整 Skill，再在隔离目录安装该 tarball，确认能从新仓库下载并启动本次 Windows 二进制。`npm pack --dry-run` 不能替代这一步。
+- [x] 真实 tarball 预装通过后，触发原 npm 包的 Trusted Publishing；等待其结束，明确核对 `dist-tags.latest` 已指向本次版本。当前流程直接更新 latest，因此把实际包预装放在公开 npm 发布之前，不另加暂存发布或人工审批流程。
+- [x] 回读 npm 版本、原包名、原 mcpName、新仓库 URL 和 provenance；检查下载的真实 tarball 与 integrity 一致。
+- [x] 核对全部发行资产及 checksum／来源证明；Windows 做一次实际安装与旧命令启动。其他平台对未变的行为复用既有结果，不因名称更新重做业务回归。
+- [x] 老版本 `patchxnote-agent@0.2.14` 仍能通过旧仓库路径取得其固定版本制品；旧包 `@latest` 能获取新版，两个入口均保留。隔离安装目录和下载缓存，防止因命中已有二进制而误判旧下载入口可用；其中一个隔离样本按“旧版 → 新版”复用同一路径完成真实升级。
 
 **完成标准：** 同一个 npm 包已发布品牌更新，新旧安装入口可用；发布证明对应新仓库和本次 tag，不要求改写旧版本证明。
 
@@ -192,18 +193,18 @@ node scripts/validate-patchxnote-skill-packages.mjs
 
 ### Task 6：沿用 MCP 身份，更新 skills.sh 来源
 
-- [ ] Registry 保留 `name=io.github.ZsTs119/patchxnote-agent`、npm identifier 和 stdio 参数；只更新展示 title／description、repository 和本次版本。
-- [ ] 官方 publisher 校验通过后，以现有 GitHub 身份发布原条目的新版本；不覆盖 `0.2.14`，不创建新 ID。
-- [ ] 从官方版本详情及搜索分别回读，核对名称、标题、npm 版本、仓库与 `mcp serve` 参数。公开搜索 `PatchX Freenote`／`patchxnote` 的实际效果分别记录，不假定搜索一定索引展示标题。
-- [ ] skills.sh 的 Skill slug 仍为 `patchxnote-mcp`，但来源仓库路径将改变。新候选详情页为 `https://skills.sh/ZsTs119/patchx-freenote-agent/patchxnote-mcp`；在实际正文有效前不将候选写成已验收链接。
-- [ ] 用新公开仓库地址进行一次项目级安装验证，检查 Skill 名称、六文件／引用和锁文件来源；复用已完成的 npm Skill 内容检查，不重复安装制造统计。
-- [ ] 复用 Task 1 的 skills CLI 旧来源锁文件样本，按该 CLI 实际支持的检查／更新方式验证旧来源仍可取得新版内容；若需用新仓库重新指定来源，验证原 slug 原位更新，并给出一次性更新命令。npm 的 managed marker 验证不能替代 skills CLI 的锁文件／更新验证；测试只涉及该 Skill，不对用户全部已安装 skills 执行批量 update。
-- [ ] 新来源的首次真实安装承担索引触发，确认该次 telemetry 未关闭；额外旧版升级／重复回归样本关闭 telemetry。确认公开默认分支上的新 Skill 内容已到位后再触发收录。[skills CLI 文档](https://skills.sh/docs/cli)说明安装遥测用于榜单统计。
-- [ ] 查询新来源的索引／正文，并检查旧 skills.sh URL 实际行为。GitHub 的仓库重定向不能当作 skills.sh 自身的重定向或安装数迁移证明。
-- [ ] 无索引时记录最后检查时间、实际来源、后续人工复查窗口；平台支持迁移时按其机制处理。统计归并无官方保证，不以重复安装或改 slug 解决。
-- [ ] 在 README／PPT 链接说明中提供实际可用的新仓库、原 npm 包、原 MCP ID 的最新版、有效 skills.sh 页面；旧链接若仍可用，作为兼容入口说明。
-- [ ] 区分可控展示和平台固定标识：Skill 标题／正文、Registry title、npm 描述展示新品牌；平台仍显示 `patchxnote-mcp`／`patchxnote-agent` 属于保留兼容的预期结果。分别记录“新品牌词可搜”“旧标识可搜”“详情页可访问”，不承诺三者随改名立即同时更新。
-- [ ] 使用指定 `@chrome` 核对品牌页面和截图；连接不可用时继续 API、安装工作，仅保留浏览器项未验证，不能替换成 IAB。
+- [x] Registry 保留 `name=io.github.ZsTs119/patchxnote-agent`、npm identifier 和 stdio 参数；只更新展示 title／description、repository 和本次版本。
+- [x] 官方 publisher 校验通过后，以现有 GitHub 身份发布原条目的新版本；不覆盖 `0.2.14`，不创建新 ID。
+- [x] 从官方版本详情及搜索分别回读，核对名称、标题、npm 版本、仓库与 `mcp serve` 参数。公开搜索 `PatchX Freenote`／`patchxnote` 的实际效果分别记录，不假定搜索一定索引展示标题。
+- [x] skills.sh 的 Skill slug 仍为 `patchxnote-mcp`，但来源仓库路径将改变。新候选详情页为 `https://skills.sh/ZsTs119/patchx-freenote-agent/patchxnote-mcp`；在实际正文有效前不将候选写成已验收链接。
+- [x] 用新公开仓库地址进行一次项目级安装验证，检查 Skill 名称、六文件／引用和锁文件来源；复用已完成的 npm Skill 内容检查，不重复安装制造统计。
+- [x] 复用 Task 1 的 skills CLI 旧来源锁文件样本，按该 CLI 实际支持的检查／更新方式验证旧来源仍可取得新版内容；若需用新仓库重新指定来源，验证原 slug 原位更新，并给出一次性更新命令。npm 的 managed marker 验证不能替代 skills CLI 的锁文件／更新验证；测试只涉及该 Skill，不对用户全部已安装 skills 执行批量 update。
+- [x] 新来源的首次真实安装承担索引触发，确认该次 telemetry 未关闭；额外旧版升级／重复回归样本关闭 telemetry。确认公开默认分支上的新 Skill 内容已到位后再触发收录。[skills CLI 文档](https://skills.sh/docs/cli)说明安装遥测用于榜单统计。
+- [x] 查询新来源的索引／正文，并检查旧 skills.sh URL 实际行为。GitHub 的仓库重定向不能当作 skills.sh 自身的重定向或安装数迁移证明。
+- [x] 新来源已可搜索与查看正文，无待收录阻塞；旧skills.sh页面仍单独存在且保留旧正文，统计未声明归并，未通过重复安装或改slug处理。
+- [x] 在 README／PPT 链接说明中提供实际可用的新仓库、原 npm 包、原 MCP ID 的最新版、有效 skills.sh 页面；旧链接若仍可用，作为兼容入口说明。
+- [x] 区分可控展示和平台固定标识：Skill 标题／正文、Registry title、npm 描述展示新品牌；平台仍显示 `patchxnote-mcp`／`patchxnote-agent` 属于保留兼容的预期结果。分别记录“新品牌词可搜”“旧标识可搜”“详情页可访问”，不承诺三者随改名立即同时更新。
+- [x] 使用指定 `@chrome` 核对品牌页面和截图；连接不可用时继续 API、安装工作，仅保留浏览器项未验证，不能替换成 IAB。
 
 候选安装命令（仅在仓库改名完成后执行）：
 
@@ -254,11 +255,11 @@ git diff --check
 
 ### Task 7：交付实际结果与兼容说明
 
-- [ ] 主代理自审：逐项核对第 1 节稳定标识和第 6 节结果，确认只有品牌、仓库引用及相关发布检查发生变化。
-- [ ] 记录实际提交、tag、GitHub／npm workflow、Registry 版本、skills.sh 新旧页面状态；更新本计划与 `docs/evidence/2026-09-16-patchx-freenote-branding.zh-CN.md`。
-- [ ] 将“原 PatchXNote，现 PatchX Freenote；原安装命令继续可用”的短说明放在当前文档，无需遍历改写旧历史记录。
-- [ ] 检查公开 main 和 workbuddy 等本次涉及分支的变更归属，各自只提交关联内容；原未提交用户工作保留。
-- [ ] 最终交付新品牌链接、测试结果、Git 状态和仍需平台处理的具体项目，不把平台取证待补写成整体已验收。
+- [x] 主代理自审：逐项核对第 1 节稳定标识和第 6 节结果，确认只有品牌、仓库引用及相关发布检查发生变化。
+- [x] 记录发行提交e05f3c0、tag v0.2.15、GitHub工作流35052300464、npm工作流35053146805、Registry与skills.sh新旧页面；更新本计划与验收文档。
+- [x] 将“原 PatchXNote，现 PatchX Freenote；原安装命令继续可用”的短说明放在当前文档，无需遍历改写旧历史记录。
+- [x] 检查公开 main 和 workbuddy 等本次涉及分支的变更归属，各自只提交关联内容；原未提交用户工作保留。
+- [x] 最终交付新品牌链接、测试结果、Git 状态和仍需平台处理的具体项目，不把平台取证待补写成整体已验收。
 
 恢复原则：npm／Registry 已发布版本不可覆盖；出现新版问题时保留旧固定版本可安装，修复后发布后续版本。若故障已影响 `@latest` 安装，将 latest 恢复到 Task 1 记录的上一稳定版本并重新验证默认安装；已发布版本不删除。GitHub 改名后若后续发布失败，先依靠已验证的旧下载重定向维持现有版本，不反复改名。发布响应超时或不确定时先回读版本／资产／Registry 状态，再决定是否重试，避免重复创建发行。原仓库名保持未被重新占用，原 tags、Release 资产与配置／凭据身份保持可用。
 
@@ -277,16 +278,15 @@ latest 恢复使用 npm 维护者可用的标签管理权限；需要本人完�
 
 ## 8. 当前检查点
 
-- **授权：** 2026-09-16 用户“那开始吧”，执行本计划全部范围。
-- **执行工作区：** `/home/zsts_119/patchnote-agent-freenote`，分支 `codex/patchx-freenote-branding`，基于 main `8cbc877742ad5475163ae145600e5b610821e05c`。
-- **已完成：** 规则／合同核对、GitHub ADMIN 权限与新名可用性检查、npm latest=0.2.14／候选0.2.15未占用确认；旧 npm tarball、二进制、Registry 回读、npm 托管 Skill 和 skills CLI 旧来源样本已留存。
-- **证据目录：** `C:/Users/11979/AppData/Local/Temp/patchx-freenote-branding-20260916`；原仓库 ID `1324845696` / `R_kgDOTveKgA`。
-- **登录基线：** Windows default profile 在旧版即返回 `server_or_client_mismatch`，未修改已有配置或登录态；实际旧有效会话升级验收另查。
-- **平台：** Chrome 已恢复、用户已登录 npm；用户完成新 Trusted Publisher 提交；Chrome 回读显示新旧绑定并存、workflow 正确、environment 留空、允许 npm publish。实际 OIDC 发布待验证。
-- **已完成实现／检查：** 四张双语图和品牌材料；发行身份／选测检查；安装器、Skill 副本、Go 相关用例；8 组渠道包身份比对；双语 README GFM、命令与链接验证。
-- **已完成改名：** 原仓库 ID 不变，现为 `ZsTs119/patchx-freenote-agent`；About／topics 已更新；共享 origin 已更新。旧包0.2.14通过旧 URL冷安装成功，二进制 SHA256 与基线一致，旧 raw 图和 badge 可访问。
-- **进行中：** Git 提交／推送、GitHub v0.2.15 构建与发布；npm／Registry／skills.sh 后续验证未执行。
-- **下一步：** 提交兼容变更并推送 main，tag 触发串行发行；GitHub 制品通过后预装实际 npm tarball，再执行 OIDC 发布。
+- **授权与范围：** 用户2026-09-16“那开始吧”，本计划内Agent品牌／Git／发行／登记均已授权；其他产品仓库不变。
+- **工作区：** `/home/zsts_119/patchnote-agent-freenote`，分支 `codex/patchx-freenote-branding`。原工作区 `/home/zsts_119/patchnote-agent` 保留WorkBuddy分支与未跟踪旧计划。
+- **发行：** `e05f3c096700b07151b79c0c1114306397b357bb` 已推送main和执行分支，tag `v0.2.15`；GitHub run `35052300464`、npm OIDC run `35053146805` 成功。
+- **兼容验收：** 六平台SHA256／attestation；真实npm包预装／公开latest安装；旧URL固定版安装；Windows原路径升级；原测试环境会话；本地／远端19工具；两类Skill原位更新均通过。
+- **渠道：** Registry原ID的0.2.15 active/latest；skills.sh新来源已收录且品牌搜索命中；旧页面仍单独存在。Chrome已核对GitHub双语README、npm、Registry与skills.sh。
+- **渠道分支提交：** `80c07ca5b1b95b903cbab537cc260be4cf41b249` 已推送 `codex/workbuddy-connector-package`，8组既有渠道包的身份和服务地址保持一致。
+- **证据：** `docs/evidence/2026-09-16-patchx-freenote-branding.zh-CN.md`；详细原始结果在本机任务目录 `C:/Users/11979/AppData/Local/Temp/patchx-freenote-branding-20260916`。
+- **文档交付：** 新渠道链接／runbook／计划／验收记录随收尾文档提交交付；没有运行中的测试或发布工作流。
+- **唯一账号待办：** 旧npm Trusted Publisher清理停在Chrome安全密钥验证页（tab 22618533）；用户问题已发出，等待本人验证或明确跳过。新绑定和新版发行均已验证。
 
 ## 9. 官方依据
 

@@ -7,7 +7,7 @@ PatchX Freenote was formerly called PatchXNote. Existing `patchxnote-agent` comm
 [![npm version](https://img.shields.io/npm/v/patchxnote-agent.svg)](https://www.npmjs.com/package/patchxnote-agent)
 [![GitHub release](https://img.shields.io/github/v/release/ZsTs119/patchx-freenote-agent)](https://github.com/ZsTs119/patchx-freenote-agent/releases)
 [![MCP Registry](https://img.shields.io/badge/MCP_Registry-registered-blue)](https://registry.modelcontextprotocol.io/?q=patchxnote)
-[![skills.sh](https://img.shields.io/badge/skills.sh-listed-black)](https://skills.sh/ZsTs119/patchxnote-agent/patchxnote-mcp)
+[![skills.sh](https://img.shields.io/badge/skills.sh-listed-black)](https://skills.sh/zsts119/patchx-freenote-agent/patchxnote-mcp)
 
 Connect your synced PatchX Freenote records to AI assistants. Find records, review existing AI results, create Markdown drafts, and share approved content through webhooks.
 
@@ -23,8 +23,8 @@ Connect your synced PatchX Freenote records to AI assistants. Find records, revi
 | --- | --- | --- |
 | npm | [patchxnote-agent](https://www.npmjs.com/package/patchxnote-agent) | Versioned CLI installer/launcher and bundled Skill; current release `0.2.15`. |
 | GitHub Release | [v0.2.15](https://github.com/ZsTs119/patchx-freenote-agent/releases/tag/v0.2.15) | Six Windows/macOS/Linux binaries, checksums, and artifact attestations. |
-| MCP official Registry | [Search PatchX Freenote](https://registry.modelcontextprotocol.io/?q=patchxnote) · [Version record](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.ZsTs119%2Fpatchxnote-agent/versions/0.2.15) | Registered as `io.github.ZsTs119/patchxnote-agent`. |
-| Vercel skills.sh | [patchxnote-mcp](https://skills.sh/ZsTs119/patchxnote-agent/patchxnote-mcp) | Discoverable Skill with installation instructions. |
+| MCP official Registry | [Search the retained ID](https://registry.modelcontextprotocol.io/?q=patchxnote) · [Version record](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.ZsTs119%2Fpatchxnote-agent/versions/0.2.15) | Registered as `io.github.ZsTs119/patchxnote-agent`. |
+| Vercel skills.sh | [patchxnote-mcp](https://skills.sh/zsts119/patchx-freenote-agent/patchxnote-mcp) | New repository source, searchable as `PatchX Freenote`; Skill ID remains `patchxnote-mcp`. |
 
 These links show publication and directory listing. The [0.2.15 verification record](./docs/evidence/2026-09-16-patchx-freenote-branding.zh-CN.md) documents artifact checks, Windows installation, local protocol discovery, and Registry readback; client/platform acceptance is tracked separately.
 

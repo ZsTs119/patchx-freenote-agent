@@ -7,7 +7,7 @@ PatchX Freenote 原名 PatchXNote。现有 `patchxnote-agent` 命令、`patchxno
 [![npm version](https://img.shields.io/npm/v/patchxnote-agent.svg)](https://www.npmjs.com/package/patchxnote-agent)
 [![GitHub release](https://img.shields.io/github/v/release/ZsTs119/patchx-freenote-agent)](https://github.com/ZsTs119/patchx-freenote-agent/releases)
 [![MCP Registry](https://img.shields.io/badge/MCP_Registry-registered-blue)](https://registry.modelcontextprotocol.io/?q=patchxnote)
-[![skills.sh](https://img.shields.io/badge/skills.sh-listed-black)](https://skills.sh/ZsTs119/patchxnote-agent/patchxnote-mcp)
+[![skills.sh](https://img.shields.io/badge/skills.sh-listed-black)](https://skills.sh/zsts119/patchx-freenote-agent/patchxnote-mcp)
 
 把已同步的 PatchX Freenote 记录接入 AI 助手：查找记录、查看已有 AI 结果、生成 Markdown 草稿，并在确认后通过 webhook 分享。
 
@@ -23,8 +23,8 @@ PatchX Freenote 原名 PatchXNote。现有 `patchxnote-agent` 命令、`patchxno
 | --- | --- | --- |
 | npm | [patchxnote-agent](https://www.npmjs.com/package/patchxnote-agent) | CLI 安装／启动壳及随包 Skill；当前发行版本 `0.2.15`。 |
 | GitHub Release | [v0.2.15](https://github.com/ZsTs119/patchx-freenote-agent/releases/tag/v0.2.15) | Windows/macOS/Linux 六平台二进制、校验清单及制品来源证明。 |
-| MCP 官方 Registry | [搜索 PatchX Freenote](https://registry.modelcontextprotocol.io/?q=patchxnote) · [版本记录](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.ZsTs119%2Fpatchxnote-agent/versions/0.2.15) | 登记名为 `io.github.ZsTs119/patchxnote-agent`。 |
-| Vercel skills.sh | [patchxnote-mcp](https://skills.sh/ZsTs119/patchxnote-agent/patchxnote-mcp) | 可检索的 Skill 详情及安装说明。 |
+| MCP 官方 Registry | [按保留标识搜索](https://registry.modelcontextprotocol.io/?q=patchxnote) · [版本记录](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.ZsTs119%2Fpatchxnote-agent/versions/0.2.15) | 登记名为 `io.github.ZsTs119/patchxnote-agent`。 |
+| Vercel skills.sh | [patchxnote-mcp](https://skills.sh/zsts119/patchx-freenote-agent/patchxnote-mcp) | 新仓库来源，可搜索 `PatchX Freenote`；Skill 标识仍为 `patchxnote-mcp`。 |
 
 这些链接用于核对公开发行和目录收录。[0.2.15 验证记录](./docs/evidence/2026-09-16-patchx-freenote-branding.zh-CN.md)包含制品校验、Windows 安装、本地协议发现和 Registry 回读；各客户端／平台的接入验收单独记录。
 

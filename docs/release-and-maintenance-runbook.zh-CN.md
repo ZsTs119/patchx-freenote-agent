@@ -4,7 +4,7 @@
 
 ## 本次品牌兼容更新
 
-候选版本 `0.2.15`：展示名统一为 PatchX Freenote，原仓库改名为 `ZsTs119/patchx-freenote-agent`；npm 包、Skill slug、MCP 登记 ID、CLI／配置／凭据身份保持兼容。进度与发布证据见 `docs/plans/2026-09-16-patchx-freenote-agent-brand-rename-checklist.md`。下面保留上一发行的已验证事实，发布完成后更新。
+已发布版本 `0.2.15`：展示名统一为 PatchX Freenote，原仓库改名为 `ZsTs119/patchx-freenote-agent`；npm 包、Skill slug、MCP 登记 ID、CLI／配置／凭据身份保持兼容。进度与发布证据见 `docs/plans/2026-09-16-patchx-freenote-agent-brand-rename-checklist.md`。发行与兼容验收见 `docs/evidence/2026-09-16-patchx-freenote-branding.zh-CN.md`。
 
 ## 当前发布事实
 
@@ -25,9 +25,9 @@
 - GitHub Release workflow：`.github/workflows/release.yml`
 - macOS 安装冒烟 workflow：`.github/workflows/macos-install-smoke.yml`
 - 默认服务端：生产 API `https://freenote.patch-x.cn`，具体默认值以 `internal/config/config.go` 为准
-- 当前已发布版本：`0.2.14`；npm、GitHub Release 和官方 Registry 已可查。
-- 当前能力：继承 `0.2.13`，修正 Registry 账号大小写、版本关联与 stdio 启动元数据；运行逻辑与 Skill 许可不变。
-- 当前发布证据：`docs/evidence/2026-09-15-release-0.2.14.zh-CN.md`。
+- 当前已发布版本：`0.2.15`；npm、GitHub Release 和官方 Registry 已可查，skills.sh 新来源已收录。
+- 当前能力：继承 `0.2.14`，展示品牌统一为 PatchX Freenote，原 GitHub 仓库改名；npm／Skill／MCP ID、CLI、配置、凭据、OAuth 和服务地址保持兼容。
+- 当前发布证据：`docs/evidence/2026-09-16-patchx-freenote-branding.zh-CN.md`。
 - 0.2.13 已有验证：实际 npm README/Skill 与源码一致，Windows 发布包生产 stdio 查询、Windows/macOS 安装、Linux 制品校验通过。本次修正版按对应证据补验，既有业务结果不冒充新版验收；平台 UI 单列。
 - 上一版 `0.2.13` 发布证据：`docs/evidence/2026-09-11-release-0.2.13.zh-CN.md`。
 
@@ -36,6 +36,14 @@
 - 旧 npm 包 `patchnote-agent` 已被新包名替代。
 - 旧二进制名 `patchnote` 已被 `patchxnote` 替代。
 - `PATCHNOTE_` 环境变量只允许作为兼容 fallback 存在，不应再出现在公开文档的新命令中。
+
+## 0.2.15 品牌兼容更新（2026-09-16）
+
+GitHub Release `35052300464`、npm OIDC `35053146805` 成功。六平台资产及签名、新旧安装入口、Windows 原路径升级、原测试环境会话、本地／远端各 19 个工具协议、两类 Skill 升级与双语页面验证通过；仅执行本次相关检查。
+
+- skills.sh 新详情：<https://skills.sh/zsts119/patchx-freenote-agent/patchxnote-mcp>。
+- MCP Registry 继续用 `patchxnote` 或完整保留 ID 搜索；品牌全称当前不命中其名称检索。
+- 原 skills.sh 页面仍是单独的旧来源页面；不声称它会自动重定向或合并安装统计。
 
 ## 0.2.14 Registry 修正版（2026-09-15）
 
