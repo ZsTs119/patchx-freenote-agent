@@ -1,6 +1,6 @@
-# PatchXNote MCP 客户端登记表
+# PatchX Freenote MCP 客户端登记表
 
-这组文件是 PatchXNote MCP 官网、CLI `setup --client`、后续市场提交和平台联调共用的事实源。第一版先把本地可闭环和平台待闭环分开，避免把“能复制配置”误写成“已经一键安装验证通过”。
+这组文件是 PatchX Freenote MCP 官网、CLI `setup --client`、后续市场提交和平台联调共用的事实源。第一版先把本地可闭环和平台待闭环分开，避免把“能复制配置”误写成“已经一键安装验证通过”。
 
 官网新会话和平台联调入口先读 `docs/mcp-local-remote-handoff.zh-CN.md`，再读本目录的客户端登记表和 `website/README.zh-CN.md`。官网相关页面架构、动作模型、官方依据、视觉系统、参考仓库、开写清单、验收 checklist 和素材说明都集中在 `website/` 目录。
 

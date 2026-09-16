@@ -1,10 +1,14 @@
-# PatchXNote Agent 发布与维护 Runbook
+# PatchX Freenote Agent 发布与维护 Runbook
 
 这份文档用于后续开发新功能、更新文档、发布 GitHub Release 和 npm 包时保持同一套事实源。它沉淀的是当前 `patchxnote-agent` 公测发布链路，不替代具体 feature 设计文档。
 
+## 本次品牌兼容更新
+
+候选版本 `0.2.15`：展示名统一为 PatchX Freenote，原仓库改名为 `ZsTs119/patchx-freenote-agent`；npm 包、Skill slug、MCP 登记 ID、CLI／配置／凭据身份保持兼容。进度与发布证据见 `docs/plans/2026-09-16-patchx-freenote-agent-brand-rename-checklist.md`。下面保留上一发行的已验证事实，发布完成后更新。
+
 ## 当前发布事实
 
-- GitHub 仓库：`https://github.com/ZsTs119/patchxnote-agent`
+- GitHub 仓库：`https://github.com/ZsTs119/patchx-freenote-agent`
 - npm 包：`patchxnote-agent`
 - 用户通用 MCP 配置命令：`npx -y patchxnote-agent@latest mcp config`
 - 用户 MCP 浏览器 OAuth 登录命令：`npx -y patchxnote-agent@latest mcp login`
@@ -276,14 +280,14 @@ PY
 
 ```sh
 gh auth status
-gh run list --repo ZsTs119/patchxnote-agent --workflow publish-npm.yml --limit 1
-gh workflow view publish-npm.yml --repo ZsTs119/patchxnote-agent --yaml >/dev/null
+gh run list --repo ZsTs119/patchx-freenote-agent --workflow publish-npm.yml --limit 1
+gh workflow view publish-npm.yml --repo ZsTs119/patchx-freenote-agent --yaml >/dev/null
 ```
 
 在 Windows PowerShell 调 WSL 预检：
 
 ```powershell
-wsl.exe -d Ubuntu-22.04 --cd /home/zsts_119/patchnote-agent bash -lc 'gh auth status && gh run list --repo ZsTs119/patchxnote-agent --workflow publish-npm.yml --limit 1'
+wsl.exe -d Ubuntu-22.04 --cd /home/zsts_119/patchnote-agent bash -lc 'gh auth status && gh run list --repo ZsTs119/patchx-freenote-agent --workflow publish-npm.yml --limit 1'
 ```
 
 如果 `gh auth status` 未登录、scope 缺少 `repo` 或 `workflow`，用浏览器恢复 GitHub CLI 登录态：
@@ -307,11 +311,11 @@ npm 本机登录不是本包的常规发布前置条件。`npm whoami --registry
 - README / 中文 README / npm README 中的通用 `mcp config`、`mcp login/status/logout`、`mcp serve`、legacy `login`、`setup --client` 命令同步。
 - 如本次涉及 setup，`docs/mcp-clients/clients.json`、官网规格和客户端详情页文案同步。
 - `.github/workflows/publish-npm.yml` 没有 `NODE_AUTH_TOKEN` 或 `NPM_TOKEN`。
-- `gh secret list --repo ZsTs119/patchxnote-agent` 不应包含 npm 发布 token。
+- `gh secret list --repo ZsTs119/patchx-freenote-agent` 不应包含 npm 发布 token。
 - npm 包 `patchxnote-agent` 的 Trusted Publisher 指向：
   - publisher：GitHub Actions
   - owner：`ZsTs119`
-  - repository：`patchxnote-agent`
+  - repository：`patchx-freenote-agent`
   - workflow：`publish-npm.yml`
   - allowed action：`npm publish`
 - npm package setting 建议为 disallow bypass 2FA tokens。
@@ -334,14 +338,14 @@ git push origin vX.Y.Z
 等待 Release workflow：
 
 ```sh
-gh run list --repo ZsTs119/patchxnote-agent --workflow release.yml --limit 5
-gh run view <run-id> --repo ZsTs119/patchxnote-agent --json status,conclusion,url
+gh run list --repo ZsTs119/patchx-freenote-agent --workflow release.yml --limit 5
+gh run view <run-id> --repo ZsTs119/patchx-freenote-agent --json status,conclusion,url
 ```
 
 如果 tag push 没有产生可用 run，或者 run 在进入 runner 前失败且没有步骤日志，可以按同一个 tag 手动触发：
 
 ```sh
-gh workflow run release.yml --repo ZsTs119/patchxnote-agent --ref vX.Y.Z
+gh workflow run release.yml --repo ZsTs119/patchx-freenote-agent --ref vX.Y.Z
 ```
 
 必须看到 GitHub Release 中存在：
@@ -361,14 +365,14 @@ patchxnote_X.Y.Z_windows_arm64.exe
 Release 资产存在后触发 npm publish：
 
 ```sh
-gh workflow run publish-npm.yml --repo ZsTs119/patchxnote-agent -f version=X.Y.Z
+gh workflow run publish-npm.yml --repo ZsTs119/patchx-freenote-agent -f version=X.Y.Z
 ```
 
 等待 publish workflow：
 
 ```sh
-gh run list --repo ZsTs119/patchxnote-agent --workflow publish-npm.yml --limit 5
-gh run view <run-id> --repo ZsTs119/patchxnote-agent --json status,conclusion,url
+gh run list --repo ZsTs119/patchx-freenote-agent --workflow publish-npm.yml --limit 5
+gh run view <run-id> --repo ZsTs119/patchx-freenote-agent --json status,conclusion,url
 ```
 
 成功日志应出现 npm provenance：
@@ -427,7 +431,7 @@ Linux Release 资产验证：
 ```sh
 tmp=$(mktemp -d)
 cd "$tmp"
-base="https://github.com/ZsTs119/patchxnote-agent/releases/download/vX.Y.Z"
+base="https://github.com/ZsTs119/patchx-freenote-agent/releases/download/vX.Y.Z"
 curl -fsSLO "${base}/checksums.txt"
 curl -fsSLO "${base}/patchxnote_X.Y.Z_linux_amd64"
 grep "patchxnote_X.Y.Z_linux_amd64" checksums.txt | sha256sum -c -
@@ -438,8 +442,8 @@ chmod +x patchxnote_X.Y.Z_linux_amd64
 macOS 安装和 MCP 验证：
 
 ```sh
-gh workflow run macos-install-smoke.yml --repo ZsTs119/patchxnote-agent -f version=X.Y.Z
-gh run list --repo ZsTs119/patchxnote-agent --workflow macos-install-smoke.yml --limit 5
+gh workflow run macos-install-smoke.yml --repo ZsTs119/patchx-freenote-agent -f version=X.Y.Z
+gh run list --repo ZsTs119/patchx-freenote-agent --workflow macos-install-smoke.yml --limit 5
 ```
 
 ### 6. 发布后记录
@@ -472,7 +476,7 @@ gh run list --repo ZsTs119/patchxnote-agent --workflow macos-install-smoke.yml -
 9. GoServer 飞书指南：`../patchxNoteGoServer/docs/integrations/patchnote-agent-feishu-guide.zh-CN.md`
 10. GoServer 飞书内部备注：`../patchxNoteGoServer/docs/integrations/patchnote-agent-feishu-guide-internal-notes.zh-CN.md`
 
-GoServer 飞书指南文件名当前仍是 `patchnote-agent-feishu-guide.zh-CN.md`，这是历史文件名。不要只因为品牌改为 PatchXNote 就随意重命名，除非同步所有引用。
+GoServer 飞书指南文件名当前仍是 `patchnote-agent-feishu-guide.zh-CN.md`，这是历史文件名。不要只因为品牌改为 PatchX Freenote 就随意重命名，除非同步所有引用。
 
 飞书导入再导出 Markdown 时，图片经常会变成：
 
@@ -483,7 +487,7 @@ GoServer 飞书指南文件名当前仍是 `patchnote-agent-feishu-guide.zh-CN.m
 提交前必须改回仓库内路径，例如：
 
 ```md
-![PatchXNote Agent 飞书封面](assets/patchxnote-agent-feishu-cover.png)
+![PatchX Freenote Agent 飞书封面](assets/patchxnote-agent-feishu-cover.png)
 ```
 
 GoServer 飞书指南图片素材位于：

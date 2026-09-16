@@ -248,7 +248,7 @@ func writeCallbackHTML(w http.ResponseWriter, status int, success bool) {
 </head>
 <body>
   <main>
-    <div class="brand"><span class="brand-mark">PX</span><span>PatchXNote</span></div>
+    <div class="brand"><span class="brand-mark">PX</span><span>PatchX Freenote</span></div>
     <div class="%s">%s</div>
     <h1>%s</h1>
     <p>%s</p>

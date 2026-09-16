@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-const DefaultTitle = "PatchXNote 记录"
+const DefaultTitle = "PatchX Freenote 记录"
 
 func FirstH1(markdown string) string {
 	lines := strings.Split(markdown, "\n")

@@ -1,40 +1,42 @@
-# PatchXNote Agent
+# PatchX Freenote Agent
+
+PatchX Freenote was formerly called PatchXNote. Existing `patchxnote-agent` commands, `patchxnote-mcp` Skill installs, MCP configuration and credentials remain compatible.
 
 [English](./README.md) | [简体中文](./README.zh-CN.md)
 
 [![npm version](https://img.shields.io/npm/v/patchxnote-agent.svg)](https://www.npmjs.com/package/patchxnote-agent)
-[![GitHub release](https://img.shields.io/github/v/release/ZsTs119/patchxnote-agent)](https://github.com/ZsTs119/patchxnote-agent/releases)
+[![GitHub release](https://img.shields.io/github/v/release/ZsTs119/patchx-freenote-agent)](https://github.com/ZsTs119/patchx-freenote-agent/releases)
 [![MCP Registry](https://img.shields.io/badge/MCP_Registry-registered-blue)](https://registry.modelcontextprotocol.io/?q=patchxnote)
 [![skills.sh](https://img.shields.io/badge/skills.sh-listed-black)](https://skills.sh/ZsTs119/patchxnote-agent/patchxnote-mcp)
 
-Connect your synced PatchXNote records to AI assistants. Find records, review existing AI results, create Markdown drafts, and share approved content through webhooks.
+Connect your synced PatchX Freenote records to AI assistants. Find records, review existing AI results, create Markdown drafts, and share approved content through webhooks.
 
 [Production service](https://freenote.patch-x.cn/) · [MCP setup](https://freenote.patch-x.cn/mcp/setup/) · [Download App](https://freenote.patch-x.cn/download/) · [User guide (Chinese)](https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd)
 
-![Connect your PatchXNote records to AI assistants](./docs/assets/patchxnote-agent-cover.en.png)
+![Connect your PatchX Freenote records to AI assistants](./docs/assets/patchxnote-agent-cover.en.png)
 
-[Quickstart](#quickstart) · [Connection options](#choose-your-connection) · [Skill](#patchxnote-mcp-skill) · [Usage examples](#common-workflows) · [Troubleshooting](#troubleshooting) · [Reference](#mcp-tools)
+[Quickstart](#quickstart) · [Connection options](#choose-your-connection) · [Skill](#patchx-freenote-mcp-skill) · [Usage examples](#common-workflows) · [Troubleshooting](#troubleshooting) · [Reference](#mcp-tools)
 
 ## Published Channels
 
 | Channel | Public entry | What is available |
 | --- | --- | --- |
-| npm | [patchxnote-agent](https://www.npmjs.com/package/patchxnote-agent) | Versioned CLI installer/launcher and bundled Skill; current release `0.2.14`. |
-| GitHub Release | [v0.2.14](https://github.com/ZsTs119/patchxnote-agent/releases/tag/v0.2.14) | Six Windows/macOS/Linux binaries, checksums, and artifact attestations. |
-| MCP official Registry | [Search PatchXNote](https://registry.modelcontextprotocol.io/?q=patchxnote) · [Version record](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.ZsTs119%2Fpatchxnote-agent/versions/0.2.14) | Registered as `io.github.ZsTs119/patchxnote-agent`. |
+| npm | [patchxnote-agent](https://www.npmjs.com/package/patchxnote-agent) | Versioned CLI installer/launcher and bundled Skill; current release `0.2.15`. |
+| GitHub Release | [v0.2.15](https://github.com/ZsTs119/patchx-freenote-agent/releases/tag/v0.2.15) | Six Windows/macOS/Linux binaries, checksums, and artifact attestations. |
+| MCP official Registry | [Search PatchX Freenote](https://registry.modelcontextprotocol.io/?q=patchxnote) · [Version record](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.ZsTs119%2Fpatchxnote-agent/versions/0.2.15) | Registered as `io.github.ZsTs119/patchxnote-agent`. |
 | Vercel skills.sh | [patchxnote-mcp](https://skills.sh/ZsTs119/patchxnote-agent/patchxnote-mcp) | Discoverable Skill with installation instructions. |
 
-These links show publication and directory listing. The [0.2.14 verification record](./docs/evidence/2026-09-15-release-0.2.14.zh-CN.md) documents artifact checks, Windows installation, local protocol discovery, and Registry readback; client/platform acceptance is tracked separately.
+These links show publication and directory listing. The [0.2.15 verification record](./docs/evidence/2026-09-16-patchx-freenote-branding.zh-CN.md) documents artifact checks, Windows installation, local protocol discovery, and Registry readback; client/platform acceptance is tracked separately.
 
 ## Choose Your Connection
 
 | Your environment | Use | Requirements |
 | --- | --- | --- |
-| Desktop editor or local MCP host | `npx -y patchxnote-agent@latest setup --client <client-id>` | Node.js 18+, Windows/macOS/Linux on amd64 or arm64, and a PatchXNote account. |
+| Desktop editor or local MCP host | `npx -y patchxnote-agent@latest setup --client <client-id>` | Node.js 18+, Windows/macOS/Linux on amd64 or arm64, and a PatchX Freenote account. |
 | Platform that supports Remote MCP and OAuth | `https://freenote.patch-x.cn/mcp` | Configure a custom connector and complete that platform's authorization flow; no local Node.js installation is required for this route. |
-| Assistant that supports Agent Skills | Install [PatchXNote MCP Skill](#patchxnote-mcp-skill) | Adds setup and usage instructions; complements the MCP connection. |
+| Assistant that supports Agent Skills | Install [PatchX Freenote MCP Skill](#patchx-freenote-mcp-skill) | Adds setup and usage instructions; complements the MCP connection. |
 
-Records must already be synced to PatchXNote and available to your account. Recorder-card connection, audio processing, and recording remain in the App/PC clients. Read records from the platform you select: `mobile` or `desktop`.
+Records must already be synced to PatchX Freenote and available to your account. Recorder-card connection, audio processing, and recording remain in the App/PC clients. Read records from the platform you select: `mobile` or `desktop`.
 
 ## Quickstart
 
@@ -42,7 +44,7 @@ Records must already be synced to PatchXNote and available to your account. Reco
 
 ### 1. Set up your local client
 
-If your assistant supports Agent Skills, install the [Skill](#patchxnote-mcp-skill) first. MCP setup also works without it. Choose **one** command for the client you use:
+If your assistant supports Agent Skills, install the [Skill](#patchx-freenote-mcp-skill) first. MCP setup also works without it. Choose **one** command for the client you use:
 
 | Client | Command |
 | --- | --- |
@@ -55,7 +57,7 @@ Setup checks browser OAuth login and writes or prints the appropriate MCP config
 
 ### 2. Authorize in the browser
 
-Complete the PatchXNote sign-in page opened by setup. Keep phone verification codes and credentials on that page. If you need to start browser login explicitly:
+Complete the PatchX Freenote sign-in page opened by setup. Keep phone verification codes and credentials on that page. If you need to start browser login explicitly:
 
 ```sh
 npx -y patchxnote-agent@latest mcp login
@@ -71,13 +73,13 @@ Refresh or restart your MCP client, let it discover the available tools, then as
 
 ### Using a hosted platform instead
 
-Create a custom MCP connector named **PatchXNote MCP**, set its server URL to `https://freenote.patch-x.cn/mcp`, complete the platform's OAuth flow, and refresh its tool list. Follow the platform-specific instructions in [client integration notes](./docs/mcp-clients/README.zh-CN.md); support and acceptance vary by platform.
+Create a custom MCP connector named **PatchX Freenote MCP**, set its server URL to `https://freenote.patch-x.cn/mcp`, complete the platform's OAuth flow, and refresh its tool list. Follow the platform-specific instructions in [client integration notes](./docs/mcp-clients/README.zh-CN.md); support and acceptance vary by platform.
 
 <details>
 <summary>Copy the complete prompt for an AI assistant</summary>
 
 ```text
-Help me connect PatchXNote MCP and install the PatchXNote MCP Skill when the client supports Agent Skills. Use the production service at https://freenote.patch-x.cn/ and the setup page at https://freenote.patch-x.cn/mcp/setup/; if existing configuration explicitly points to the old test service, update the server address used for this connection to production first. First, if this is a local command-capable environment, run npx -y patchxnote-agent@latest skill install on this machine so future or long sessions remember the PatchXNote SOP; if the current client does not support Skill installation, do not treat that as a connection blocker and continue with MCP setup according to the client's capabilities. Identify the MCP client you are running in: if this is a local MCP client such as Codex, Cursor, VS Code, Claude Desktop, Claude Code, or Windsurf, run npx -y patchxnote-agent@latest setup --client <client-id> on this machine in the same OS/runtime that will later launch the MCP server. If this is an AI client or cloud platform that cannot run local commands but supports Remote MCP, custom connectors, custom MCP services, or tool plugins, create a custom MCP connector named PatchXNote MCP and connect it with this PatchXNote Remote MCP URL: https://freenote.patch-x.cn/mcp. If you are not sure which client ID or config format to use, local clients should first run npx -y patchxnote-agent@latest mcp config and use the printed generic stdio config, while remote clients should look for a Remote MCP Server URL, MCP Server URL, or Custom Connector setup entry. For login, open the browser and let me complete PatchXNote phone-code authorization there; do not ask me to paste OTP codes, OAuth codes, authorization codes, access tokens, refresh tokens, or webhook secrets into chat. After setup, call patchxnote_get_current_user and patchxnote_list_memories with {"platform":"mobile","limit":5} to verify it works. References: https://github.com/ZsTs119/patchxnote-agent and https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd
+Help me connect PatchX Freenote MCP and install the PatchX Freenote MCP Skill when the client supports Agent Skills. Use the production service at https://freenote.patch-x.cn/ and the setup page at https://freenote.patch-x.cn/mcp/setup/; if existing configuration explicitly points to the old test service, update the server address used for this connection to production first. First, if this is a local command-capable environment, run npx -y patchxnote-agent@latest skill install on this machine so future or long sessions remember the PatchX Freenote SOP; if the current client does not support Skill installation, do not treat that as a connection blocker and continue with MCP setup according to the client's capabilities. Identify the MCP client you are running in: if this is a local MCP client such as Codex, Cursor, VS Code, Claude Desktop, Claude Code, or Windsurf, run npx -y patchxnote-agent@latest setup --client <client-id> on this machine in the same OS/runtime that will later launch the MCP server. If this is an AI client or cloud platform that cannot run local commands but supports Remote MCP, custom connectors, custom MCP services, or tool plugins, create a custom MCP connector named PatchX Freenote MCP and connect it with this PatchX Freenote Remote MCP URL: https://freenote.patch-x.cn/mcp. If you are not sure which client ID or config format to use, local clients should first run npx -y patchxnote-agent@latest mcp config and use the printed generic stdio config, while remote clients should look for a Remote MCP Server URL, MCP Server URL, or Custom Connector setup entry. For login, open the browser and let me complete PatchX Freenote phone-code authorization there; do not ask me to paste OTP codes, OAuth codes, authorization codes, access tokens, refresh tokens, or webhook secrets into chat. After setup, call patchxnote_get_current_user and patchxnote_list_memories with {"platform":"mobile","limit":5} to verify it works. References: https://github.com/ZsTs119/patchx-freenote-agent and https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd
 ```
 
 </details>
@@ -93,7 +95,7 @@ Help me connect PatchXNote MCP and install the PatchXNote MCP Skill when the cli
 
 An existing record/result is the input. Local draft files and local webhook aliases require the local tools that provide those capabilities; check the connected endpoint's tool list before using them.
 
-## PatchXNote MCP Skill
+## PatchX Freenote MCP Skill
 
 The Skill gives compatible assistants reusable setup, authorization, record lookup, result inspection, and approved webhook instructions. The npm package bundles it, so the recommended install does not require a separate GitHub clone:
 
@@ -101,7 +103,7 @@ The Skill gives compatible assistants reusable setup, authorization, record look
 npx -y patchxnote-agent@latest skill install
 ```
 
-This installs the Skill into the user's `.agents/skills/patchxnote-mcp` directory by default. It does not log in to PatchXNote or start an MCP server.
+This installs the Skill into the user's `.agents/skills/patchxnote-mcp` directory by default. It does not log in to PatchX Freenote or start an MCP server.
 
 <details>
 <summary>Skill install options and existing-folder handling</summary>
@@ -125,7 +127,7 @@ The installer is idempotent. If an existing `patchxnote-mcp` directory differs a
 For users of the standard skills CLI, this Codex example installs from GitHub into the current project. It installs the Skill, not the MCP connection. Choose either this route or the npm-bundled install above.
 
 ```sh
-npx -y skills add ZsTs119/patchxnote-agent --skill patchxnote-mcp --agent codex --yes
+npx -y skills add ZsTs119/patchx-freenote-agent --skill patchxnote-mcp --agent codex --yes
 ```
 
 </details>
@@ -135,7 +137,7 @@ npx -y skills add ZsTs119/patchxnote-agent --skill patchxnote-mcp --agent codex 
 The client transport and the source of its tools are separate:
 
 - `mcp serve` speaks **stdio** to the local client. In default `auto` mode, matching, unexpired browser OAuth credentials select a proxy to the hosted MCP service; otherwise it uses the local implementation.
-- The local implementation provides **19 tool definitions** in `0.2.14`. Their data calls still require appropriate authentication. A proxied or directly connected hosted service supplies its own tool set and may differ.
+- The local implementation provides **19 tool definitions** in `0.2.15`. Their data calls still require appropriate authentication. A proxied or directly connected hosted service supplies its own tool set and may differ.
 - Use the connected endpoint's `tools/list` result as the source of truth for available tools. Local filesystem and webhook capabilities listed below describe the local implementation.
 - `mcp login` is the browser OAuth entry. Terminal-only `patchxnote login` remains the separate legacy Agent login. `mcp serve` does not open a login browser when the editor starts.
 
@@ -220,7 +222,7 @@ The fallback config uses the installed binary path:
 
 | Tool | Purpose |
 | --- | --- |
-| `patchxnote_get_current_user` | Show the current PatchXNote account status. |
+| `patchxnote_get_current_user` | Show the current PatchX Freenote account status. |
 | `patchxnote_list_recorder_cards` | List bound recorder cards with masked identifiers only. |
 | `patchxnote_get_quota_summary` | Show current quota. |
 | `patchxnote_get_model_usage_summary` | Show current-month AI usage and charged quota. |
@@ -311,7 +313,7 @@ patchxnote webhook remove "Product Feishu"
 Useful global flags:
 
 ```sh
---server-base-url <url>   PatchXNote API base URL
+--server-base-url <url>   PatchX Freenote API base URL
 --profile <name>          local profile name
 --output json             machine-readable output where supported
 --config <path>           non-secret config file path
@@ -348,7 +350,7 @@ npx -y --registry https://registry.npmjs.org patchxnote-agent@latest mcp config
 npx -y --registry https://registry.npmjs.org patchxnote-agent@latest mcp status --output json
 ```
 
-After authorization, add `--verify` to `mcp status` to verify access. If the native binary is on PATH, `patchxnote version` reports its version and release commit. The current published release is `0.2.14`.
+After authorization, add `--verify` to `mcp status` to verify access. If the native binary is on PATH, `patchxnote version` reports its version and release commit. The current published release is `0.2.15`.
 
 ## Troubleshooting
 
@@ -363,7 +365,7 @@ After authorization, add `--verify` to `mcp status` to verify access. If the nat
 | Record list is empty | Check that you selected the correct `platform`: `mobile` or `desktop`; use `model-io list` for lower-level AI processing runs. |
 | Webhook did not send | Confirm the alias exists, the target is enabled, and check the provider error returned by the command. |
 | Checksum verification fails | Retry later or pin a known version; the installer refuses unchecked binaries. |
-| `skill install` says the target already exists and differs | The target contains an unmanaged or manually edited `patchxnote-mcp` skill. Inspect or back it up first; rerun with `--force` only when you want PatchXNote Agent to replace that skill folder. |
+| `skill install` says the target already exists and differs | The target contains an unmanaged or manually edited `patchxnote-mcp` skill. Inspect or back it up first; rerun with `--force` only when you want PatchX Freenote Agent to replace that skill folder. |
 | Wrong server environment | Use `--server-base-url <url>` when logging in to another environment, and use a separate profile. |
 | New release returns `ETARGET` | Check `npm config get registry`. A mirror may not have synced yet; use the one-command official-registry example below. |
 
@@ -395,7 +397,7 @@ Choose the action you need; these are separate maintenance operations:
 
 ## Security And Risk Notice
 
-- PatchXNote server data access is read-only. Agent does not bind hardware, read raw audio, trigger model runs, handle payments, or expose Admin APIs.
+- PatchX Freenote server data access is read-only. Agent does not bind hardware, read raw audio, trigger model runs, handle payments, or expose Admin APIs.
 - Local webhook configuration and user-approved sending are supported local actions. Sending is explicit, with no automatic background delivery.
 - Credentials use OS-native secure storage; MCP config contains no bearer tokens or webhook secrets. Windows, WSL, and remote runtimes do not automatically share credentials.
 - Records are scoped to the authenticated account and selected `mobile` or `desktop` platform. Source text, AI results, exported files, and webhook destinations may be sensitive.
@@ -407,12 +409,12 @@ Search covers record basics cached during the current local MCP session. Linux h
 
 ## Release History
 
-[GitHub Releases](https://github.com/ZsTs119/patchxnote-agent/releases)
+[GitHub Releases](https://github.com/ZsTs119/patchx-freenote-agent/releases)
 
 <details>
-<summary>Release highlights from 0.2.6 to 0.2.14</summary>
+<summary>Release highlights from 0.2.6 to 0.2.15</summary>
 
-### 0.2.14 Highlights
+### 0.2.15 Highlights
 
 - Corrects the MCP Registry namespace to preserve GitHub owner casing: `io.github.ZsTs119/patchxnote-agent`.
 - Adds the `mcp serve` launch arguments and validates release metadata before publication.
@@ -432,7 +434,7 @@ Search covers record basics cached during the current local MCP session. Linux h
 
 ### 0.2.11 Highlights
 
-- Bundles the canonical PatchXNote MCP Skill inside the npm package.
+- Bundles the canonical PatchX Freenote MCP Skill inside the npm package.
 - Adds `npx -y patchxnote-agent@latest skill install` for npm-based skill installation without relying on a separate skills CLI or GitHub clone.
 - Makes skill installation idempotent, records a managed marker, and protects manually edited skill folders unless `--force` is explicitly used.
 - Extends skill package sync and validation so OpenAI, Claude, and npm copies stay byte-identical to `skills/patchxnote-mcp/`.
@@ -440,7 +442,7 @@ Search covers record basics cached during the current local MCP session. Linux h
 
 ### 0.2.10 Highlights
 
-- Adds the reusable PatchXNote MCP Skill at `skills/patchxnote-mcp/` so compatible AI clients can keep the setup and usage SOP across fresh or long sessions.
+- Adds the reusable PatchX Freenote MCP Skill at `skills/patchxnote-mcp/` so compatible AI clients can keep the setup and usage SOP across fresh or long sessions.
 - Adds OpenAI/Codex, Claude Code, Agent Skills, MCP Registry, Smithery, and third-party directory draft packaging and listing materials.
 - Adds MCP Registry metadata through `server.json` and `package.json#mcpName`, plus local validation and stdio smoke scripts for release evidence.
 - Updates the one-line setup prompt so agents install the skill when supported, then run MCP setup, browser OAuth, and tool verification without asking users to paste codes or tokens into chat.
@@ -476,8 +478,8 @@ For architecture, local development, and checks appropriate to your change, read
 
 ## Release Notes For Operators
 
-The [runbook](./docs/release-and-maintenance-runbook.zh-CN.md) covers version synchronization, GitHub Release assets, npm Trusted Publishing, and release verification. Current evidence: [0.2.14](./docs/evidence/2026-09-15-release-0.2.14.zh-CN.md).
+The [runbook](./docs/release-and-maintenance-runbook.zh-CN.md) covers version synchronization, GitHub Release assets, npm Trusted Publishing, and release verification. Current evidence: [0.2.15](./docs/evidence/2026-09-16-patchx-freenote-branding.zh-CN.md).
 
 ## License
 
-This repository is currently published without an open-source license. Contact PatchXNote before redistributing or embedding it in another product.
+This repository is currently published without an open-source license. Contact PatchX Freenote before redistributing or embedding it in another product.

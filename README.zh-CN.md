@@ -1,40 +1,42 @@
-# PatchXNote Agent
+# PatchX Freenote Agent
+
+PatchX Freenote 原名 PatchXNote。现有 `patchxnote-agent` 命令、`patchxnote-mcp` Skill、MCP 配置及本机凭据继续兼容。
 
 [English](./README.md) | [简体中文](./README.zh-CN.md)
 
 [![npm version](https://img.shields.io/npm/v/patchxnote-agent.svg)](https://www.npmjs.com/package/patchxnote-agent)
-[![GitHub release](https://img.shields.io/github/v/release/ZsTs119/patchxnote-agent)](https://github.com/ZsTs119/patchxnote-agent/releases)
+[![GitHub release](https://img.shields.io/github/v/release/ZsTs119/patchx-freenote-agent)](https://github.com/ZsTs119/patchx-freenote-agent/releases)
 [![MCP Registry](https://img.shields.io/badge/MCP_Registry-registered-blue)](https://registry.modelcontextprotocol.io/?q=patchxnote)
 [![skills.sh](https://img.shields.io/badge/skills.sh-listed-black)](https://skills.sh/ZsTs119/patchxnote-agent/patchxnote-mcp)
 
-把已同步的 PatchXNote 记录接入 AI 助手：查找记录、查看已有 AI 结果、生成 Markdown 草稿，并在确认后通过 webhook 分享。
+把已同步的 PatchX Freenote 记录接入 AI 助手：查找记录、查看已有 AI 结果、生成 Markdown 草稿，并在确认后通过 webhook 分享。
 
 [生产服务](https://freenote.patch-x.cn/) · [MCP 接入页面](https://freenote.patch-x.cn/mcp/setup/) · [下载 App](https://freenote.patch-x.cn/download/) · [使用指南](https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd)
 
-![把 PatchXNote 记录接入 AI 助手](./docs/assets/patchxnote-agent-cover.zh-CN.png)
+![把 PatchX Freenote 记录接入 AI 助手](./docs/assets/patchxnote-agent-cover.zh-CN.png)
 
-[快速开始](#快速开始) · [选择接入方式](#选择接入方式) · [Skill](#patchxnote-mcp-skill) · [使用场景](#常用场景) · [问题排查](#常见问题排查) · [工具参考](#mcp-工具)
+[快速开始](#快速开始) · [选择接入方式](#选择接入方式) · [Skill](#patchx-freenote-mcp-skill) · [使用场景](#常用场景) · [问题排查](#常见问题排查) · [工具参考](#mcp-工具)
 
 ## 公开发布与生态收录
 
 | 渠道 | 公开入口 | 当前可获取的内容 |
 | --- | --- | --- |
-| npm | [patchxnote-agent](https://www.npmjs.com/package/patchxnote-agent) | CLI 安装／启动壳及随包 Skill；当前发行版本 `0.2.14`。 |
-| GitHub Release | [v0.2.14](https://github.com/ZsTs119/patchxnote-agent/releases/tag/v0.2.14) | Windows/macOS/Linux 六平台二进制、校验清单及制品来源证明。 |
-| MCP 官方 Registry | [搜索 PatchXNote](https://registry.modelcontextprotocol.io/?q=patchxnote) · [版本记录](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.ZsTs119%2Fpatchxnote-agent/versions/0.2.14) | 登记名为 `io.github.ZsTs119/patchxnote-agent`。 |
+| npm | [patchxnote-agent](https://www.npmjs.com/package/patchxnote-agent) | CLI 安装／启动壳及随包 Skill；当前发行版本 `0.2.15`。 |
+| GitHub Release | [v0.2.15](https://github.com/ZsTs119/patchx-freenote-agent/releases/tag/v0.2.15) | Windows/macOS/Linux 六平台二进制、校验清单及制品来源证明。 |
+| MCP 官方 Registry | [搜索 PatchX Freenote](https://registry.modelcontextprotocol.io/?q=patchxnote) · [版本记录](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.ZsTs119%2Fpatchxnote-agent/versions/0.2.15) | 登记名为 `io.github.ZsTs119/patchxnote-agent`。 |
 | Vercel skills.sh | [patchxnote-mcp](https://skills.sh/ZsTs119/patchxnote-agent/patchxnote-mcp) | 可检索的 Skill 详情及安装说明。 |
 
-这些链接用于核对公开发行和目录收录。[0.2.14 验证记录](./docs/evidence/2026-09-15-release-0.2.14.zh-CN.md)包含制品校验、Windows 安装、本地协议发现和 Registry 回读；各客户端／平台的接入验收单独记录。
+这些链接用于核对公开发行和目录收录。[0.2.15 验证记录](./docs/evidence/2026-09-16-patchx-freenote-branding.zh-CN.md)包含制品校验、Windows 安装、本地协议发现和 Registry 回读；各客户端／平台的接入验收单独记录。
 
 ## 选择接入方式
 
 | 你的环境 | 使用入口 | 前提 |
 | --- | --- | --- |
-| 桌面编辑器或本地 MCP 客户端 | `npx -y patchxnote-agent@latest setup --client <client-id>` | Node.js 18+，Windows/macOS/Linux 的 amd64 或 arm64 环境，以及 PatchXNote 账号。 |
+| 桌面编辑器或本地 MCP 客户端 | `npx -y patchxnote-agent@latest setup --client <client-id>` | Node.js 18+，Windows/macOS/Linux 的 amd64 或 arm64 环境，以及 PatchX Freenote 账号。 |
 | 支持 Remote MCP 和 OAuth 的平台 | `https://freenote.patch-x.cn/mcp` | 配置自定义连接器并完成平台授权流程；此方式不要求在本机安装 Node.js。 |
-| 支持 Agent Skills 的 AI 助手 | 安装 [PatchXNote MCP Skill](#patchxnote-mcp-skill) | 提供接入和使用说明，配合 MCP 连接使用。 |
+| 支持 Agent Skills 的 AI 助手 | 安装 [PatchX Freenote MCP Skill](#patchx-freenote-mcp-skill) | 提供接入和使用说明，配合 MCP 连接使用。 |
 
-记录应已同步到 PatchXNote，并对当前账号可读。录音卡连接、音频处理和录音仍由 App/PC 完成。查询时选择对应来源：`mobile` 或 `desktop`。
+记录应已同步到 PatchX Freenote，并对当前账号可读。录音卡连接、音频处理和录音仍由 App/PC 完成。查询时选择对应来源：`mobile` 或 `desktop`。
 
 ## 快速开始
 
@@ -42,7 +44,7 @@
 
 ### 1. 配置本地客户端
 
-如果 AI 助手支持 Agent Skills，建议先安装 [Skill](#patchxnote-mcp-skill)；不支持时也可以继续 MCP 接入。按实际使用的客户端选择**一条**命令：
+如果 AI 助手支持 Agent Skills，建议先安装 [Skill](#patchx-freenote-mcp-skill)；不支持时也可以继续 MCP 接入。按实际使用的客户端选择**一条**命令：
 
 | 客户端 | 命令 |
 | --- | --- |
@@ -55,7 +57,7 @@ setup 会检查浏览器 OAuth 登录，并写入或打印对应的 MCP 配置�
 
 ### 2. 在浏览器完成授权
 
-在 setup 打开的 PatchXNote 页面完成登录，手机号验证码和凭据留在授权页面处理。如果需要单独发起浏览器登录：
+在 setup 打开的 PatchX Freenote 页面完成登录，手机号验证码和凭据留在授权页面处理。如果需要单独发起浏览器登录：
 
 ```sh
 npx -y patchxnote-agent@latest mcp login
@@ -71,13 +73,13 @@ npx -y patchxnote-agent@latest mcp status --verify --output json
 
 ### 使用托管平台时
 
-创建名为 **PatchXNote MCP** 的自定义 MCP 连接器，将服务地址设为 `https://freenote.patch-x.cn/mcp`，完成该平台的 OAuth 流程并刷新工具列表。具体步骤参考[客户端接入说明](./docs/mcp-clients/README.zh-CN.md)，各平台的支持方式和验收状态有所区别。
+创建名为 **PatchX Freenote MCP** 的自定义 MCP 连接器，将服务地址设为 `https://freenote.patch-x.cn/mcp`，完成该平台的 OAuth 流程并刷新工具列表。具体步骤参考[客户端接入说明](./docs/mcp-clients/README.zh-CN.md)，各平台的支持方式和验收状态有所区别。
 
 <details>
 <summary>复制完整接入提示给 AI 助手</summary>
 
 ```text
-请帮我接入 PatchXNote MCP，并在客户端支持 Agent Skills 时安装 PatchXNote MCP Skill。请使用生产服务地址 https://freenote.patch-x.cn/，接入页面为 https://freenote.patch-x.cn/mcp/setup/；如现有配置显式指定了旧测试地址，请先将本次接入使用的服务地址调整为上述生产地址。首先，如果当前是支持本地命令执行的环境，请在本机执行 npx -y patchxnote-agent@latest skill install，让后续新会话或长上下文能记住 PatchXNote SOP；如果当前客户端不支持 Skill 安装，不要判定为不能接入，请继续按客户端能力完成 MCP 接入。请识别你所在的 MCP 客户端：如果是 Codex、Cursor、VS Code、Claude Desktop、Claude Code、Windsurf 等本地 MCP 客户端，请在当前本机、并且在后续会启动 MCP 服务的同一个运行时执行 npx -y patchxnote-agent@latest setup --client <client-id>；如果是不支持本机命令但支持 Remote MCP、自定义连接器、自定义 MCP 服务或工具插件的 AI 客户端/云平台，请创建名为 PatchXNote MCP 的自定义 MCP 连接器，并使用这个 PatchXNote Remote MCP URL 完成接入：https://freenote.patch-x.cn/mcp。如果不确定客户端 ID 或配置格式，本地客户端先执行 npx -y patchxnote-agent@latest mcp config 并使用打印出的通用 stdio 配置，远程客户端则优先寻找 Remote MCP Server URL / MCP Server URL / Custom Connector 配置入口。登录时请打开浏览器让我完成 PatchXNote 手机号验证码授权，不要让我把验证码、OAuth code、授权码、access token、refresh token 或 webhook secret 粘贴到聊天里。完成后请调用 patchxnote_get_current_user 和 patchxnote_list_memories，参数 {"platform":"mobile","limit":5} 验证可用。参考资料：https://github.com/ZsTs119/patchxnote-agent 和 https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd。
+请帮我接入 PatchX Freenote MCP，并在客户端支持 Agent Skills 时安装 PatchX Freenote MCP Skill。请使用生产服务地址 https://freenote.patch-x.cn/，接入页面为 https://freenote.patch-x.cn/mcp/setup/；如现有配置显式指定了旧测试地址，请先将本次接入使用的服务地址调整为上述生产地址。首先，如果当前是支持本地命令执行的环境，请在本机执行 npx -y patchxnote-agent@latest skill install，让后续新会话或长上下文能记住 PatchX Freenote SOP；如果当前客户端不支持 Skill 安装，不要判定为不能接入，请继续按客户端能力完成 MCP 接入。请识别你所在的 MCP 客户端：如果是 Codex、Cursor、VS Code、Claude Desktop、Claude Code、Windsurf 等本地 MCP 客户端，请在当前本机、并且在后续会启动 MCP 服务的同一个运行时执行 npx -y patchxnote-agent@latest setup --client <client-id>；如果是不支持本机命令但支持 Remote MCP、自定义连接器、自定义 MCP 服务或工具插件的 AI 客户端/云平台，请创建名为 PatchX Freenote MCP 的自定义 MCP 连接器，并使用这个 PatchX Freenote Remote MCP URL 完成接入：https://freenote.patch-x.cn/mcp。如果不确定客户端 ID 或配置格式，本地客户端先执行 npx -y patchxnote-agent@latest mcp config 并使用打印出的通用 stdio 配置，远程客户端则优先寻找 Remote MCP Server URL / MCP Server URL / Custom Connector 配置入口。登录时请打开浏览器让我完成 PatchX Freenote 手机号验证码授权，不要让我把验证码、OAuth code、授权码、access token、refresh token 或 webhook secret 粘贴到聊天里。完成后请调用 patchxnote_get_current_user 和 patchxnote_list_memories，参数 {"platform":"mobile","limit":5} 验证可用。参考资料：https://github.com/ZsTs119/patchx-freenote-agent 和 https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd。
 ```
 
 </details>
@@ -93,7 +95,7 @@ npx -y patchxnote-agent@latest mcp status --verify --output json
 
 这些操作以已有记录／结果为输入。本地草稿文件和本机 webhook 别名需要对应的本地工具能力，使用前以当前连接端点返回的工具列表为准。
 
-## PatchXNote MCP Skill
+## PatchX Freenote MCP Skill
 
 Skill 为兼容的 AI 助手提供可重复使用的接入、授权、记录查询、结果查看和已确认 webhook 操作指引。npm 包已内置 Skill，推荐安装方式不需要单独克隆 GitHub 仓库：
 
@@ -101,7 +103,7 @@ Skill 为兼容的 AI 助手提供可重复使用的接入、授权、记录查�
 npx -y patchxnote-agent@latest skill install
 ```
 
-默认安装到用户目录中的 `.agents/skills/patchxnote-mcp`。Skill 本身不会登录 PatchXNote，也不会启动 MCP 服务。
+默认安装到用户目录中的 `.agents/skills/patchxnote-mcp`。Skill 本身不会登录 PatchX Freenote，也不会启动 MCP 服务。
 
 <details>
 <summary>Skill 安装参数及已有目录处理</summary>
@@ -125,7 +127,7 @@ npx -y patchxnote-agent@latest skill install
 使用标准 skills CLI 时，以下 Codex 示例从 GitHub 安装到当前项目。它只安装 Skill，不会完成 MCP 连接；与上方 npm 随包安装方式按需选择一种。
 
 ```sh
-npx -y skills add ZsTs119/patchxnote-agent --skill patchxnote-mcp --agent codex --yes
+npx -y skills add ZsTs119/patchx-freenote-agent --skill patchxnote-mcp --agent codex --yes
 ```
 
 </details>
@@ -135,7 +137,7 @@ npx -y skills add ZsTs119/patchxnote-agent --skill patchxnote-mcp --agent codex 
 客户端使用的传输方式，与工具实际运行的位置，需要分别理解：
 
 - `mcp serve` 通过 **stdio** 与本地客户端通信。默认 `auto` 模式下，存在匹配且有效的浏览器 OAuth 凭据时，会代理到托管 MCP 服务；否则使用本地实现。
-- `0.2.14` 的本地实现提供 **19 个工具定义**，其中的数据调用仍需对应登录授权。通过代理或直接连接的托管服务提供自己的工具集，数量和能力可能不同。
+- `0.2.15` 的本地实现提供 **19 个工具定义**，其中的数据调用仍需对应登录授权。通过代理或直接连接的托管服务提供自己的工具集，数量和能力可能不同。
 - 可用工具以实际连接端点的 `tools/list` 为准。下方涉及本地文件和 webhook 的工具表描述的是本地实现。
 - `mcp login` 是浏览器 OAuth 入口；终端方式的 `patchxnote login` 保留为独立的旧 Agent 登录。编辑器启动 `mcp serve` 时不会自动打开登录浏览器。
 
@@ -220,7 +222,7 @@ fallback 配置会使用已安装二进制的绝对路径：
 
 | 工具 | 用途 |
 | --- | --- |
-| `patchxnote_get_current_user` | 查看当前 PatchXNote 账号状态。 |
+| `patchxnote_get_current_user` | 查看当前 PatchX Freenote 账号状态。 |
 | `patchxnote_list_recorder_cards` | 查看已绑定录音卡，只返回脱敏标识。 |
 | `patchxnote_get_quota_summary` | 查看当前账号额度。 |
 | `patchxnote_get_model_usage_summary` | 查看当月 AI 使用情况和扣费额度。 |
@@ -311,7 +313,7 @@ patchxnote webhook remove "产品群 飞书"
 常用全局参数：
 
 ```sh
---server-base-url <url>   PatchXNote API base URL
+--server-base-url <url>   PatchX Freenote API base URL
 --profile <name>          本地 profile 名称
 --output json             支持时输出机器可读 JSON
 --config <path>           非 secret 配置文件路径
@@ -348,7 +350,7 @@ npx -y --registry https://registry.npmjs.org patchxnote-agent@latest mcp config
 npx -y --registry https://registry.npmjs.org patchxnote-agent@latest mcp status --output json
 ```
 
-完成授权后，可以给 `mcp status` 加上 `--verify` 核对访问状态。原生二进制已加入 PATH 时，`patchxnote version` 可查看版本和发行提交。当前已发布版本为 `0.2.14`。
+完成授权后，可以给 `mcp status` 加上 `--verify` 核对访问状态。原生二进制已加入 PATH 时，`patchxnote version` 可查看版本和发行提交。当前已发布版本为 `0.2.15`。
 
 ## 常见问题排查
 
@@ -363,7 +365,7 @@ npx -y --registry https://registry.npmjs.org patchxnote-agent@latest mcp status 
 | 记录列表为空 | 检查是否选择了正确的 `platform`：`mobile` 或 `desktop`；底层 AI 调用记录请用 `model-io list`。 |
 | webhook 没发出去 | 确认别名存在、目标启用，并检查下游平台返回的错误信息。 |
 | checksum 校验失败 | 稍后重试或固定已知版本；安装器会拒绝未校验二进制。 |
-| `skill install` 提示目标已存在且内容不同 | 目标目录里已有非托管或手动修改过的 `patchxnote-mcp` skill。先检查或备份；只有确认要让 PatchXNote Agent 替换该 skill 目录时，再执行 `--force`。 |
+| `skill install` 提示目标已存在且内容不同 | 目标目录里已有非托管或手动修改过的 `patchxnote-mcp` skill。先检查或备份；只有确认要让 PatchX Freenote Agent 替换该 skill 目录时，再执行 `--force`。 |
 | 连到了错误服务端 | 登录其他环境时使用 `--server-base-url <url>`，并为不同环境使用独立 profile。 |
 | 新版安装返回 `ETARGET` | 先用 `npm config get registry` 查看来源；镜像可能尚未同步，可对本次命令指定下方官方源。 |
 
@@ -395,7 +397,7 @@ npx -y --registry https://registry.npmjs.org patchxnote-agent@latest install --p
 
 ## 安全与风险提示
 
-- PatchXNote 服务端数据访问保持只读；Agent 不绑定硬件、不读取原始音频、不触发模型运行，也不处理支付或 Admin API。
+- PatchX Freenote 服务端数据访问保持只读；Agent 不绑定硬件、不读取原始音频、不触发模型运行，也不处理支付或 Admin API。
 - 本地 webhook 配置和用户已确认的发送属于支持的本地操作。发送须明确触发，不会在后台自动发生。
 - 凭据保存在系统原生安全存储中，MCP 配置不包含 bearer token 或 webhook 密钥。Windows、WSL 和远程环境不会自动共享凭据。
 - 记录按登录账号及 `mobile`／`desktop` 平台限定范围。原文文本、AI 结果、导出文件和 webhook 目标可能包含私密信息。
@@ -407,12 +409,12 @@ npx -y --registry https://registry.npmjs.org patchxnote-agent@latest install --p
 
 ## 版本记录
 
-[GitHub Releases](https://github.com/ZsTs119/patchxnote-agent/releases)
+[GitHub Releases](https://github.com/ZsTs119/patchx-freenote-agent/releases)
 
 <details>
-<summary>0.2.6 至 0.2.14 更新重点</summary>
+<summary>0.2.6 至 0.2.15 更新重点</summary>
 
-### 0.2.14 更新重点
+### 0.2.15 更新重点
 
 - 修正 MCP Registry 登记名大小写：`io.github.ZsTs119/patchxnote-agent`，与 GitHub 发布身份一致。
 - 补齐 `mcp serve` 启动参数，在发版前校验关联元数据。
@@ -432,7 +434,7 @@ npx -y --registry https://registry.npmjs.org patchxnote-agent@latest install --p
 
 ### 0.2.11 更新重点
 
-- 将 canonical PatchXNote MCP Skill 打包进 npm package。
+- 将 canonical PatchX Freenote MCP Skill 打包进 npm package。
 - 新增 `npx -y patchxnote-agent@latest skill install`，可以通过 npm 安装 skill，不再依赖单独的 skills CLI 或 GitHub clone。
 - skill 安装支持重复执行，会写入托管标记；已有手动修改目录时默认保护性拒绝，只有显式 `--force` 才会替换。
 - 扩展 skill 包同步和校验，让 OpenAI、Claude、npm 三份副本和 `skills/patchxnote-mcp/` 保持字节一致。
@@ -440,7 +442,7 @@ npx -y --registry https://registry.npmjs.org patchxnote-agent@latest install --p
 
 ### 0.2.10 更新重点
 
-- 新增可复用的 PatchXNote MCP Skill：`skills/patchxnote-mcp/`，让兼容 AI 客户端在新会话或长上下文里继续记住 setup 和使用 SOP。
+- 新增可复用的 PatchX Freenote MCP Skill：`skills/patchxnote-mcp/`，让兼容 AI 客户端在新会话或长上下文里继续记住 setup 和使用 SOP。
 - 新增 OpenAI/Codex、Claude Code、Agent Skills、MCP Registry、Smithery 和第三方目录的首版草稿包与 listing 文案。
 - 新增 MCP Registry 元数据：`server.json` 和 `package.json#mcpName`，并补充本地校验与 stdio smoke 脚本作为发布证据。
 - 更新一句话 setup prompt：客户端支持时先安装 skill，再执行 MCP setup、浏览器 OAuth 和工具验证，且不要求用户把验证码或 token 粘贴到聊天里。
@@ -476,8 +478,8 @@ npx -y --registry https://registry.npmjs.org patchxnote-agent@latest install --p
 
 ## 发布维护说明
 
-[维护手册](./docs/release-and-maintenance-runbook.zh-CN.md)包含版本同步、GitHub Release 制品、npm Trusted Publishing 和发布验证流程。当前证据：[0.2.14](./docs/evidence/2026-09-15-release-0.2.14.zh-CN.md)。
+[维护手册](./docs/release-and-maintenance-runbook.zh-CN.md)包含版本同步、GitHub Release 制品、npm Trusted Publishing 和发布验证流程。当前证据：[0.2.15](./docs/evidence/2026-09-16-patchx-freenote-branding.zh-CN.md)。
 
 ## 许可证
 
-当前仓库尚未发布开源许可证。重新分发或嵌入其他产品前，请先联系 PatchXNote。
+当前仓库尚未发布开源许可证。重新分发或嵌入其他产品前，请先联系 PatchX Freenote。

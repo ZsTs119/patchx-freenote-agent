@@ -56,7 +56,9 @@ jobs:
 
       - name: Validate release metadata and select affected tests
         id: validation
-        run: node scripts/validate-release-metadata.mjs
+        run: |
+          node scripts/validate-release-metadata.test.mjs
+          node scripts/validate-release-metadata.mjs
 
       - name: Test npm wrapper
         if: ${{ steps.validation.outputs.wrapper_changed == 'true' }}

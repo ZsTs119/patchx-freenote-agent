@@ -348,11 +348,11 @@ for (const warning of warnings) {
   console.warn(`Warning: ${warning}`);
 }
 if (errors.length > 0) {
-  console.error("PatchXNote skill package validation failed:");
+  console.error("PatchX Freenote skill package validation failed:");
   for (const error of errors) {
     console.error(`- ${error}`);
   }
   process.exit(1);
 }
 
-console.log("PatchXNote skill package validation passed.");
+console.log("PatchX Freenote skill package validation passed.");

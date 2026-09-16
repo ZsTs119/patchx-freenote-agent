@@ -57,7 +57,7 @@ func defaultWebhookTools(server *Server) []Tool {
 	return []Tool{
 		{
 			Name:        "patchxnote_list_webhook_targets",
-			Description: "List local webhook target aliases and masked metadata for the active PatchXNote Agent profile.",
+			Description: "List local webhook target aliases and masked metadata for the active PatchX Freenote Agent profile.",
 			InputSchema: objectSchema(map[string]any{
 				"include_disabled": booleanProperty(),
 			}, nil),
@@ -101,7 +101,7 @@ func defaultWebhookTools(server *Server) []Tool {
 		},
 		{
 			Name:        "patchxnote_render_webhook_message",
-			Description: "Render a PatchXNote memory delivery document into Markdown and optionally save a local draft directory.",
+			Description: "Render a PatchX Freenote memory delivery document into Markdown and optionally save a local draft directory.",
 			InputSchema: objectSchema(map[string]any{
 				"memory_id":        stringProperty(1, 160),
 				"platform":         platformProperty(),
@@ -118,7 +118,7 @@ func defaultWebhookTools(server *Server) []Tool {
 		},
 		{
 			Name:        "patchxnote_export_model_io",
-			Description: "Export explicit PatchXNote Agent model IO JSON to a user-chosen local file and return only a summary.",
+			Description: "Export explicit PatchX Freenote Agent model IO JSON to a user-chosen local file and return only a summary.",
 			InputSchema: objectSchema(map[string]any{
 				"memory_id":  stringProperty(1, 160),
 				"request_id": stringProperty(1, 160),
@@ -448,8 +448,8 @@ func (s *Server) webhookMessageFromSendArgs(ctx context.Context, title string, m
 	switch {
 	case testMessage:
 		return webhook.Message{
-			Title:    "PatchXNote Webhook Test",
-			Markdown: "这是一条 PatchXNote Agent MCP 本地测试消息。",
+			Title:    "PatchX Freenote Webhook Test",
+			Markdown: "这是一条 PatchX Freenote Agent MCP 本地测试消息。",
 			Metadata: map[string]string{"source": "mcp-test"},
 		}, nil
 	case markdown != "":
@@ -578,7 +578,7 @@ func (s *Server) fetchModelRunIOTrace(ctx context.Context, platform string, requ
 
 func (s *Server) withAgentAccessToken(ctx context.Context, platform string, call func(accessToken string) error) error {
 	if s.api == nil {
-		return fmt.Errorf("PatchXNote API client is not configured")
+		return fmt.Errorf("PatchX Freenote API client is not configured")
 	}
 	requiredScopes := []string{}
 	if platform != "" {
@@ -598,7 +598,7 @@ func (s *Server) withAgentAccessToken(ctx context.Context, platform string, call
 			if refreshedOK && refreshed.AccessToken != "" {
 				for _, scope := range requiredScopes {
 					if !hasScope(refreshed.Scopes, scope) {
-						return rpcErr(codeToolError, "permission_denied", "PatchXNote Agent does not have permission for this tool")
+						return rpcErr(codeToolError, "permission_denied", "PatchX Freenote Agent does not have permission for this tool")
 					}
 				}
 				err = call(refreshed.AccessToken)

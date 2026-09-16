@@ -1,26 +1,32 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.ZsTs119/patchxnote-agent",
-  "description": "PatchXNote MCP: accounts, summaries, memories, model results and user-approved webhook workflows.",
+  "description": "PatchX Freenote MCP: summaries, memories, model results and user-approved webhook workflows.",
   "repository": {
-    "url": "https://github.com/ZsTs119/patchxnote-agent",
+    "url": "https://github.com/ZsTs119/patchx-freenote-agent",
     "source": "github"
   },
-  "version": "0.2.14",
+  "version": "0.2.15",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "patchxnote-agent",
-      "version": "0.2.14",
+      "version": "0.2.15",
       "transport": {
         "type": "stdio"
       },
       "packageArguments": [
-        { "type": "positional", "value": "mcp" },
-        { "type": "positional", "value": "serve" }
+        {
+          "type": "positional",
+          "value": "mcp"
+        },
+        {
+          "type": "positional",
+          "value": "serve"
+        }
       ]
     }
   ],
-  "title": "PatchXNote Agent",
+  "title": "PatchX Freenote Agent",
   "websiteUrl": "https://freenote.patch-x.cn/mcp/setup/"
 }

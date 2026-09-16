@@ -1,4 +1,4 @@
-# PatchXNote MCP 官网实现与验收 Checklist
+# PatchX Freenote MCP 官网实现与验收 Checklist
 
 **日期：** 2026-08-28
 
@@ -27,7 +27,7 @@
 
 ## C. 官网前端
 
-- [ ] 首屏展示 PatchXNote MCP 的产品定位和主 CTA。
+- [ ] 首屏展示 PatchX Freenote MCP 的产品定位和主 CTA。
 - [ ] 顶部导航覆盖 Clients、Security、Docs、Download App、Get started。
 - [ ] 顶部品牌首屏使用 `PATCHX`，不把 `NOTE` 放进主 logo。
 - [ ] 第一屏只保留核心标题、副标题、两枚 CTA、产品主视觉和轻量编辑器提示。

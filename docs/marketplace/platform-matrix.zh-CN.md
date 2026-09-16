@@ -1,8 +1,8 @@
-# PatchXNote MCP Skill Platform Matrix
+# PatchX Freenote MCP Skill Platform Matrix
 
 更新日期：2026-09-03
 
-本文记录 PatchXNote MCP Skill 和 PatchXNote Agent MCP server 的首版分发渠道。状态只描述仓库侧准备度，不代表平台已经审核通过。
+本文记录 PatchX Freenote MCP Skill 和 PatchX Freenote Agent MCP server 的首版分发渠道。状态只描述仓库侧准备度，不代表平台已经审核通过。
 
 ## 状态定义
 

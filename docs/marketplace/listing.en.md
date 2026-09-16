@@ -1,14 +1,14 @@
-# PatchXNote Agent Listing Copy
+# PatchX Freenote Agent Listing Copy
 
 ## Short Description
 
-Connect local AI clients to PatchXNote MCP for safe access to summaries, memories, model results, and approved webhook workflows.
+Connect local AI clients to PatchX Freenote MCP for safe access to summaries, memories, model results, and approved webhook workflows.
 
 ## Long Description
 
-PatchXNote Agent helps trusted local AI clients connect to PatchXNote through a local stdio MCP server. It guides setup, browser OAuth, verification, and common PatchXNote workflows such as listing recent mobile or desktop memories, checking account and quota projections, inspecting model-result fields, creating Markdown drafts, and manually sending user-approved webhook messages.
+PatchX Freenote Agent helps trusted local AI clients connect to PatchX Freenote through a local stdio MCP server. It guides setup, browser OAuth, verification, and common PatchX Freenote workflows such as listing recent mobile or desktop memories, checking account and quota projections, inspecting model-result fields, creating Markdown drafts, and manually sending user-approved webhook messages.
 
-PatchXNote server-backed data access is read-only and platform-scoped. The local webhook tools are explicit user-triggered exceptions for configuring local target aliases and sending approved content. PatchXNote Agent does not expose raw audio, full transcripts by default, hardware write operations, payments, Admin APIs, model execution, or background automatic webhook pushes.
+PatchX Freenote server-backed data access is read-only and platform-scoped. The local webhook tools are explicit user-triggered exceptions for configuring local target aliases and sending approved content. PatchX Freenote Agent does not expose raw audio, full transcripts by default, hardware write operations, payments, Admin APIs, model execution, or background automatic webhook pushes.
 
 ## Tags
 

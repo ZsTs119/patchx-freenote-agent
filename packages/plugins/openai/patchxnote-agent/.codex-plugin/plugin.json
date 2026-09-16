@@ -1,13 +1,13 @@
 {
   "name": "patchxnote-agent",
-  "version": "0.1.1",
-  "description": "PatchXNote MCP setup and workflow skill package.",
+  "version": "0.1.2",
+  "description": "PatchX Freenote MCP setup and workflow skill package.",
   "author": {
-    "name": "PatchXNote",
+    "name": "PatchX Freenote",
     "url": "https://github.com/ZsTs119"
   },
   "homepage": "https://freenote.patch-x.cn/mcp/setup/",
-  "repository": "https://github.com/ZsTs119/patchxnote-agent",
+  "repository": "https://github.com/ZsTs119/patchx-freenote-agent",
   "license": "UNLICENSED",
   "keywords": [
     "patchxnote",
@@ -19,10 +19,10 @@
   ],
   "skills": "./skills/",
   "interface": {
-    "displayName": "PatchXNote Agent",
-    "shortDescription": "Set up PatchXNote MCP and use summaries safely.",
-    "longDescription": "Helps local AI clients install, verify, and use PatchXNote MCP workflows while preserving OAuth, runtime, and evidence boundaries.",
-    "developerName": "PatchXNote",
+    "displayName": "PatchX Freenote Agent",
+    "shortDescription": "Set up PatchX Freenote MCP and use summaries safely.",
+    "longDescription": "Helps local AI clients install, verify, and use PatchX Freenote MCP workflows while preserving OAuth, runtime, and evidence boundaries.",
+    "developerName": "PatchX Freenote",
     "category": "Productivity",
     "capabilities": [
       "Read",
@@ -31,9 +31,9 @@
     "websiteURL": "https://freenote.patch-x.cn/mcp/setup/",
     "brandColor": "#1F7A68",
     "defaultPrompt": [
-      "Help me connect PatchXNote MCP.",
-      "List my latest 5 PatchXNote mobile summaries.",
-      "Check my PatchXNote MCP tools."
+      "Help me connect PatchX Freenote MCP.",
+      "List my latest 5 PatchX Freenote mobile summaries.",
+      "Check my PatchX Freenote MCP tools."
     ]
   }
 }

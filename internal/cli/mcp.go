@@ -14,7 +14,7 @@ import (
 func newMCPCommand(state *rootState) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "mcp",
-		Short: "Run or configure the PatchXNote MCP server",
+		Short: "Run or configure the PatchX Freenote MCP server",
 	}
 	cmd.AddCommand(
 		newMCPConfigCommand(state),
@@ -29,7 +29,7 @@ func newMCPCommand(state *rootState) *cobra.Command {
 func newMCPServeCommand(state *rootState) *cobra.Command {
 	return &cobra.Command{
 		Use:   "serve",
-		Short: "Serve PatchXNote MCP over stdio",
+		Short: "Serve PatchX Freenote MCP over stdio",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			runtime, err := loadRuntime(state)

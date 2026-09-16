@@ -1,4 +1,4 @@
-# PatchXNote MCP Troubleshooting
+# PatchX Freenote MCP Troubleshooting
 
 Use this reference when setup, login, tool calls, or client loading fail.
 
@@ -64,7 +64,7 @@ Then use the printed absolute `patchxnote` command path with `args: ["mcp", "ser
 
 ## Credential Storage Missing
 
-PatchXNote Agent expects OS-native secure storage:
+PatchX Freenote Agent expects OS-native secure storage:
 
 - macOS Keychain
 - Windows Credential Manager
@@ -92,7 +92,7 @@ Check:
 - Is `patchxnote_search_memories` searching only current-session cache?
 - Does `patchxnote_list_memories` need pagination?
 
-Do not infer that no PatchXNote data exists across every platform unless both platforms were queried and accepted by the user.
+Do not infer that no PatchX Freenote data exists across every platform unless both platforms were queried and accepted by the user.
 
 ## Tool Count Drift
 

@@ -71,7 +71,7 @@ func newMCPLoginCommand(state *rootState) *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "login",
-		Short: "Log in to PatchXNote MCP with browser OAuth",
+		Short: "Log in to PatchX Freenote MCP with browser OAuth",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			runtimeState, err := loadRuntime(state)
@@ -176,15 +176,15 @@ func runMCPLoginFlow(cmd *cobra.Command, state *rootState, runtimeState runtimeS
 		return mcpLoginResult{}, err
 	}
 	if options.NoBrowser {
-		fmt.Fprintf(cmd.ErrOrStderr(), "Open PatchXNote MCP login URL in your browser:\n%s\n", authorizeURL)
+		fmt.Fprintf(cmd.ErrOrStderr(), "Open PatchX Freenote MCP login URL in your browser:\n%s\n", authorizeURL)
 	} else {
-		fmt.Fprintln(cmd.ErrOrStderr(), "Opening PatchXNote MCP login in your browser...")
+		fmt.Fprintln(cmd.ErrOrStderr(), "Opening PatchX Freenote MCP login in your browser...")
 		opener := state.browserOpen
 		if opener == nil {
 			opener = oauthflow.OpenBrowser
 		}
 		if err := opener(authorizeURL); err != nil {
-			fmt.Fprintf(cmd.ErrOrStderr(), "Could not open browser automatically: %v\nOpen PatchXNote MCP login URL in your browser:\n%s\n", err, authorizeURL)
+			fmt.Fprintf(cmd.ErrOrStderr(), "Could not open browser automatically: %v\nOpen PatchX Freenote MCP login URL in your browser:\n%s\n", err, authorizeURL)
 		}
 	}
 
@@ -231,7 +231,7 @@ func newMCPStatusCommand(state *rootState) *cobra.Command {
 	var clientID string
 	cmd := &cobra.Command{
 		Use:   "status",
-		Short: "Print PatchXNote MCP OAuth login status",
+		Short: "Print PatchX Freenote MCP OAuth login status",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			runtimeState, err := loadRuntime(state)
@@ -309,7 +309,7 @@ func newMCPLogoutCommand(state *rootState) *cobra.Command {
 	var localOnly bool
 	cmd := &cobra.Command{
 		Use:   "logout",
-		Short: "Revoke and remove PatchXNote MCP OAuth credentials",
+		Short: "Revoke and remove PatchX Freenote MCP OAuth credentials",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			runtimeState, err := loadRuntime(state)

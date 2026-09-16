@@ -122,7 +122,7 @@ func TestSetupAutoWritesCursorConfigWithExistingMCPOAuth(t *testing.T) {
 	if err != nil {
 		t.Fatalf("setup cursor: %v", err)
 	}
-	if !strings.Contains(stdout, "Installed PatchXNote MCP config for cursor") {
+	if !strings.Contains(stdout, "Installed PatchX Freenote MCP config for cursor") {
 		t.Fatalf("unexpected stdout: %s", stdout)
 	}
 	stdout, _, err = executeForTestWithDeps(t, Deps{

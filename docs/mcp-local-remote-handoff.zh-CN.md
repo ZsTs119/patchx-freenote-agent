@@ -1,4 +1,4 @@
-# PatchXNote 本地 MCP 与远程 MCP 交接文档
+# PatchX Freenote 本地 MCP 与远程 MCP 交接文档
 
 **日期：** 2026-09-11
 
@@ -6,18 +6,18 @@
 
 ## 当前结论
 
-PatchXNote MCP 现在分两条链路：
+PatchX Freenote MCP 现在分两条链路：
 
 - 本地 MCP：面向 VS Code、Cursor、Codex、Claude Code、Claude Desktop、Windsurf、Trae、Qoder、WorkBuddy 等能在用户电脑上启动本地命令的编辑器或桌面 Agent。
 - 远程 MCP：面向飞书 Aily / 豆包工作伙伴、腾讯 Agent 平台、企业 WorkBuddy 等平台型智能体，它们通常不能直接运行用户本机 `npx`，需要 HTTPS MCP 网关。
 
-两条链路共享同一套 PatchXNote Agent 工具语义和服务端授权边界，不应该在官网文案里混成一个安装方式。
+两条链路共享同一套 PatchX Freenote Agent 工具语义和服务端授权边界，不应该在官网文案里混成一个安装方式。
 
 ## 对外术语
 
 官网、PRD、市场页和后续竞品调研建议统一使用这些术语：
 
-- **Hybrid MCP distribution**：混合 MCP 分发。PatchXNote 同时提供本地 stdio MCP 和远程 hosted MCP。
+- **Hybrid MCP distribution**：混合 MCP 分发。PatchX Freenote 同时提供本地 stdio MCP 和远程 hosted MCP。
 - **Local stdio MCP server**：本地 stdio MCP。由编辑器或 Agent 在用户电脑上启动 `npx -y patchxnote-agent@latest mcp serve`，通过 stdin/stdout 传 JSON-RPC。
 - **npm stdio launcher**：npm 启动器。`patchxnote-agent` npm 包负责安装/校验平台原生 `patchxnote` 二进制，然后代理到 `patchxnote mcp serve`。
 - **Local MCP bridge / stdio-to-remote proxy**：本地桥接层。用户完成 `mcp login` 后，本地 stdio MCP 可以把请求代理到 GoServer 远程 `/mcp`，同时保留旧本地 Agent fallback。
@@ -33,7 +33,7 @@ PatchXNote MCP 现在分两条链路：
 一句话定义当前技术方向：
 
 ```text
-PatchXNote MCP 是 Hybrid MCP distribution：本地用 npm stdio launcher + browser OAuth + OS-native secure storage 接入桌面编辑器；平台侧用 GoServer-hosted remote MCP gateway + OAuth connector session 接入云端/企业智能体。
+PatchX Freenote MCP 是 Hybrid MCP distribution：本地用 npm stdio launcher + browser OAuth + OS-native secure storage 接入桌面编辑器；平台侧用 GoServer-hosted remote MCP gateway + OAuth connector session 接入云端/企业智能体。
 ```
 
 ## 本地 MCP 事实
@@ -81,11 +81,11 @@ PatchXNote MCP 是 Hybrid MCP distribution：本地用 npm stdio launcher + brow
 
 ```text
 用户在官网或平台控制台选择平台客户端
- -> 用户完成 PatchXNote 授权
+ -> 用户完成 PatchX Freenote 授权
  -> 平台拿到可调用远程 MCP 的连接配置或连接会话
  -> 平台通过 HTTPS 调用 GoServer /mcp
  -> GoServer 按 connector session / OAuth / Agent access 边界映射到当前账号
- -> 平台调用同一套 PatchXNote MCP 工具
+ -> 平台调用同一套 PatchX Freenote MCP 工具
 ```
 
 当前远程入口：
@@ -98,7 +98,7 @@ https://freenote.patch-x.cn/mcp
 
 关键口径：
 
-- 平台型客户端不应要求用户把 PatchXNote access token 粘贴进第三方平台。
+- 平台型客户端不应要求用户把 PatchX Freenote access token 粘贴进第三方平台。
 - 能走平台官方 OAuth / remote MCP 的，优先走远程 MCP。
 - 不能走 remote MCP 的，记录为平台限制；如业务必须接入，再评估 webhook / HTTP tool / 平台私有插件方案。
 - 远程 MCP 不能访问用户本机文件系统，render/export/webhook 等本地能力需要服务端持久化或返回 bounded content/download handle。
@@ -113,16 +113,16 @@ https://freenote.patch-x.cn/mcp
 
 以下页面已在 2026-08-27 核验，可作为官网信息架构和安装入口参考。不要直接照抄文案、视觉或商标资产。
 
-| 产品/页面 | 可学习点 | 对 PatchXNote 的启发 |
+| 产品/页面 | 可学习点 | 对 PatchX Freenote 的启发 |
 | --- | --- | --- |
 | [1Server Clients](https://1server.ai/clients/) | 客户端卡片网格、`Use ... in every MCP client`、每个客户端详情页、通用 `mcpServers` fallback。 | 首页可以先让用户选择正在用的 AI 工具；详情页再给 setup command、config fallback、限制说明。 |
-| [Context7 Install](https://context7.com/install) | `One command` + `Pick your agent`，把 Claude Code、Cursor、Codex 等入口压得很短。 | PatchXNote 可以把第一屏主路径做成 `npx -y patchxnote-agent@latest setup --client <id>`，降低文档感。 |
+| [Context7 Install](https://context7.com/install) | `One command` + `Pick your agent`，把 Claude Code、Cursor、Codex 等入口压得很短。 | PatchX Freenote 可以把第一屏主路径做成 `npx -y patchxnote-agent@latest setup --client <id>`，降低文档感。 |
 | [Context7 MCP Clients](https://context7.com/docs/resources/all-clients) | 每个客户端有本地连接配置，也有 VS Code 扩展自动注册路径。 | 我们也要把“自动安装”和“手动配置”分开，不能未验收就写一键。 |
-| [Composio MCP for VS Code](https://composio.dev/toolkits/composio/framework/vscode) | 单客户端详情页包含 one-click、manual config、authorize、authenticate 四段。 | PatchXNote 每个详情页也按安装、登录授权、验证、故障恢复来写。 |
-| [Zapier MCP](https://zapier.com/mcp) | 面向普通用户强调“AI action bridge”、平台无关、企业治理、无终端/无配置的引导。 | 我们官网可以强调“让 AI 读 PatchXNote 记录和总结”，但第一版不能承诺无终端，除非 deeplink/插件真实闭环。 |
-| [Zapier Remote MCP Client](https://help.zapier.com/hc/en-us/articles/38777069364109-Connect-remote-MCP-servers-to-Zapier-using-MCP-Client) | 远程 MCP 表单明确 Server URL、Transport、OAuth、Bearer Token。 | 平台型客户端页应明确 remote URL、transport、OAuth；不鼓励用户粘贴 PatchXNote token。 |
+| [Composio MCP for VS Code](https://composio.dev/toolkits/composio/framework/vscode) | 单客户端详情页包含 one-click、manual config、authorize、authenticate 四段。 | PatchX Freenote 每个详情页也按安装、登录授权、验证、故障恢复来写。 |
+| [Zapier MCP](https://zapier.com/mcp) | 面向普通用户强调“AI action bridge”、平台无关、企业治理、无终端/无配置的引导。 | 我们官网可以强调“让 AI 读 PatchX Freenote 记录和总结”，但第一版不能承诺无终端，除非 deeplink/插件真实闭环。 |
+| [Zapier Remote MCP Client](https://help.zapier.com/hc/en-us/articles/38777069364109-Connect-remote-MCP-servers-to-Zapier-using-MCP-Client) | 远程 MCP 表单明确 Server URL、Transport、OAuth、Bearer Token。 | 平台型客户端页应明确 remote URL、transport、OAuth；不鼓励用户粘贴 PatchX Freenote token。 |
 | [Pipedream MCP Developers](https://pipedream.com/docs/connect/mcp/developers) | Remote MCP + 内置用户授权 + behalf-of 用户工具调用。 | 远程 MCP 需要把“代表用户调用”讲清楚：不是平台公共 token，而是用户授权的 connector session。 |
-| [Smithery](https://smithery.ai/) | MCP marketplace、server 详情、Setup snippet、Tools/Resources/Prompts 展示。 | PatchXNote 详情页可以展示工具能力分组，但保持工具数量克制，不做 full OpenAPI 暴露。 |
+| [Smithery](https://smithery.ai/) | MCP marketplace、server 详情、Setup snippet、Tools/Resources/Prompts 展示。 | PatchX Freenote 详情页可以展示工具能力分组，但保持工具数量克制，不做 full OpenAPI 暴露。 |
 | [21st MCP](https://github.com/21st-dev/magic-mcp) | CLI `init --client` 覆盖 Cursor/Claude/VS Code/Windsurf/Codex，并提供 HTTP MCP fallback。 | 我们的 `setup --client` 路线是对的；远程 HTTP fallback 要和本地 stdio 写清楚。 |
 | [DevUtils MCP Server](https://mcpservers.org/servers/paladini/devutils-mcp-server) | one-click/plugin、npx、npm、不同客户端分段安装。 | 官网可以按“推荐安装 / 手动安装 / 插件市场”三层展示。 |
 | [VS Code MCP docs](https://code.visualstudio.com/docs/agent-customization/mcp-servers) | 官方支持 MCP gallery、用户/工作区配置、`code --add-mcp`、trust prompt、remote/dev container 差异。 | VS Code 页必须区分 user profile、workspace、remote/dev container；自动写配置要提示 trust。 |
@@ -133,11 +133,11 @@ https://freenote.patch-x.cn/mcp
 
 首页不要只写“支持 MCP”。更清楚的分层是：
 
-- **Use PatchXNote in local AI editors**：给 VS Code、Cursor、Codex、Claude Code、Claude Desktop、Windsurf、Trae、Qoder、WorkBuddy。
-- **Connect PatchXNote to platform agents**：给飞书 Aily / 豆包工作伙伴、腾讯 Agent 平台、企业 WorkBuddy。
+- **Use PatchX Freenote in local AI editors**：给 VS Code、Cursor、Codex、Claude Code、Claude Desktop、Windsurf、Trae、Qoder、WorkBuddy。
+- **Connect PatchX Freenote to platform agents**：给飞书 Aily / 豆包工作伙伴、腾讯 Agent 平台、企业 WorkBuddy。
 - **One login, secret-free config**：本地 token 存 OS 安全存储，MCP 配置不含密钥。
-- **Same PatchXNote tools everywhere**：本地和远程尽量工具语义一致，但安装/授权/文件能力不同。
-- **Read-first Agent boundary**：强调读 PatchXNote 记录、总结、AI 结果；不要把硬件绑定、支付、Admin、模型执行写进去。
+- **Same PatchX Freenote tools everywhere**：本地和远程尽量工具语义一致，但安装/授权/文件能力不同。
+- **Read-first Agent boundary**：强调读 PatchX Freenote 记录、总结、AI 结果；不要把硬件绑定、支付、Admin、模型执行写进去。
 
 ## 还没做的三件事
 
@@ -208,7 +208,7 @@ https://freenote.patch-x.cn/mcp
 
 - [ ] 平台能配置 remote MCP：接 `https://freenote.patch-x.cn/mcp`。
 - [ ] 平台能走 OAuth：按平台官方强调方式接授权。
-- [ ] 平台只能配置 header/token：第一版不要让用户粘贴 PatchXNote access token，先标记为限制。
+- [ ] 平台只能配置 header/token：第一版不要让用户粘贴 PatchX Freenote access token，先标记为限制。
 - [ ] 平台不能接 MCP：记录为平台限制，评估 webhook/HTTP 方案。
 - [ ] 每个平台至少验收 `initialize`、`tools/list`、一个安全读工具。
 - [ ] 只记录工具名、数量、状态码、request id、脱敏账号状态；不记录手机号、验证码、token、原始转写、完整模型输入输出或 provider payload。

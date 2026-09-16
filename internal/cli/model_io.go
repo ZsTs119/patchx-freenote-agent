@@ -36,7 +36,7 @@ type modelIOListFlags struct {
 func newModelIOCommand(state *rootState) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "model-io",
-		Short: "Inspect explicit PatchXNote Agent model IO fields",
+		Short: "Inspect explicit PatchX Freenote Agent model IO fields",
 	}
 	cmd.AddCommand(
 		newModelIOListCommand(state),
@@ -176,8 +176,8 @@ func newModelIOExportCommand(state *rootState) *cobra.Command {
 }
 
 func addModelIOLookupFlags(cmd *cobra.Command, flags *modelIOLookupFlags, requireOut bool) {
-	cmd.Flags().StringVar(&flags.memoryID, "memory-id", "", "PatchXNote memory ID")
-	cmd.Flags().StringVar(&flags.requestID, "request-id", "", "PatchXNote model request/run ID")
+	cmd.Flags().StringVar(&flags.memoryID, "memory-id", "", "PatchX Freenote memory ID")
+	cmd.Flags().StringVar(&flags.requestID, "request-id", "", "PatchX Freenote model request/run ID")
 	cmd.Flags().StringVar(&flags.platform, "platform", "", "Optional platform: mobile or desktop")
 	cmd.Flags().StringVar(&flags.outFile, "out", "", "Output file")
 	cmd.Flags().BoolVar(&flags.force, "force", false, "Overwrite existing output file")

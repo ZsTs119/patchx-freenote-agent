@@ -1,11 +1,11 @@
 {
   "name": "patchxnote-agent",
-  "version": "0.2.14",
+  "version": "0.2.15",
   "mcpName": "io.github.ZsTs119/patchxnote-agent",
-  "description": "Installer wrapper for the PatchXNote Agent CLI, local MCP server, and PatchXNote MCP Skill.",
+  "description": "Installer wrapper for the PatchX Freenote Agent CLI, local MCP server, and PatchX Freenote MCP Skill.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ZsTs119/patchxnote-agent.git"
+    "url": "git+https://github.com/ZsTs119/patchx-freenote-agent.git"
   },
   "homepage": "https://freenote.patch-x.cn/mcp/setup/",
   "bin": {
@@ -24,7 +24,9 @@
     "agent-skills",
     "codex",
     "cursor",
-    "claude-code"
+    "claude-code",
+    "patchx-freenote",
+    "freenote"
   ],
   "scripts": {
     "install:local": "node ./bin/patchxnote-agent.js install",

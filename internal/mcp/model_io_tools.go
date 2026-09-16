@@ -13,17 +13,17 @@ import (
 func defaultModelIOTools(server *Server) []Tool {
 	return []Tool{
 		modelIOTraceListTool(server),
-		modelIOFieldTool(server, "patchxnote_get_model_io_source_text", "Get the explicit PatchXNote Agent source text/safe transcript projection.", modelio.FieldSourceText),
-		modelIOFieldTool(server, "patchxnote_get_model_io_provider_response", "Get the explicit model provider response JSON for one PatchXNote Agent model IO trace.", modelio.FieldProviderResponse),
-		modelIOFieldTool(server, "patchxnote_get_model_io_parsed_result", "Get the parsed model result JSON for one PatchXNote Agent model IO trace.", modelio.FieldParsedResult),
-		modelIOFieldTool(server, "patchxnote_get_model_io_packaged_result", "Get the packaged structured result JSON for one PatchXNote Agent model IO trace.", modelio.FieldPackagedResult),
+		modelIOFieldTool(server, "patchxnote_get_model_io_source_text", "Get the explicit PatchX Freenote Agent source text/safe transcript projection.", modelio.FieldSourceText),
+		modelIOFieldTool(server, "patchxnote_get_model_io_provider_response", "Get the explicit model provider response JSON for one PatchX Freenote Agent model IO trace.", modelio.FieldProviderResponse),
+		modelIOFieldTool(server, "patchxnote_get_model_io_parsed_result", "Get the parsed model result JSON for one PatchX Freenote Agent model IO trace.", modelio.FieldParsedResult),
+		modelIOFieldTool(server, "patchxnote_get_model_io_packaged_result", "Get the packaged structured result JSON for one PatchX Freenote Agent model IO trace.", modelio.FieldPackagedResult),
 	}
 }
 
 func modelIOTraceListTool(server *Server) Tool {
 	return Tool{
 		Name:        "patchxnote_list_model_io_traces",
-		Description: "List lightweight PatchXNote Agent model IO trace metadata and request IDs for one platform.",
+		Description: "List lightweight PatchX Freenote Agent model IO trace metadata and request IDs for one platform.",
 		InputSchema: objectSchema(map[string]any{
 			"platform":     platformProperty(),
 			"request_id":   stringProperty(1, 160),

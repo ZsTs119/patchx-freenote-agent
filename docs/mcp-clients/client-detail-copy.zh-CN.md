@@ -1,4 +1,4 @@
-# PatchXNote MCP 客户端详情页文案
+# PatchX Freenote MCP 客户端详情页文案
 
 以下文案用于官网客户端详情页。所有命令和配置都不包含用户密钥。
 
@@ -18,13 +18,13 @@
 通用中文说明：
 
 ```text
-先运行 mcp login 完成浏览器 OAuth，或让 setup 自动复用同一套登录流程。PatchXNote 会把登录态保存到本机安全存储。编辑器里的 MCP 配置只负责启动本地服务，不保存手机号、验证码或 token。
+先运行 mcp login 完成浏览器 OAuth，或让 setup 自动复用同一套登录流程。PatchX Freenote 会把登录态保存到本机安全存储。编辑器里的 MCP 配置只负责启动本地服务，不保存手机号、验证码或 token。
 ```
 
 Generic English copy:
 
 ```text
-Run mcp login once, or let setup reuse the same browser OAuth flow. PatchXNote stores the connector session in the OS keychain, while the MCP config stays secret-free and only launches the local server.
+Run mcp login once, or let setup reuse the same browser OAuth flow. PatchX Freenote stores the connector session in the OS keychain, while the MCP config stays secret-free and only launches the local server.
 ```
 
 ## VS Code / GitHub Copilot

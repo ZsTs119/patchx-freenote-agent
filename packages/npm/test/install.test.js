@@ -142,7 +142,7 @@ const dryRun = spawnSync(process.execPath, [
 ], { encoding: "utf8" });
 
 assert.strictEqual(dryRun.status, 0, dryRun.stderr);
-assert.match(dryRun.stdout, /PatchXNote Agent install dry run/);
+assert.match(dryRun.stdout, /PatchX Freenote Agent install dry run/);
 assert.match(dryRun.stdout, new RegExp(`patchxnote_${packageVersion.replaceAll(".", "\\.")}_linux_amd64`));
 assert.match(dryRun.stdout, /install_dir_on_path/);
 assert.match(dryRun.stdout, /path_hint/);
@@ -282,7 +282,7 @@ const skillForce = runWrapper([
 ]);
 assert.strictEqual(skillForce.status, 0, skillForce.stderr);
 assert.strictEqual(JSON.parse(skillForce.stdout).targets[0].status, "replaced");
-assert.match(fs.readFileSync(path.join(conflictTarget, "SKILL.md"), "utf8"), /# PatchXNote MCP/);
+assert.match(fs.readFileSync(path.join(conflictTarget, "SKILL.md"), "utf8"), /# PatchX Freenote MCP/);
 
 const goodBinary = buildFakePatchXNote(fixtureRoot, packageVersion, "good");
 const oldBinary = buildFakePatchXNote(fixtureRoot, "0.0.1", "old");
@@ -300,7 +300,7 @@ const serveResult = runWrapper([
 ], { input: initializeLine(), logPath: serveLog });
 assert.strictEqual(serveResult.status, 0, serveResult.stderr);
 assertSingleJSONRPCLine(serveResult.stdout, 1);
-assert.doesNotMatch(serveResult.stdout, /Installed|PatchXNote Agent|binary missing|reinstalling/);
+assert.doesNotMatch(serveResult.stdout, /Installed|PatchX Freenote Agent|binary missing|reinstalling/);
 assert.match(serveResult.stderr, /binary missing; installing/);
 assert.deepStrictEqual(readJSONLines(serveLog).at(-1), ["mcp", "serve"]);
 assert.deepStrictEqual(inspectInstalledBinary(createInstallPlan("install", { installDir: serveDir })), {

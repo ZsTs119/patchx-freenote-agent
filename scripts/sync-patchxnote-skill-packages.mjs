@@ -129,10 +129,10 @@ if (checkOnly) {
     }
   }
   if (failures.length > 0) {
-    console.error(`PatchXNote skill package copies are out of sync:\n- ${failures.join("\n- ")}`);
+    console.error(`PatchX Freenote skill package copies are out of sync:\n- ${failures.join("\n- ")}`);
     process.exit(1);
   }
-  console.log("PatchXNote skill package copies are in sync.");
+  console.log("PatchX Freenote skill package copies are in sync.");
 } else {
   for (const destination of destinations) {
     await copySkill(sourceRoot, destination);

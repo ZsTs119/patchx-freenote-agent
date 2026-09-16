@@ -1,19 +1,19 @@
-# PatchXNote Agent npm wrapper
+# PatchX Freenote Agent npm wrapper
 
-[English README](https://github.com/ZsTs119/patchxnote-agent#readme) | [简体中文说明](https://github.com/ZsTs119/patchxnote-agent/blob/main/README.zh-CN.md) | [飞书公开使用指南](https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd)
+[English README](https://github.com/ZsTs119/patchx-freenote-agent#readme) | [简体中文说明](https://github.com/ZsTs119/patchx-freenote-agent/blob/main/README.zh-CN.md) | [飞书公开使用指南](https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd)
 
-This npm package is the installer and thin launcher wrapper for PatchXNote Agent. It downloads or verifies the matching native `patchxnote` CLI binary from GitHub Releases, verifies `checksums.txt`, and installs it into a user-writable directory before delegating runtime commands to that binary.
+This npm package is the installer and thin launcher wrapper for PatchX Freenote Agent. It downloads or verifies the matching native `patchxnote` CLI binary from GitHub Releases, verifies `checksums.txt`, and installs it into a user-writable directory before delegating runtime commands to that binary.
 
-PatchXNote Agent is the local AI assistant connector for PatchXNote. It lets an MCP-capable AI assistant find PatchXNote records, inspect AI-generated results, create Markdown drafts, and manually send user-approved messages to Feishu, DingTalk, or another webhook.
+PatchX Freenote Agent is the local AI assistant connector for PatchX Freenote. It lets an MCP-capable AI assistant find PatchX Freenote records, inspect AI-generated results, create Markdown drafts, and manually send user-approved messages to Feishu, DingTalk, or another webhook.
 
-Version `0.2.14` defaults to the production API at `https://freenote.patch-x.cn`. When upgrading from test, update or remove explicit server-address overrides in your CLI and MCP host configuration, then run `mcp login` in the same runtime and profile that launches MCP. Test credentials and records do not migrate to production.
+Version `0.2.15` defaults to the production API at `https://freenote.patch-x.cn`. When upgrading from test, update or remove explicit server-address overrides in your CLI and MCP host configuration, then run `mcp login` in the same runtime and profile that launches MCP. Test credentials and records do not migrate to production.
 
 Production service: [https://freenote.patch-x.cn/](https://freenote.patch-x.cn/) · [MCP setup](https://freenote.patch-x.cn/mcp/setup/) · [Download App](https://freenote.patch-x.cn/download/)
 
 Give this one-line prompt to an AI assistant:
 
 ```text
-Help me connect PatchXNote MCP and install the PatchXNote MCP Skill when the client supports Agent Skills. Use the production service at https://freenote.patch-x.cn/ and the setup page at https://freenote.patch-x.cn/mcp/setup/; if existing configuration explicitly points to the old test service, update the server address used for this connection to production first. First, if this is a local command-capable environment, run npx -y patchxnote-agent@latest skill install on this machine so future or long sessions remember the PatchXNote SOP; if the current client does not support Skill installation, do not treat that as a connection blocker and continue with MCP setup according to the client's capabilities. Identify the MCP client you are running in: if this is a local MCP client such as Codex, Cursor, VS Code, Claude Desktop, Claude Code, or Windsurf, run npx -y patchxnote-agent@latest setup --client <client-id> on this machine in the same OS/runtime that will later launch the MCP server. If this is an AI client or cloud platform that cannot run local commands but supports Remote MCP, custom connectors, custom MCP services, or tool plugins, create a custom MCP connector named PatchXNote MCP and connect it with this PatchXNote Remote MCP URL: https://freenote.patch-x.cn/mcp. If you are not sure which client ID or config format to use, local clients should first run npx -y patchxnote-agent@latest mcp config and use the printed generic stdio config, while remote clients should look for a Remote MCP Server URL, MCP Server URL, or Custom Connector setup entry. For login, open the browser and let me complete PatchXNote phone-code authorization there; do not ask me to paste OTP codes, OAuth codes, authorization codes, access tokens, refresh tokens, or webhook secrets into chat. After setup, call patchxnote_get_current_user and patchxnote_list_memories with {"platform":"mobile","limit":5} to verify it works. References: https://github.com/ZsTs119/patchxnote-agent and https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd
+Help me connect PatchX Freenote MCP and install the PatchX Freenote MCP Skill when the client supports Agent Skills. Use the production service at https://freenote.patch-x.cn/ and the setup page at https://freenote.patch-x.cn/mcp/setup/; if existing configuration explicitly points to the old test service, update the server address used for this connection to production first. First, if this is a local command-capable environment, run npx -y patchxnote-agent@latest skill install on this machine so future or long sessions remember the PatchX Freenote SOP; if the current client does not support Skill installation, do not treat that as a connection blocker and continue with MCP setup according to the client's capabilities. Identify the MCP client you are running in: if this is a local MCP client such as Codex, Cursor, VS Code, Claude Desktop, Claude Code, or Windsurf, run npx -y patchxnote-agent@latest setup --client <client-id> on this machine in the same OS/runtime that will later launch the MCP server. If this is an AI client or cloud platform that cannot run local commands but supports Remote MCP, custom connectors, custom MCP services, or tool plugins, create a custom MCP connector named PatchX Freenote MCP and connect it with this PatchX Freenote Remote MCP URL: https://freenote.patch-x.cn/mcp. If you are not sure which client ID or config format to use, local clients should first run npx -y patchxnote-agent@latest mcp config and use the printed generic stdio config, while remote clients should look for a Remote MCP Server URL, MCP Server URL, or Custom Connector setup entry. For login, open the browser and let me complete PatchX Freenote phone-code authorization there; do not ask me to paste OTP codes, OAuth codes, authorization codes, access tokens, refresh tokens, or webhook secrets into chat. After setup, call patchxnote_get_current_user and patchxnote_list_memories with {"platform":"mobile","limit":5} to verify it works. References: https://github.com/ZsTs119/patchx-freenote-agent and https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd
 ```
 
 The npm package includes an Agent Skills package at `skills/patchxnote-mcp/`. Compatible agents can install or refresh it with:
@@ -22,7 +22,7 @@ The npm package includes an Agent Skills package at `skills/patchxnote-mcp/`. Co
 npx -y patchxnote-agent@latest skill install
 ```
 
-The skill teaches the AI the PatchXNote SOP. MCP setup and browser login still use the commands below. By default, the installer writes under the user's home directory at `.agents/skills/patchxnote-mcp`; use `--agent <id>` only after that client's local skills directory is verified.
+The skill teaches the AI the PatchX Freenote SOP. MCP setup and browser login still use the commands below. By default, the installer writes under the user's home directory at `.agents/skills/patchxnote-mcp`; use `--agent <id>` only after that client's local skills directory is verified.
 
 Useful skill installer options are `--dry-run --json`, `--home <path>` or `PATCHXNOTE_AGENT_SKILL_HOME=<path>`, `--agent universal|codex|cursor|claude-code|gemini-cli|github-copilot|all`, and `--force`. Existing unmanaged or manually edited `patchxnote-mcp` folders are protected unless `--force` is supplied.
 
@@ -34,7 +34,7 @@ npx -y patchxnote-agent@latest setup --client vscode
 npx -y patchxnote-agent@latest setup --client codex
 ```
 
-PatchXNote Agent currently exposes two login surfaces and two MCP service shapes:
+PatchX Freenote Agent currently exposes two login surfaces and two MCP service shapes:
 
 | Mode | Entry | Use when |
 | --- | --- | --- |
@@ -107,10 +107,10 @@ patchxnote webhook send --target "Product Feishu" --file ./message.md
 
 Webhook aliases can contain Chinese text, spaces, and dots.
 
-Server-backed PatchXNote data access remains read-only through dedicated `/v1/agent/**` APIs. Record lookup can include formal saved results and readable model-generated outputs returned by the server. Local webhook tools can configure named targets and perform explicit manual sends. AI result tools can inspect source text, AI response, parsed result, and final result when explicitly called. MCP config contains no phone number, OTP, access token, refresh token, webhook secret, or base URL by default. The CLI stores credentials and webhook secrets in the OS-native keychain when available, never lists webhook URLs or signing secrets back, and does not expose raw audio, audio downloads, hardware write actions, payment flows, or Admin APIs.
+Server-backed PatchX Freenote data access remains read-only through dedicated `/v1/agent/**` APIs. Record lookup can include formal saved results and readable model-generated outputs returned by the server. Local webhook tools can configure named targets and perform explicit manual sends. AI result tools can inspect source text, AI response, parsed result, and final result when explicitly called. MCP config contains no phone number, OTP, access token, refresh token, webhook secret, or base URL by default. The CLI stores credentials and webhook secrets in the OS-native keychain when available, never lists webhook URLs or signing secrets back, and does not expose raw audio, audio downloads, hardware write actions, payment flows, or Admin APIs.
 
 For full installation, MCP setup, security notes, and troubleshooting, read the GitHub documentation:
 
-- [English README](https://github.com/ZsTs119/patchxnote-agent#readme)
-- [简体中文 README](https://github.com/ZsTs119/patchxnote-agent/blob/main/README.zh-CN.md)
-- [PatchXNote Agent 公测使用指南（飞书公开版）](https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd)
+- [English README](https://github.com/ZsTs119/patchx-freenote-agent#readme)
+- [简体中文 README](https://github.com/ZsTs119/patchx-freenote-agent/blob/main/README.zh-CN.md)
+- [PatchX Freenote Agent 公测使用指南（飞书公开版）](https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd)

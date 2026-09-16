@@ -10,7 +10,7 @@ const { spawn, spawnSync } = require("child_process");
 
 const packageRoot = path.resolve(__dirname, "..");
 const packageJSON = require(path.join(packageRoot, "package.json"));
-const repo = "ZsTs119/patchxnote-agent";
+const repo = "ZsTs119/patchx-freenote-agent";
 const lockTimeoutMs = 10000;
 const staleLockMs = 10 * 60 * 1000;
 const skillName = "patchxnote-mcp";
@@ -75,7 +75,7 @@ async function runInstall(parsed) {
     return;
   }
   await withInstallLock(plan, async () => installBinary(plan, parsed.options));
-  console.log(`Installed PatchXNote Agent ${plan.version} to ${plan.install_path}`);
+  console.log(`Installed PatchX Freenote Agent ${plan.version} to ${plan.install_path}`);
   printPathGuidance(plan.install_dir, plan.platform);
   if (parsed.options.printConfig) {
     printMCPConfig(plan.install_path);
@@ -199,7 +199,7 @@ function createSkillInstallPlan(options = {}) {
 function assertPackagedSkillSource(source) {
   const entry = path.join(source, "SKILL.md");
   if (!fs.existsSync(entry)) {
-    throw new Error(`packaged PatchXNote MCP skill not found: ${entry}`);
+    throw new Error(`packaged PatchX Freenote MCP skill not found: ${entry}`);
   }
 }
 
@@ -256,7 +256,7 @@ function inspectSkillTarget(source, targetPath) {
       managed,
       sameContent: true,
       status: managed ? "current" : "adoptable",
-      reason: managed ? "" : "same content without PatchXNote Agent marker"
+      reason: managed ? "" : "same content without PatchX Freenote Agent marker"
     };
   }
   return {
@@ -368,7 +368,7 @@ async function installPackagedSkill(plan, options = {}) {
   for (const target of plan.targets) {
     const status = installActionForSkillTarget(target, options.force);
     if (status === "blocked") {
-      throw new Error(`skill target already exists and differs: ${target.path}; rerun with --force only if you want PatchXNote Agent to replace that folder`);
+      throw new Error(`skill target already exists and differs: ${target.path}; rerun with --force only if you want PatchX Freenote Agent to replace that folder`);
     }
     if (status === "unchanged") {
       targets.push({ agent: target.agent, path: target.path, status });
@@ -527,7 +527,7 @@ async function uninstall(plan, options) {
     return;
   }
   await fs.promises.rm(plan.install_path, { force: true });
-  console.log(`Removed PatchXNote Agent from ${plan.install_path}`);
+  console.log(`Removed PatchX Freenote Agent from ${plan.install_path}`);
 }
 
 async function assertExecutable(installPath) {
@@ -546,20 +546,20 @@ async function ensureBinary(options = {}, io = {}) {
     }
 
     if (!inspected.exists) {
-      writeDiagnostic(io, `PatchXNote Agent binary missing; installing ${plan.version}.\n`);
+      writeDiagnostic(io, `PatchX Freenote Agent binary missing; installing ${plan.version}.\n`);
     } else if (inspected.ok) {
-      writeDiagnostic(io, `PatchXNote Agent binary version ${inspected.version} does not match package ${plan.version}; reinstalling.\n`);
+      writeDiagnostic(io, `PatchX Freenote Agent binary version ${inspected.version} does not match package ${plan.version}; reinstalling.\n`);
     } else {
-      writeDiagnostic(io, `PatchXNote Agent binary preflight failed; reinstalling ${plan.version}.\n`);
+      writeDiagnostic(io, `PatchX Freenote Agent binary preflight failed; reinstalling ${plan.version}.\n`);
     }
 
     await installBinary(plan, options);
     const afterInstall = inspectInstalledBinary(plan);
     if (!afterInstall.ok) {
-      throw new Error(`installed PatchXNote Agent binary failed preflight: ${afterInstall.reason}`);
+      throw new Error(`installed PatchX Freenote Agent binary failed preflight: ${afterInstall.reason}`);
     }
     if (afterInstall.version !== plan.version) {
-      throw new Error(`installed PatchXNote Agent binary version ${afterInstall.version} does not match package ${plan.version}`);
+      throw new Error(`installed PatchX Freenote Agent binary version ${afterInstall.version} does not match package ${plan.version}`);
     }
     return plan;
   });
@@ -923,7 +923,7 @@ function joinInstallPath(installDir, binaryName, targetPlatform) {
 }
 
 function printPlan(plan) {
-  console.log(`PatchXNote Agent ${plan.action} dry run:`);
+  console.log(`PatchX Freenote Agent ${plan.action} dry run:`);
   console.log(JSON.stringify(plan, null, 2));
 }
 
@@ -932,7 +932,7 @@ function printSkillPlan(plan, options = {}) {
     console.log(JSON.stringify(plan, null, 2));
     return;
   }
-  console.log("PatchXNote MCP Skill install dry run:");
+  console.log("PatchX Freenote MCP Skill install dry run:");
   console.log(`Package: ${plan.package}@${plan.package_version}`);
   console.log(`Source: ${plan.source}`);
   console.log(`Source hash: ${plan.source_hash}`);
@@ -947,9 +947,9 @@ function printSkillResult(result, options = {}) {
     return;
   }
   for (const target of result.targets) {
-    console.log(`PatchXNote MCP Skill ${target.status} for ${target.agent}: ${target.path}`);
+    console.log(`PatchX Freenote MCP Skill ${target.status} for ${target.agent}: ${target.path}`);
   }
-  console.log("Next: ask your AI assistant to use the PatchXNote MCP Skill, then run PatchXNote MCP setup if needed.");
+  console.log("Next: ask your AI assistant to use the PatchX Freenote MCP Skill, then run PatchX Freenote MCP setup if needed.");
 }
 
 function printMCPConfig(commandPath) {

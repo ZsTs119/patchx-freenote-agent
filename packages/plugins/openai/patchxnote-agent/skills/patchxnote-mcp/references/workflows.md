@@ -1,6 +1,6 @@
-# PatchXNote MCP Workflows
+# PatchX Freenote MCP Workflows
 
-Use this reference when the user wants to use PatchXNote data after MCP setup.
+Use this reference when the user wants to use PatchX Freenote data after MCP setup.
 
 ## Common Read Workflows
 
@@ -61,7 +61,7 @@ Report the local draft path and the source record ID/platform. Do not imply the 
 
 ## Webhook Workflow
 
-PatchXNote webhook workflows are user-approved, manual side effects:
+PatchX Freenote webhook workflows are user-approved, manual side effects:
 
 - `patchxnote_configure_webhook_target` stores webhook URL/secret material through local secure storage and returns only masked metadata.
 - `patchxnote_list_webhook_targets` lists aliases and safe metadata.
@@ -77,7 +77,7 @@ Use evidence-specific wording:
 - Configured: a client config entry was written or printed.
 - Authenticated: `mcp status --verify` succeeded.
 - Tools listed: `tools/list` succeeded.
-- Real tool called: a PatchXNote tool call succeeded.
+- Real tool called: a PatchX Freenote tool call succeeded.
 - Published: npm/release/marketplace material was published.
 - Indexed: a directory page or registry entry became visible.
 - Platform accepted: the actual target client/platform was tested and accepted.

@@ -1,4 +1,4 @@
-# PatchXNote MCP 官网客户端安装官方依据
+# PatchX Freenote MCP 官网客户端安装官方依据
 
 **日期：** 2026-08-28
 
@@ -33,7 +33,7 @@ patchxnote-agent mcp login
 官网成功页文案不能写成“token 已保存成功”，除非后续增加本地状态回报机制。V1 更稳的说法是：
 
 ```text
-授权信息已返回本机。请回到编辑器或终端，等待 PatchXNote MCP 完成最后的连接验证。
+授权信息已返回本机。请回到编辑器或终端，等待 PatchX Freenote MCP 完成最后的连接验证。
 ```
 
 远程 MCP / 云平台不使用本地 callback。它们走平台支持的 OAuth / connector 回调流程。
@@ -52,7 +52,7 @@ patchxnote-agent mcp login
 - VS Code 支持 MCP server gallery、用户 profile 配置、workspace `.vscode/mcp.json`、Dev Container 配置和命令行 `code --add-mcp`。
 - VS Code 的官方配置结构是 `servers`，不是通用 MCP 示例里常见的 `mcpServers`。
 - 用户 profile 配置适合“所有项目可用”，workspace 配置适合“随项目共享”。
-- remote / Agent Host / Dev Container 场景有运行时差异。官网必须提醒：在哪个运行时启动 MCP，就在哪个运行时执行 PatchXNote setup/login。
+- remote / Agent Host / Dev Container 场景有运行时差异。官网必须提醒：在哪个运行时启动 MCP，就在哪个运行时执行 PatchX Freenote setup/login。
 - VS Code 首次启动 MCP server 时有 trust prompt。官网不能绕过用户确认。
 
 官网动作：
@@ -103,12 +103,12 @@ windsurf://windsurf-mcp-registry?serverName=<server-name>
 ```
 
 - 文档同时说明支持 stdio、Streamable HTTP、SSE 和 OAuth，但企业/团队可通过管理员关闭 MCP 访问。
-- Cascade 工具总数存在限制，官网要避免一次暴露过多 PatchXNote 工具。
+- Cascade 工具总数存在限制，官网要避免一次暴露过多 PatchX Freenote 工具。
 
 官网动作：
 
 - V1 主路径：`Copy AI setup prompt` + `Copy setup command`。
-- marketplace/deeplink 只有 PatchXNote 进入对应 registry 或真实验收后才显示为主按钮。
+- marketplace/deeplink 只有 PatchX Freenote 进入对应 registry 或真实验收后才显示为主按钮。
 - 手动 fallback：`~/.codeium/windsurf/mcp_config.json`。
 
 ### Trae / Trae CN / TraeWork Code
@@ -188,7 +188,7 @@ windsurf://windsurf-mcp-registry?serverName=<server-name>
 官网动作：
 
 - V1 可以给 Zed 专用 `context_servers` 配置，不要复用通用 `mcpServers` JSON。
-- 本地 PatchXNote 用 stdio；远程平台候选可以走 URL + OAuth。
+- 本地 PatchX Freenote 用 stdio；远程平台候选可以走 URL + OAuth。
 - 当前标 `planned / researched`，等用户安装 Zed 或官方安装入口确认后再升级。
 
 ### JetBrains AI Assistant
@@ -201,13 +201,13 @@ windsurf://windsurf-mcp-registry?serverName=<server-name>
 真实逻辑：
 
 - JetBrains AI Assistant 有 MCP 配置页，可添加 MCP server。
-- JetBrains 2025.2 起还内置 IDE MCP Server，用来把 IDE 能力暴露给 Codex、Claude Code、VS Code 等外部客户端。这和 PatchXNote 作为外部 MCP server 接入 JetBrains AI Assistant 是两个方向。
+- JetBrains 2025.2 起还内置 IDE MCP Server，用来把 IDE 能力暴露给 Codex、Claude Code、VS Code 等外部客户端。这和 PatchX Freenote 作为外部 MCP server 接入 JetBrains AI Assistant 是两个方向。
 - 部分 JetBrains agent 需要开启“Pass custom MCP servers”才能把已配置 MCP server 暴露给 agent。
 
 官网动作：
 
 - V1 只写 `Manual setup guide`，不写一键。
-- 详情页要避免把“JetBrains IDE 作为 MCP server”误写成“PatchXNote 已自动接入 JetBrains”。
+- 详情页要避免把“JetBrains IDE 作为 MCP server”误写成“PatchX Freenote 已自动接入 JetBrains”。
 
 ### Cline / Continue / Roo-derived VS Code agents
 
@@ -245,7 +245,7 @@ windsurf://windsurf-mcp-registry?serverName=<server-name>
 - Codex MCP 配置在 `config.toml`，默认 `~/.codex/config.toml`，也可在受信任项目里用 `.codex/config.toml`。
 - ChatGPT desktop、Codex CLI、IDE extension 共享 Codex MCP 配置。
 - Codex CLI 支持 `codex mcp add <name> --url <remote-url>` 这类远程配置，也支持本地 stdio 配置。
-- 本地 PatchXNote 仍建议走 `patchxnote-agent setup --client codex`，因为我们还要处理本地 login 和 OS 安全存储。
+- 本地 PatchX Freenote 仍建议走 `patchxnote-agent setup --client codex`，因为我们还要处理本地 login 和 OS 安全存储。
 
 官网动作：
 
@@ -306,7 +306,7 @@ windsurf://windsurf-mcp-registry?serverName=<server-name>
 官网动作：
 
 - V1 先给 manual config 和 AI-assisted prompt。
-- 本地 PatchXNote 用 stdio；远程 PatchXNote 可在后续验证 OAuth discovery 后开放。
+- 本地 PatchX Freenote 用 stdio；远程 PatchX Freenote 可在后续验证 OAuth discovery 后开放。
 
 ### Qwen Code
 
@@ -465,14 +465,14 @@ windsurf://windsurf-mcp-registry?serverName=<server-name>
 
 ### Cursor 验收
 
-- 生成 PatchXNote MCP deeplink。
+- 生成 PatchX Freenote MCP deeplink。
 - 浏览器点击后确认系统弹窗。
 - Cursor 打开安装页并预填 `patchxnote` server。
 - 用户确认安装。
 - 运行或触发 `mcp login`，完成官网授权页。
 - callback 跳官网成功页。
 - Cursor 刷新 MCP server。
-- 验证 `tools/list` 只显示 PatchXNote 工具名。
+- 验证 `tools/list` 只显示 PatchX Freenote 工具名。
 - 调用一个只读工具，只返回标题/时间等脱敏字段。
 
 ### VS Code 验收
@@ -480,7 +480,7 @@ windsurf://windsurf-mcp-registry?serverName=<server-name>
 - 备份或使用测试 profile。
 - 测 `code --add-mcp` 或 `.vscode/mcp.json`。
 - 打开 VS Code MCP 列表，确认 trust prompt。
-- 启动 PatchXNote MCP server。
+- 启动 PatchX Freenote MCP server。
 - 运行或触发 `mcp login`，完成官网授权页。
 - callback 跳官网成功页。
 - 重载窗口或刷新 MCP server。

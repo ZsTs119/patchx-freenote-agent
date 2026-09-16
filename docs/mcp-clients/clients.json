@@ -434,7 +434,7 @@
       },
       "runtime": {
         "location": "cloud-platform",
-        "credential_caveat": "Local npx setup is not enough; this needs a remote PatchXNote MCP connector."
+        "credential_caveat": "Local npx setup is not enough; this needs a remote PatchX Freenote MCP connector."
       },
       "install": {
         "primary_strategy": "remote-url",

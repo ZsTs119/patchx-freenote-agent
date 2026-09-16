@@ -2,7 +2,7 @@
 
 更新日期：2026-09-15
 
-PatchXNote Agent 的 MCP Registry 登记名称：
+PatchX Freenote Agent 的 MCP Registry 登记名称：
 
 ```text
 io.github.ZsTs119/patchxnote-agent

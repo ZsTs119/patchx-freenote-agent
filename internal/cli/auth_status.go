@@ -10,7 +10,7 @@ import (
 func newAuthCommand(state *rootState) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "auth",
-		Short: "Inspect PatchXNote Agent authentication",
+		Short: "Inspect PatchX Freenote Agent authentication",
 	}
 
 	cmd.AddCommand(newAuthStatusCommand(state))

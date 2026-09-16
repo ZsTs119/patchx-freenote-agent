@@ -29,7 +29,7 @@ func MessageFromMarkdown(markdown string, titleOverride string) (Message, error)
 		return Message{}, fmt.Errorf("Markdown input exceeds local safety cap")
 	}
 	return Message{
-		Title:    renderdoc.InferTitle(markdown, "PatchXNote 记录", titleOverride),
+		Title:    renderdoc.InferTitle(markdown, "PatchX Freenote 记录", titleOverride),
 		Markdown: markdown,
 		Metadata: map[string]string{"source": "direct"},
 	}, nil

@@ -1,6 +1,6 @@
 # Security Policy
 
-PatchXNote Agent is a local CLI and MCP bridge for read-only PatchXNote account access. Please report security issues privately so we can validate and fix them before public disclosure.
+PatchX Freenote Agent is a local CLI and MCP bridge for read-only PatchX Freenote account access. Please report security issues privately so we can validate and fix them before public disclosure.
 
 ## Supported Versions
 
@@ -12,7 +12,7 @@ PatchXNote Agent is a local CLI and MCP bridge for read-only PatchXNote account 
 
 Use GitHub's private vulnerability reporting flow when it is available for this repository:
 
-https://github.com/ZsTs119/patchxnote-agent/security/advisories/new
+https://github.com/ZsTs119/patchx-freenote-agent/security/advisories/new
 
 If private reporting is not available, contact the maintainer through the GitHub repository without posting exploit details, credentials, OTPs, personal data, raw recordings, transcripts, or provider payloads in a public issue.
 
@@ -35,15 +35,15 @@ Helpful report details:
 
 ## Out Of Scope
 
-- denial-of-service or load testing against PatchXNote servers without prior written permission
+- denial-of-service or load testing against PatchX Freenote servers without prior written permission
 - social engineering, phishing, spam, or physical attacks
 - reports requiring access to another user's account or device
-- vulnerabilities in third-party MCP clients unless PatchXNote Agent is the direct cause
+- vulnerabilities in third-party MCP clients unless PatchX Freenote Agent is the direct cause
 - requests for raw audio, full transcripts, private model responses, payment flows, Admin APIs, or hardware write actions; these are intentionally not exposed by Agent V1
 
 ## Beta Security Notes
 
-The beta release defaults to the PatchXNote production API at `https://freenote.patch-x.cn`. Credential material is stored in the OS-native keychain when available:
+The beta release defaults to the PatchX Freenote production API at `https://freenote.patch-x.cn`. Credential material is stored in the OS-native keychain when available:
 
 - macOS Keychain
 - Windows Credential Manager

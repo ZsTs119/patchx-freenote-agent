@@ -1,6 +1,6 @@
 ---
 version: alpha
-name: PatchXNote MCP Website
+name: PatchX Freenote MCP Website
 colors:
   background: "#07090A"
   backgroundElevated: "#0D1012"
@@ -75,11 +75,11 @@ spacing:
   sectionMobile: 72px
 ---
 
-# PatchXNote MCP Website DESIGN.md
+# PatchX Freenote MCP Website DESIGN.md
 
 ## Overview
 
-本文件是 PatchXNote MCP 官网给 AI coding agent 使用的视觉事实源。它把 `04-visual-system.zh-CN.md` 中已经确认的方向压缩成可执行 token、组件约束和验收边界，避免后续实现时重新发散。
+本文件是 PatchX Freenote MCP 官网给 AI coding agent 使用的视觉事实源。它把 `04-visual-system.zh-CN.md` 中已经确认的方向压缩成可执行 token、组件约束和验收边界，避免后续实现时重新发散。
 
 官网视觉方向固定为 `Black Chrome Command Hub`：高级黑、黑铬、石墨、冷银、钛银、实体硬件可信度、AI 工具接入感和安全控制感。它不是普通深色文档站，不是硬件电商页，也不是霓虹赛博朋克页面。
 
@@ -185,14 +185,14 @@ Header 使用半透明黑色毛玻璃，但文字、焦点和按钮必须保持�
 Hero 的任务是一眼确认这是官方 MCP 入口：
 
 ```text
-PatchXNote MCP
+PatchX Freenote MCP
 隐私归你，AI 由你掌控
 把你的真实对话，安全接入 Cursor、VS Code、Codex 和更多 AI 工具。
 ```
 
 Hero 只放核心标题、副标题、两枚 CTA、产品主视觉和轻量编辑器提示。完整客户端卡片放第二屏。
 
-产品视觉使用银黑 PatchXNote 录音卡或可解释的产品剪影，不能直接贴用户给的浅蓝白介绍图。
+产品视觉使用银黑 PatchX Freenote 录音卡或可解释的产品剪影，不能直接贴用户给的浅蓝白介绍图。
 
 ### Buttons
 

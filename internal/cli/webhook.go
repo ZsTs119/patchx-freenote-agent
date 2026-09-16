@@ -283,8 +283,8 @@ func newWebhookTestCommand(state *rootState) *cobra.Command {
 				return err
 			}
 			message := webhook.Message{
-				Title:    "PatchXNote Webhook Test",
-				Markdown: "# PatchXNote Webhook Test\n\n这是一条 PatchXNote Agent 本地测试消息。",
+				Title:    "PatchX Freenote Webhook Test",
+				Markdown: "# PatchX Freenote Webhook Test\n\n这是一条 PatchX Freenote Agent 本地测试消息。",
 				Metadata: map[string]string{"source": "test"},
 			}
 			results, sendErr := webhook.NewSender(nil).Send(cmd.Context(), resolved, message, webhook.SendOptions{Timeout: timeout})
@@ -391,7 +391,7 @@ func newWebhookDraftCommand(state *rootState) *cobra.Command {
 	var force bool
 	cmd := &cobra.Command{
 		Use:   "draft",
-		Short: "Render a PatchXNote memory into local webhook draft files",
+		Short: "Render a PatchX Freenote memory into local webhook draft files",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if strings.TrimSpace(memoryID) == "" {
@@ -435,7 +435,7 @@ func newWebhookDraftCommand(state *rootState) *cobra.Command {
 			}
 		},
 	}
-	cmd.Flags().StringVar(&memoryID, "memory-id", "", "PatchXNote memory ID")
+	cmd.Flags().StringVar(&memoryID, "memory-id", "", "PatchX Freenote memory ID")
 	cmd.Flags().StringVar(&platform, "platform", "", "Optional memory platform: mobile or desktop")
 	cmd.Flags().StringVar(&templateName, "template", "default", "Template name or local template file path")
 	cmd.Flags().StringVar(&outDir, "out", "", "Draft output directory")
@@ -503,7 +503,7 @@ func newWebhookSendCommand(state *rootState) *cobra.Command {
 	cmd.Flags().StringArrayVar(&targets, "target", nil, "Webhook target alias; may be repeated")
 	cmd.Flags().StringVar(&filePath, "file", "", "Markdown file to send")
 	cmd.Flags().StringVar(&draftDir, "draft", "", "Draft directory containing message.md")
-	cmd.Flags().StringVar(&memoryID, "memory-id", "", "PatchXNote memory ID")
+	cmd.Flags().StringVar(&memoryID, "memory-id", "", "PatchX Freenote memory ID")
 	cmd.Flags().StringVar(&platform, "platform", "", "Optional memory platform: mobile or desktop")
 	cmd.Flags().StringVar(&templateName, "template", "default", "Template name or local template file path")
 	cmd.Flags().StringVar(&title, "title", "", "Override title for --file")
@@ -560,8 +560,8 @@ func newWebhookExportModelIOCommand(state *rootState) *cobra.Command {
 			}
 		},
 	}
-	cmd.Flags().StringVar(&memoryID, "memory-id", "", "PatchXNote memory ID")
-	cmd.Flags().StringVar(&requestID, "request-id", "", "PatchXNote model request/run ID")
+	cmd.Flags().StringVar(&memoryID, "memory-id", "", "PatchX Freenote memory ID")
+	cmd.Flags().StringVar(&requestID, "request-id", "", "PatchX Freenote model request/run ID")
 	cmd.Flags().StringVar(&platform, "platform", "", "Optional platform: mobile or desktop")
 	cmd.Flags().StringVar(&outFile, "out", "", "Output JSON file")
 	cmd.Flags().BoolVar(&force, "force", false, "Overwrite existing output file")
@@ -678,7 +678,7 @@ func fetchModelRunIOTrace(ctx context.Context, runtime runtimeState, platform st
 
 func withAgentAccessToken(ctx context.Context, runtime runtimeState, call func(accessToken string) error) error {
 	if runtime.API == nil {
-		return fmt.Errorf("PatchXNote API client is not configured")
+		return fmt.Errorf("PatchX Freenote API client is not configured")
 	}
 	credential, ok, err := runtime.Credentials.Credential(ctx)
 	if err != nil {

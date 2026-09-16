@@ -12,6 +12,8 @@ on:
       - "server.json"
       - "packages/npm/package.json"
       - "scripts/validate-release-metadata.mjs"
+      - "scripts/validate-release-metadata.test.mjs"
+      - "scripts/test-branding.sh"
       - "cmd/**"
       - "internal/**"
       - "go.mod"
@@ -47,10 +49,16 @@ jobs:
 
       - name: Validate release metadata and select affected tests
         id: validation
-        run: node scripts/validate-release-metadata.mjs
+        run: |
+          node scripts/validate-release-metadata.test.mjs
+          node scripts/validate-release-metadata.mjs
+
+      - name: Test branding compatibility
+        if: ${{ steps.validation.outputs.runtime_branding_only == 'true' }}
+        run: bash scripts/test-branding.sh
 
       - name: Test
-        if: ${{ steps.validation.outputs.runtime_changed == 'true' }}
+        if: ${{ steps.validation.outputs.runtime_changed == 'true' && steps.validation.outputs.runtime_branding_only != 'true' }}
         run: go test -p 1 -parallel 1 ./...
 
       - name: Check GoReleaser config
