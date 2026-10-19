@@ -6,7 +6,9 @@ This npm package is the installer and thin launcher wrapper for PatchX Freenote 
 
 PatchX Freenote Agent is the local AI assistant connector for PatchX Freenote. It lets an MCP-capable AI assistant find PatchX Freenote records, inspect AI-generated results, create Markdown drafts, and manually send user-approved messages to Feishu, DingTalk, or another webhook.
 
-Version `0.2.15` defaults to the production API at `https://freenote.patch-x.cn`. When upgrading from test, update or remove explicit server-address overrides in your CLI and MCP host configuration, then run `mcp login` in the same runtime and profile that launches MCP. Test credentials and records do not migrate to production.
+Version `0.2.16` defaults to the production API at `https://freenote.patch-x.cn`. When upgrading from test, update or remove explicit server-address overrides in your CLI and MCP host configuration, then run `mcp login` in the same runtime and profile that launches MCP. Test credentials and records do not migrate to production.
+
+This release supports the WorkBuddy connector's CLI authorization flow. Temporary token-refresh failures preserve the login session and return a retryable error; rejected refresh credentials require authorization again. WorkBuddy's connector update and official client verification are tracked separately.
 
 Production service: [https://freenote.patch-x.cn/](https://freenote.patch-x.cn/) · [MCP setup](https://freenote.patch-x.cn/mcp/setup/) · [Download App](https://freenote.patch-x.cn/download/)
 

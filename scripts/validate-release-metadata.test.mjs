@@ -38,4 +38,10 @@ assert.equal(selectTests('v0.2.14', ['go.mod'], () => before, () => after).runti
 assert.equal(selectTests(null, [], () => before, () => after).runtimeChanged, true);
 assert.equal(selectTests('v0.2.14', ['README.md'], () => before, () => after).runtimeChanged, false);
 assert.equal(selectTests('v0.2.14', ['packages/npm/bin/patchxnote-agent.js'], () => before, () => after).wrapperChanged, true);
+const authFiles = ['internal/cli/workbuddy_connector_test.go', 'internal/oauthflow/refresh.go',
+  'internal/oauthflow/oauthflow_test.go', 'internal/remotemcp/proxy.go', 'internal/remotemcp/proxy_test.go'];
+assert.equal(selectTests('v0.2.15', authFiles, () => before, () => after).runtimeWorkbuddyAuthOnly, true);
+assert.equal(selectTests('v0.2.15', [...authFiles, 'internal/config/paths.go'], () => before, () => after).runtimeWorkbuddyAuthOnly, false);
+assert.equal(selectTests('v0.2.15', ['README.md'], () => before, () => after).runtimeWorkbuddyAuthOnly, false);
+assert.equal(selectTests(null, authFiles, () => before, () => after).runtimeWorkbuddyAuthOnly, false);
 console.log('Release identity and affected-test selection checks passed.');

@@ -6,12 +6,12 @@
     "url": "https://github.com/ZsTs119/patchx-freenote-agent",
     "source": "github"
   },
-  "version": "0.2.15",
+  "version": "0.2.16",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "patchxnote-agent",
-      "version": "0.2.15",
+      "version": "0.2.16",
       "transport": {
         "type": "stdio"
       },

@@ -66,6 +66,12 @@ const brandingFiles = new Set([
   'internal/renderdoc/templates.go', 'internal/webhook/files.go', 'internal/webhook/payload.go'
 ]);
 
+const workbuddyAuthFiles = new Set([
+  'internal/cli/workbuddy_connector_test.go',
+  'internal/oauthflow/refresh.go', 'internal/oauthflow/oauthflow_test.go',
+  'internal/remotemcp/proxy.go', 'internal/remotemcp/proxy_test.go'
+]);
+
 export function selectTests(base, changed, readBase, readCurrent) {
   const runtime = changed.filter(file => /\.go$|^(cmd\/|internal\/|go\.(mod|sum)$|\.goreleaser\.yaml$)/.test(file));
   const runtimeChanged = !base || runtime.length > 0;
@@ -78,7 +84,9 @@ export function selectTests(base, changed, readBase, readCurrent) {
     } catch { return false; }
   });
   const wrapperChanged = !base || changed.some(file => /^packages\/npm\/(bin\/|test\/)/.test(file));
-  return { runtimeChanged, runtimeBrandingOnly, wrapperChanged };
+  const runtimeWorkbuddyAuthOnly = !!base && runtime.length > 0 &&
+    runtime.every(file => workbuddyAuthFiles.has(file));
+  return { runtimeChanged, runtimeBrandingOnly, runtimeWorkbuddyAuthOnly, wrapperChanged };
 }
 
 function main() {
@@ -100,7 +108,7 @@ function main() {
     file => execFileSync('git', ['show', `${base}:${file}`], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }),
     file => fs.readFileSync(path.join(root, file), 'utf8'));
   if (process.env.GITHUB_OUTPUT) {
-    fs.appendFileSync(process.env.GITHUB_OUTPUT, `runtime_changed=${selected.runtimeChanged}\nruntime_branding_only=${selected.runtimeBrandingOnly}\nwrapper_changed=${selected.wrapperChanged}\n`);
+    fs.appendFileSync(process.env.GITHUB_OUTPUT, `runtime_changed=${selected.runtimeChanged}\nruntime_branding_only=${selected.runtimeBrandingOnly}\nruntime_workbuddy_auth_only=${selected.runtimeWorkbuddyAuthOnly}\nwrapper_changed=${selected.wrapperChanged}\n`);
   }
   console.log(JSON.stringify({ name: expectedName, version: pkg.version, targets, base, ...selected }, null, 2));
 }
