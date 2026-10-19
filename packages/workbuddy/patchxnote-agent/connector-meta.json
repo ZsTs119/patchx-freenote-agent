@@ -2,21 +2,21 @@
   "name": "PatchX Freenote",
   "name_zh": "PatchX Freenote",
   "name_en": "PatchX Freenote",
-  "description": "连接 PatchX Freenote 账号，查询录音总结、记忆、额度和 AI 整理结果，并在用户确认后处理 Markdown 与 webhook 工作流。",
-  "description_zh": "连接 PatchX Freenote 账号，查询录音总结、记忆、额度和 AI 整理结果，并在用户确认后处理 Markdown 与 webhook 工作流。",
-  "description_en": "Connect PatchX Freenote to query recording summaries, memories, quota, model results, and user-approved Markdown or webhook workflows.",
-  "source": "patchxnote-agent",
+  "description": "首次使用时引导浏览器登录授权，随后查询录音总结、记忆、额度和 AI 整理结果，将记录整理成可复制的笔记。",
+  "description_zh": "首次使用时引导浏览器登录授权，随后查询录音总结、记忆、额度和 AI 整理结果，将记录整理成可复制的笔记。",
+  "description_en": "Sign in through your browser, then read recording summaries, memories, quota and AI results, and turn records into copyable notes.",
+  "source": "patchxfreenote",
   "type": "mcp",
-  "version": "0.1.1",
-  "minWorkbuddyVersion": "4.24.0",
+  "version": "0.1.2",
+  "minWorkbuddyVersion": "5.0.0",
   "examples_zh": [
-    "帮我查看今天手机端的 PatchX Freenote 记录。",
-    "查一下这条记录的 AI 整理结果。",
-    "把这条 PatchX Freenote 总结渲染成 Markdown 草稿。"
+    "帮我登录并连接 PatchX Freenote，打开浏览器让我完成授权，然后检查连接是否成功。",
+    "帮我查看最近的手机端录音总结；如果尚未登录，请先引导我完成授权。",
+    "帮我把最近一次手机端录音总结整理成可复制的笔记；如果尚未登录，请先引导我完成授权。"
   ],
   "examples_en": [
-    "Show my recent mobile PatchX Freenote records.",
-    "Find the AI result behind this PatchX Freenote record.",
-    "Create a Markdown draft from this PatchX Freenote summary."
+    "Connect me to PatchX Freenote, open the browser for authorization if needed, and verify the connection.",
+    "Show my recent mobile recording summaries; help me authorize first if I am not signed in.",
+    "Turn my latest mobile recording summary into a copyable note; help me authorize first if I am not signed in."
   ]
 }

@@ -5,8 +5,11 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
+
+	"github.com/ZsTs119/patchxnote-agent/internal/api"
 )
 
 const (
@@ -106,7 +109,7 @@ func (p *Proxy) forward(ctx context.Context, line []byte) ([]byte, bool) {
 	accessToken, hasToken, tokenErr := p.accessToken(ctx)
 	if tokenErr != nil {
 		if method == "tools/call" {
-			return marshalResponse(errorResponse(requestID, codeAuthRequired, "auth_required", "PatchXNote MCP authorization is required")), true
+			return marshalResponse(tokenErrorResponse(requestID, tokenErr)), true
 		}
 		accessToken = ""
 		hasToken = false
@@ -116,7 +119,11 @@ func (p *Proxy) forward(ctx context.Context, line []byte) ([]byte, bool) {
 	}
 	response, err := p.client.Do(ctx, line, accessToken)
 	if err == nil && response.AuthFailed && p.tokenProvider != nil {
-		if refreshed, ok, refreshErr := p.tokenProvider.RefreshNow(ctx); refreshErr == nil && ok && refreshed != "" {
+		refreshed, ok, refreshErr := p.tokenProvider.RefreshNow(ctx)
+		if refreshErr != nil {
+			return marshalResponse(tokenErrorResponse(requestID, refreshErr)), !isNotification
+		}
+		if ok && refreshed != "" {
 			response, err = p.client.Do(ctx, line, refreshed)
 		}
 	}
@@ -143,6 +150,19 @@ func (p *Proxy) accessToken(ctx context.Context) (string, bool, error) {
 		return "", false, nil
 	}
 	return p.tokenProvider.AccessToken(ctx)
+}
+
+func tokenErrorResponse(id json.RawMessage, err error) rpcResponse {
+	var apiErr *api.Error
+	if errors.As(err, &apiErr) {
+		if apiErr.StatusCode == 401 || apiErr.Code == "invalid_grant" || apiErr.Code == "invalid_token" {
+			return httpErrorResponse(id, 401)
+		}
+		if apiErr.StatusCode == 403 || apiErr.StatusCode == 429 {
+			return httpErrorResponse(id, apiErr.StatusCode)
+		}
+	}
+	return errorResponse(id, codeToolError, "token_refresh_failed", "PatchXNote MCP credential refresh failed; retry without signing out")
 }
 
 func requestEnvelope(line []byte) (json.RawMessage, string, bool, error) {

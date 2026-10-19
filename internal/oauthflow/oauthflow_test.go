@@ -275,6 +275,72 @@ type fakeOAuthTokenClient struct {
 	refreshToken string
 }
 
+type failedRefreshClient struct{ err error }
+
+func (f failedRefreshClient) RefreshOAuthToken(context.Context, api.OAuthTokenRequest) (api.OAuthTokenResponse, error) {
+	return api.OAuthTokenResponse{}, f.err
+}
+
+func TestRefreshFailureKeepsRetryableCredential(t *testing.T) {
+	for _, tc := range []struct {
+		name       string
+		err        error
+		wantStored bool
+	}{
+		{"network_timeout", context.DeadlineExceeded, true},
+		{"unavailable", &api.Error{StatusCode: 503}, true},
+		{"invalid_token", &api.Error{StatusCode: 401, Code: "invalid_token"}, false},
+		{"invalid_grant", &api.Error{StatusCode: 400, Code: "invalid_grant"}, false},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			store := NewStore(keychain.NewMemoryStore(), "workbuddy")
+			now := fixedOAuthTime()
+			credential, err := CredentialFromTokenResponse(api.OAuthTokenResponse{
+				AccessToken: strings.Repeat("a", 43), TokenType: "Bearer", ExpiresIn: 1,
+				RefreshToken: strings.Repeat("r", 43), RefreshTokenExpiresIn: 2592000,
+				Scope: "agent:account.read", ConnectorSessionID: "mcpconn_fixture",
+			}, "https://freenote.patch-x.cn", DefaultClientID, now)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err := store.Save(context.Background(), credential); err != nil {
+				t.Fatal(err)
+			}
+			provider := RefreshProvider{Store: store, Client: failedRefreshClient{tc.err}, ServerBaseURL: "https://freenote.patch-x.cn", Now: func() time.Time { return now.Add(2 * time.Second) }}
+			if _, _, err := provider.Credential(context.Background()); err == nil {
+				t.Fatal("expected refresh failure")
+			}
+			got, exists, err := store.Load(context.Background())
+			if err != nil || exists != tc.wantStored {
+				t.Fatalf("stored=%t, expected=%t, err=%v", exists, tc.wantStored, err)
+			}
+			if exists && (got.AccessToken != credential.AccessToken || got.RefreshToken != credential.RefreshToken) {
+				t.Fatal("retryable error changed credentials")
+			}
+		})
+	}
+}
+
+func TestExpiredRefreshCredentialRequiresLogin(t *testing.T) {
+	store := NewStore(keychain.NewMemoryStore(), "workbuddy")
+	now := fixedOAuthTime()
+	credential, err := CredentialFromTokenResponse(api.OAuthTokenResponse{
+		AccessToken: "fixture_access", TokenType: "Bearer", ExpiresIn: 900,
+		RefreshToken: "fixture_refresh", RefreshTokenExpiresIn: 2592000,
+		Scope: "agent:account.read", ConnectorSessionID: "fixture_connector",
+	}, "https://freenote.patch-x.cn", DefaultClientID, now)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := store.Save(context.Background(), credential); err != nil {
+		t.Fatal(err)
+	}
+	provider := RefreshProvider{Store: store, Client: failedRefreshClient{context.DeadlineExceeded}, ServerBaseURL: "https://freenote.patch-x.cn", Now: func() time.Time { return now.Add(30*24*time.Hour + time.Second) }}
+	if _, ok, err := provider.Credential(context.Background()); err != nil || ok {
+		t.Fatalf("expired credential should require login without a refresh request: ok=%t err=%v", ok, err)
+	}
+}
+
 func (f *fakeOAuthTokenClient) RefreshOAuthToken(ctx context.Context, request api.OAuthTokenRequest) (api.OAuthTokenResponse, error) {
 	f.refreshToken = request.RefreshToken
 	return api.OAuthTokenResponse{

@@ -75,7 +75,8 @@ func (p *RefreshProvider) RefreshNow(ctx context.Context) (Credential, bool, err
 	})
 	if err != nil {
 		var apiErr *api.Error
-		if errors.As(err, &apiErr) && apiErr.StatusCode == 401 {
+		if errors.As(err, &apiErr) && (apiErr.StatusCode == 401 ||
+			(apiErr.StatusCode == 400 && apiErr.Code == "invalid_grant")) {
 			_ = p.Store.Delete(ctx)
 		}
 		return Credential{}, false, err

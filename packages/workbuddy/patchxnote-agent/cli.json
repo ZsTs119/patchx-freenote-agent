@@ -1,0 +1,26 @@
+{
+  "runtime": { "type": "node", "version": "20" },
+  "init": {
+    "darwin": "npx --yes patchxnote-agent@{{CLI_PACKAGE_VERSION}} install",
+    "linux": "npx --yes patchxnote-agent@{{CLI_PACKAGE_VERSION}} install",
+    "win32": "npx.cmd --yes patchxnote-agent@{{CLI_PACKAGE_VERSION}} install"
+  },
+  "auth": {
+    "darwin": "npx --yes patchxnote-agent@{{CLI_PACKAGE_VERSION}} mcp login --no-browser --force --profile workbuddy --server-base-url {{API_BASE_URL}} --callback-timeout 5m",
+    "linux": "npx --yes patchxnote-agent@{{CLI_PACKAGE_VERSION}} mcp login --no-browser --force --profile workbuddy --server-base-url {{API_BASE_URL}} --callback-timeout 5m",
+    "win32": "npx.cmd --yes patchxnote-agent@{{CLI_PACKAGE_VERSION}} mcp login --no-browser --force --profile workbuddy --server-base-url {{API_BASE_URL}} --callback-timeout 5m"
+  },
+  "status": {
+    "darwin": "npx --yes patchxnote-agent@{{CLI_PACKAGE_VERSION}} mcp status --output json --profile workbuddy --server-base-url {{API_BASE_URL}}",
+    "linux": "npx --yes patchxnote-agent@{{CLI_PACKAGE_VERSION}} mcp status --output json --profile workbuddy --server-base-url {{API_BASE_URL}}",
+    "win32": "npx.cmd --yes patchxnote-agent@{{CLI_PACKAGE_VERSION}} mcp status --output json --profile workbuddy --server-base-url {{API_BASE_URL}}"
+  },
+  "unAuth": {
+    "darwin": "npx --yes patchxnote-agent@{{CLI_PACKAGE_VERSION}} mcp logout --profile workbuddy --server-base-url {{API_BASE_URL}}",
+    "linux": "npx --yes patchxnote-agent@{{CLI_PACKAGE_VERSION}} mcp logout --profile workbuddy --server-base-url {{API_BASE_URL}}",
+    "win32": "npx.cmd --yes patchxnote-agent@{{CLI_PACKAGE_VERSION}} mcp logout --profile workbuddy --server-base-url {{API_BASE_URL}}"
+  },
+  "statusMatch": "\"authenticated\"\\s*:\\s*true",
+  "authUrlDomain": "{{AUTH_URL_DOMAIN}}",
+  "authWaitForExit": true
+}

@@ -61,18 +61,20 @@ function collectFiles(directory, prefix = "") {
   return files;
 }
 
-function render(content, environment, environmentName, version) {
+function render(content, environment, environmentName, version, cliPackageVersion = "") {
   return Buffer.from(content.toString("utf8")
     .replaceAll("{{API_BASE_URL}}", environment.apiBaseURL)
     .replaceAll("{{MCP_URL}}", environment.mcpURL)
     .replaceAll("{{ENVIRONMENT}}", environmentName)
-    .replaceAll("{{PACKAGE_VERSION}}", version));
+    .replaceAll("{{PACKAGE_VERSION}}", version)
+    .replaceAll("{{CLI_PACKAGE_VERSION}}", cliPackageVersion)
+    .replaceAll("{{AUTH_URL_DOMAIN}}", new URL(environment.apiBaseURL).hostname));
 }
 
 function buildSkill(common, channel, environment, environmentName, version) {
   const files = collectFiles(path.resolve(repoRoot, common.skillSource));
   for (const [destination, source] of Object.entries(channel.skillOverrides ?? {})) {
-    files.set(destination, render(readSource(source), environment, environmentName, version));
+    files.set(destination, render(readSource(source), environment, environmentName, version, channel.cliPackageVersion));
   }
   // Reuse the hosted connector SOP while allowing an explicit channel label.
   for (const [name, content] of files) {
@@ -162,7 +164,12 @@ function main() {
   if (!/^\d+\.\d+\.\d+(?:[-+][A-Za-z0-9.-]+)?$/.test(manifest.version ?? "")) throw new Error("Channel manifest must provide a package version");
   const skill = buildSkill(config.common, channel, environment, values.env, manifest.version);
   const packageFiles = new Map([[channel.manifestDestination, jsonBuffer(manifest)]]);
-  for (const [destination, source] of Object.entries(channel.files ?? {})) packageFiles.set(destination, readSource(source));
+  for (const [destination, source] of Object.entries(channel.files ?? {})) {
+    const content = readSource(source);
+    packageFiles.set(destination, channel.format === "workbuddy-zip" && destination.endsWith(".json")
+      ? render(content, environment, values.env, manifest.version, channel.cliPackageVersion)
+      : content);
+  }
   for (const [name, content] of skill) packageFiles.set(path.posix.join(config.common.skillDestination, name), content);
   for (const [name, content] of packageFiles) {
     if ([".md", ".svg"].includes(path.posix.extname(name))) {
@@ -176,7 +183,7 @@ function main() {
     const mcp = parseJSON(packageFiles.get("mcp.json"), "mcp.json");
     const servers = Object.values(mcp.mcpServers ?? {});
     if (servers.length !== 1) throw new Error("Remote plugin must configure exactly one MCP server");
-    servers[0].url = environment.mcpURL;
+    if (servers[0].type !== "stdio") servers[0].url = environment.mcpURL;
     packageFiles.set("mcp.json", jsonBuffer(mcp));
   } else {
     pluginDirectory = path.posix.join(path.posix.dirname(channel.pluginDirectory), branding.pluginName);
@@ -209,7 +216,7 @@ function main() {
     if (channel.format === "agent-plugin-zip") validateAgentPlugin(bundle, environment, packageFiles, channel.maxPackageBytes);
     createZipFromDirectory(bundle, zipPath);
     if (channel.format === "workbuddy-zip") {
-      validateWorkBuddyConnector({ connectorRoot: bundle, expectedURL: environment.mcpURL, zipPath });
+      validateWorkBuddyConnector({ connectorRoot: bundle, expectedURL: environment.mcpURL, expectedCLIVersion: channel.cliPackageVersion, zipPath });
     } else if (fs.statSync(zipPath).size >= channel.maxPackageBytes) {
       throw new Error("ZIP exceeds the channel size limit");
     }
