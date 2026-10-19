@@ -9,7 +9,7 @@ import (
 func newLogoutCommand(state *rootState) *cobra.Command {
 	return &cobra.Command{
 		Use:   "logout",
-		Short: "Remove local PatchXNote Agent credentials",
+		Short: "Remove local PatchX Freenote Agent credentials",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			runtime, err := loadRuntime(state)

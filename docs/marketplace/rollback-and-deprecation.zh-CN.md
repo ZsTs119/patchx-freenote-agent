@@ -1,4 +1,4 @@
-# PatchXNote Skill And Marketplace Rollback
+# PatchX Freenote Skill And Marketplace Rollback
 
 更新日期：2026-09-03
 

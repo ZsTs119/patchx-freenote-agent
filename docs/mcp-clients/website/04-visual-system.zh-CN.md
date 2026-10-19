@@ -1,8 +1,8 @@
-# PatchXNote MCP 官网视觉系统与 UI 规范
+# PatchX Freenote MCP 官网视觉系统与 UI 规范
 
 **日期：** 2026-08-28
 
-**定位：** 本文用于指导 PatchXNote MCP 官网、客户端详情页、OAuth 授权页和后续生成视觉素材。本文只定义视觉和交互规范，不代表页面已经实现或客户端已经完成真实验收。
+**定位：** 本文用于指导 PatchX Freenote MCP 官网、客户端详情页、OAuth 授权页和后续生成视觉素材。本文只定义视觉和交互规范，不代表页面已经实现或客户端已经完成真实验收。
 
 ## 设计方向
 
@@ -14,8 +14,8 @@ Black Chrome Command Hub
 
 这不是普通深色文档站，也不是硬件电商页。它应表达三件事：
 
-1. **真实产品可信度**：PatchXNote 是有实体 AI 录音卡、App 和服务端授权边界的产品。
-2. **AI 工具接入感**：官网核心任务是让用户把 PatchXNote 接入 Cursor、VS Code、Codex、Claude、飞书、腾讯等 AI 工具。
+1. **真实产品可信度**：PatchX Freenote 是有实体 AI 录音卡、App 和服务端授权边界的产品。
+2. **AI 工具接入感**：官网核心任务是让用户把 PatchX Freenote 接入 Cursor、VS Code、Codex、Claude、飞书、腾讯等 AI 工具。
 3. **安全和控制感**：One login、secret-free config、OS-native secure storage、OAuth connector session 必须被视觉化。
 
 用户提供的产品图、介绍页和 Logo 图只作为事实参考，不直接作为官网最终视觉素材。后续素材应基于这些事实重新生成或处理成统一的高级黑风格。
@@ -24,7 +24,7 @@ Black Chrome Command Hub
 
 官网可使用的产品事实：
 
-- 产品名：`PatchXNote`。面向消费者文案可出现 `Patchx Note`，但 MCP 官网导航和技术入口优先统一为 `PatchXNote MCP`。
+- 产品名：`PatchX Freenote`。面向消费者文案可出现 `Patchx Note`，但 MCP 官网导航和技术入口优先统一为 `PatchX Freenote MCP`。
 - 产品类型：AI 录音卡、本地优先记录工具、AI 总结和记忆入口。
 - 主张：隐私归你，订阅归零。
 - 价值表达：不只是记录声音，而是把每一次记录沉淀为自己的数字资产。
@@ -157,12 +157,12 @@ Header 使用半透明黑色毛玻璃，但文字和按钮必须有足够对比�
 
 ### Hero
 
-目标：一眼知道这是 PatchXNote 官方 MCP 入口。
+目标：一眼知道这是 PatchX Freenote 官方 MCP 入口。
 
 展示信息：
 
 ```text
-PatchXNote MCP
+PatchX Freenote MCP
 隐私归你，AI 由你掌控
 把你的真实对话，安全接入 Cursor、VS Code、Codex 和更多 AI 工具。
 ```
@@ -176,7 +176,7 @@ PatchXNote MCP
 
 视觉：
 
-- 中心使用生成/重制后的银黑 PatchXNote 录音卡，不直接使用浅色介绍图。
+- 中心使用生成/重制后的银黑 PatchX Freenote 录音卡，不直接使用浅色介绍图。
 - 第一屏不展示完整客户端卡片网格，不展示四个以上功能点，不展示安装命令。
 - 产品周围只允许出现极轻量的 AI 工具文字或单色银灰符号。
 - 连接线使用冷银细线，轻微流动表达 MCP connection。
@@ -240,7 +240,7 @@ Verify tools
 ```text
 Copy remote MCP URL
 Add it in platform console
-Authorize PatchXNote
+Authorize PatchX Freenote
 Verify one safe read tool
 ```
 
@@ -281,14 +281,14 @@ No tokens in config.
 No phone numbers in examples.
 Credentials stay in OS-native secure storage.
 Cloud platforms use revocable OAuth connector sessions.
-PatchXNote returns bounded, authorized content only.
+PatchX Freenote returns bounded, authorized content only.
 ```
 
 视觉节点：
 
 ```text
-MCP Config -> npx launcher -> OS Keychain -> GoServer OAuth -> PatchXNote tools
-Cloud Platform -> Remote MCP Gateway -> OAuth Connector Session -> PatchXNote tools
+MCP Config -> npx launcher -> OS Keychain -> GoServer OAuth -> PatchX Freenote tools
+Cloud Platform -> Remote MCP Gateway -> OAuth Connector Session -> PatchX Freenote tools
 ```
 
 ### Cloud Platform Status
@@ -314,7 +314,7 @@ AI 录音卡 · MCP for local editors and cloud agents
 
 Product
 Download App
-PatchXNote MCP
+PatchX Freenote MCP
 Security
 Privacy Policy
 
@@ -499,7 +499,7 @@ Local-first recorder · MCP ready
 需要生成或处理的官网素材：
 
 1. Hero 产品渲染图：银黑录音卡在高级黑空间中，主体清晰，保留真实外形特征。
-2. AI 连接背景：PatchXNote 产品节点连接编辑器、本地 MCP 和云平台节点。
+2. AI 连接背景：PatchX Freenote 产品节点连接编辑器、本地 MCP 和云平台节点。
 3. 深色 App / Summary mock：展示摘要、记忆、结构化结果，不使用真实用户内容。
 4. OAuth 授权视觉：安全授权面板，和官网同一视觉语言。
 5. 三类入口插图：编辑器安装、本地 CLI、云平台 remote MCP。
@@ -557,4 +557,4 @@ Local-first recorder · MCP ready
 - 主按钮 hover、copy、Tab 切换状态清晰。
 - `prefers-reduced-motion` 生效。
 - 示例配置不包含 token、手机号、验证码、OAuth code、refresh token、webhook secret、真实用户内容或 provider payload。
-- 若使用生成图，确认硬件外形仍像 PatchXNote 录音卡，不把产品变成无关设备。
+- 若使用生成图，确认硬件外形仍像 PatchX Freenote 录音卡，不把产品变成无关设备。

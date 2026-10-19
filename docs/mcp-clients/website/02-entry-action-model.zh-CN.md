@@ -1,15 +1,15 @@
-# PatchXNote MCP 官网三类入口与动作方案
+# PatchX Freenote MCP 官网三类入口与动作方案
 
 **日期：** 2026-08-27
 
-**定位：** 本文用于统一 PatchXNote MCP 官网、客户端详情页、授权页体验和后续 GoServer `web/` 实现口径。本文是产品与实现边界文档，不代表所有客户端已经完成真实验收。
+**定位：** 本文用于统一 PatchX Freenote MCP 官网、客户端详情页、授权页体验和后续 GoServer `web/` 实现口径。本文是产品与实现边界文档，不代表所有客户端已经完成真实验收。
 
 ## 核心结论
 
 截图里讨论的“官网、一键安装、登录授权、不同客户端入口”在用户体验上应合并成一件事：
 
 ```text
-PatchXNote MCP 官网安装与授权中枢
+PatchX Freenote MCP 官网安装与授权中枢
 ```
 
 用户只需要先选择正在用的 AI 工具，然后按照该工具支持的最佳路径完成接入。工程实现上仍拆成三类入口，因为它们的能力边界不同：
@@ -103,7 +103,7 @@ Cursor 这类支持 deeplink 的客户端，按钮可以打开类似系统确认
  -> 用户复制官网提供的一句话到 AI 输入框，或复制命令到终端
  -> AI 在本机运行 setup 命令
  -> 如需打开浏览器授权、系统确认、客户端重启，AI 暂停并让用户自己操作
- -> 用户完成 PatchXNote 登录和授权
+ -> 用户完成 PatchX Freenote 登录和授权
  -> AI 继续验证 MCP 工具列表
 ```
 
@@ -112,28 +112,28 @@ Cursor 这类支持 deeplink 的客户端，按钮可以打开类似系统确认
 官网每个本地客户端详情页都提供一个可复制 prompt。以 Cursor 为例：
 
 ```text
-请帮我在当前环境安装 PatchXNote MCP。请运行：
+请帮我在当前环境安装 PatchX Freenote MCP。请运行：
 npx -y patchxnote-agent@latest setup --client cursor
 
-如果需要打开浏览器、确认编辑器安装、登录 PatchXNote 或输入验证码，请暂停并让我自己完成。不要读取、保存或输出手机号、验证码、token、OAuth code、refresh token、webhook secret 或任何密钥。安装完成后，请刷新 MCP，并验证：List the PatchXNote MCP tools and show only their names.
+如果需要打开浏览器、确认编辑器安装、登录 PatchX Freenote 或输入验证码，请暂停并让我自己完成。不要读取、保存或输出手机号、验证码、token、OAuth code、refresh token、webhook secret 或任何密钥。安装完成后，请刷新 MCP，并验证：List the PatchX Freenote MCP tools and show only their names.
 ```
 
 Codex 示例：
 
 ```text
-请帮我在当前 Codex 环境安装 PatchXNote MCP。请运行：
+请帮我在当前 Codex 环境安装 PatchX Freenote MCP。请运行：
 npx -y patchxnote-agent@latest setup --client codex
 
-如果需要打开浏览器、登录 PatchXNote、输入验证码或确认授权，请暂停并让我自己完成。不要读取、保存或输出手机号、验证码、token、OAuth code、refresh token、webhook secret 或任何密钥。安装完成后，请新开或刷新 Codex 会话，并验证：List the PatchXNote MCP tools and show only their names.
+如果需要打开浏览器、登录 PatchX Freenote、输入验证码或确认授权，请暂停并让我自己完成。不要读取、保存或输出手机号、验证码、token、OAuth code、refresh token、webhook secret 或任何密钥。安装完成后，请新开或刷新 Codex 会话，并验证：List the PatchX Freenote MCP tools and show only their names.
 ```
 
 Claude Code 示例：
 
 ```text
-请帮我在当前 Claude Code 环境安装 PatchXNote MCP。请运行：
+请帮我在当前 Claude Code 环境安装 PatchX Freenote MCP。请运行：
 npx -y patchxnote-agent@latest setup --client claude-code
 
-如果需要打开浏览器、登录 PatchXNote、输入验证码或确认授权，请暂停并让我自己完成。不要读取、保存或输出手机号、验证码、token、OAuth code、refresh token、webhook secret 或任何密钥。安装完成后，请刷新 MCP，并验证：List the PatchXNote MCP tools and show only their names.
+如果需要打开浏览器、登录 PatchX Freenote、输入验证码或确认授权，请暂停并让我自己完成。不要读取、保存或输出手机号、验证码、token、OAuth code、refresh token、webhook secret 或任何密钥。安装完成后，请刷新 MCP，并验证：List the PatchX Freenote MCP tools and show only their names.
 ```
 
 ### 命令与配置兜底
@@ -180,9 +180,9 @@ npx -y patchxnote-agent@latest setup --client <client-id>
 ```text
 官网选择云平台
  -> 复制 remote MCP URL 或打开平台配置指引
- -> 在平台控制台添加 PatchXNote remote MCP
+ -> 在平台控制台添加 PatchX Freenote remote MCP
  -> 平台按 OAuth protected resource metadata 发现授权入口
- -> 用户在 PatchXNote 授权页登录和确认
+ -> 用户在 PatchX Freenote 授权页登录和确认
  -> GoServer 创建可撤销 connector session
  -> 平台通过 HTTPS 调用 /mcp
  -> 验证 initialize、tools/list 和一个安全只读 tools/call
@@ -198,7 +198,7 @@ https://freenote.patch-x.cn/mcp
 
 云平台关键边界：
 
-- 不要求用户把 PatchXNote access token 粘贴到第三方平台。
+- 不要求用户把 PatchX Freenote access token 粘贴到第三方平台。
 - 能走平台官方 OAuth / remote MCP 的，优先走 remote MCP。
 - 如果平台只支持 header/token，首版标记为平台限制，不把它包装成已闭环。
 - 如果平台不支持 MCP，再单独评估 webhook、HTTP tool 或平台私有插件。
@@ -209,7 +209,7 @@ https://freenote.patch-x.cn/mcp
 首页第一屏先建立产品识别和转化，不在首屏塞卡片墙。第二屏或 `Clients` 锚点再让用户选择工具：
 
 ```text
-PatchXNote MCP
+PatchX Freenote MCP
 隐私归你，AI 由你掌控
 连接我的 AI 工具
 ```

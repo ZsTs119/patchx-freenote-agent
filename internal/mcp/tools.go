@@ -36,7 +36,7 @@ func defaultTools(server *Server) []Tool {
 	tools := []Tool{
 		{
 			Name:        "patchxnote_get_current_user",
-			Description: "Read the current PatchXNote account projection for the logged-in Agent session.",
+			Description: "Read the current PatchX Freenote account projection for the logged-in Agent session.",
 			InputSchema: objectSchema(nil, nil),
 			Annotations: readOnlyAnnotations(),
 			handler:     server.handleGetCurrentUser,
@@ -44,7 +44,7 @@ func defaultTools(server *Server) []Tool {
 		},
 		{
 			Name:        "patchxnote_list_recorder_cards",
-			Description: "List recorder cards bound to the current PatchXNote account with masked identifiers only.",
+			Description: "List recorder cards bound to the current PatchX Freenote account with masked identifiers only.",
 			InputSchema: objectSchema(nil, nil),
 			Annotations: readOnlyAnnotations(),
 			handler:     server.handleListRecorderCards,
@@ -52,7 +52,7 @@ func defaultTools(server *Server) []Tool {
 		},
 		{
 			Name:        "patchxnote_get_quota_summary",
-			Description: "Read the current PatchXNote quota summary for the logged-in account.",
+			Description: "Read the current PatchX Freenote quota summary for the logged-in account.",
 			InputSchema: objectSchema(nil, nil),
 			Annotations: readOnlyAnnotations(),
 			handler:     server.handleGetQuotaSummary,
@@ -60,7 +60,7 @@ func defaultTools(server *Server) []Tool {
 		},
 		{
 			Name:        "patchxnote_get_model_usage_summary",
-			Description: "Read the current-month PatchXNote model usage summary.",
+			Description: "Read the current-month PatchX Freenote model usage summary.",
 			InputSchema: objectSchema(nil, nil),
 			Annotations: readOnlyAnnotations(),
 			handler:     server.handleGetModelUsageSummary,
@@ -68,7 +68,7 @@ func defaultTools(server *Server) []Tool {
 		},
 		{
 			Name:        "patchxnote_list_memories",
-			Description: "List PatchXNote readable record entries for one selected platform, including formal saved results and model-generated outputs.",
+			Description: "List PatchX Freenote readable record entries for one selected platform, including formal saved results and model-generated outputs.",
 			InputSchema: objectSchema(map[string]any{
 				"platform": platformProperty(),
 				"limit":    integerProperty(1, 50),
@@ -80,7 +80,7 @@ func defaultTools(server *Server) []Tool {
 		},
 		{
 			Name:        "patchxnote_search_memories",
-			Description: "Search the local authorized PatchXNote memory metadata cache for one selected platform.",
+			Description: "Search the local authorized PatchX Freenote memory metadata cache for one selected platform.",
 			InputSchema: objectSchema(map[string]any{
 				"platform": platformProperty(),
 				"query":    stringProperty(1, 128),
@@ -92,7 +92,7 @@ func defaultTools(server *Server) []Tool {
 		},
 		{
 			Name:        "patchxnote_get_memory",
-			Description: "Read safe metadata for one PatchXNote readable record entry.",
+			Description: "Read safe metadata for one PatchX Freenote readable record entry.",
 			InputSchema: objectSchema(map[string]any{
 				"platform":  platformProperty(),
 				"memory_id": stringProperty(1, 160),
@@ -112,7 +112,7 @@ func (s *Server) handleGetCurrentUser(ctx context.Context, arguments json.RawMes
 		return CallToolResult{}, err
 	}
 	if s.api == nil {
-		return CallToolResult{}, rpcErr(codeToolError, "api_unavailable", "PatchXNote API client is not configured")
+		return CallToolResult{}, rpcErr(codeToolError, "api_unavailable", "PatchX Freenote API client is not configured")
 	}
 	user, err := s.api.CurrentUser(ctx, token)
 	if err != nil {
@@ -127,7 +127,7 @@ func (s *Server) handleListRecorderCards(ctx context.Context, arguments json.Raw
 		return CallToolResult{}, err
 	}
 	if s.api == nil {
-		return CallToolResult{}, rpcErr(codeToolError, "api_unavailable", "PatchXNote API client is not configured")
+		return CallToolResult{}, rpcErr(codeToolError, "api_unavailable", "PatchX Freenote API client is not configured")
 	}
 	cards, err := s.api.ListRecorderCards(ctx, token)
 	if err != nil {
@@ -142,7 +142,7 @@ func (s *Server) handleGetQuotaSummary(ctx context.Context, arguments json.RawMe
 		return CallToolResult{}, err
 	}
 	if s.api == nil {
-		return CallToolResult{}, rpcErr(codeToolError, "api_unavailable", "PatchXNote API client is not configured")
+		return CallToolResult{}, rpcErr(codeToolError, "api_unavailable", "PatchX Freenote API client is not configured")
 	}
 	quota, err := s.api.GetQuotaSummary(ctx, token)
 	if err != nil {
@@ -157,7 +157,7 @@ func (s *Server) handleGetModelUsageSummary(ctx context.Context, arguments json.
 		return CallToolResult{}, err
 	}
 	if s.api == nil {
-		return CallToolResult{}, rpcErr(codeToolError, "api_unavailable", "PatchXNote API client is not configured")
+		return CallToolResult{}, rpcErr(codeToolError, "api_unavailable", "PatchX Freenote API client is not configured")
 	}
 	usage, err := s.api.GetModelUsageSummary(ctx, token)
 	if err != nil {
@@ -176,7 +176,7 @@ func (s *Server) handleListMemories(ctx context.Context, arguments json.RawMessa
 		return CallToolResult{}, err
 	}
 	if s.api == nil {
-		return CallToolResult{}, rpcErr(codeToolError, "api_unavailable", "PatchXNote API client is not configured")
+		return CallToolResult{}, rpcErr(codeToolError, "api_unavailable", "PatchX Freenote API client is not configured")
 	}
 	page, err := s.api.ListMemories(ctx, token, params)
 	if err != nil {
@@ -213,7 +213,7 @@ func (s *Server) handleGetMemory(ctx context.Context, arguments json.RawMessage)
 		return CallToolResult{}, err
 	}
 	if s.api == nil {
-		return CallToolResult{}, rpcErr(codeToolError, "api_unavailable", "PatchXNote API client is not configured")
+		return CallToolResult{}, rpcErr(codeToolError, "api_unavailable", "PatchX Freenote API client is not configured")
 	}
 	memory, err := s.api.GetMemory(ctx, token, params.Platform, params.MemoryID)
 	if err != nil {

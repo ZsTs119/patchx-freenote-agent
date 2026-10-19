@@ -20,6 +20,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           ref: v${{ inputs.version }}
+          fetch-depth: 0
 
       - name: Set up Node
         uses: actions/setup-node@v6
@@ -53,11 +54,20 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ inputs.version }}
 
-      - name: Test npm wrapper
-        working-directory: packages/npm
+      - name: Validate release metadata and select affected tests
+        id: validation
         run: |
-          npm test
-          npm pack --dry-run
+          node scripts/validate-release-metadata.test.mjs
+          node scripts/validate-release-metadata.mjs
+
+      - name: Test npm wrapper
+        if: ${{ steps.validation.outputs.wrapper_changed == 'true' }}
+        working-directory: packages/npm
+        run: npm test
+
+      - name: Check npm package contents
+        working-directory: packages/npm
+        run: npm pack --dry-run
 
       - name: npm publish with Trusted Publishing
         working-directory: packages/npm

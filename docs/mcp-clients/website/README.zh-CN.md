@@ -1,8 +1,8 @@
-# PatchXNote MCP 官网规划入口
+# PatchX Freenote MCP 官网规划入口
 
 **日期：** 2026-08-28
 
-这个目录沉淀 PatchXNote MCP 官网的产品、视觉、安装动作、素材和验收流程。后续写 GoServer `web/mcp/` 页面时，先读本文，再读编号文档和 `../clients.json`。
+这个目录沉淀 PatchX Freenote MCP 官网的产品、视觉、安装动作、素材和验收流程。后续写 GoServer `web/mcp/` 页面时，先读本文，再读编号文档和 `../clients.json`。
 
 ## 当前结论
 

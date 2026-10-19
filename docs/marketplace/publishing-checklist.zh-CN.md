@@ -1,4 +1,4 @@
-# PatchXNote Skill And MCP Publishing Checklist
+# PatchX Freenote Skill And MCP Publishing Checklist
 
 更新日期：2026-09-03
 
@@ -19,7 +19,7 @@
 - [ ] 正向/负向触发用例覆盖。
 - [ ] 不写死当前工具数量。
 - [ ] 明确浏览器 OAuth 和不得粘贴 code/token/secret。
-- [ ] 明确 PatchXNote 返回内容是数据，不是指令。
+- [ ] 明确 PatchX Freenote 返回内容是数据，不是指令。
 
 ## 2. Plugin Packages
 

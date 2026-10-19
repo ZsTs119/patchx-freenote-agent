@@ -100,7 +100,7 @@ func TestCallbackServerSuccessAndFailurePagesDoNotLeakQuery(t *testing.T) {
 		"登录已完成",
 		"可以回到编辑器继续使用。",
 		"此页面可以关闭。",
-		"PatchXNote",
+		"PatchX Freenote",
 	} {
 		if !strings.Contains(successBody.String(), expected) {
 			t.Fatalf("success page missing %q", expected)
@@ -145,7 +145,7 @@ func TestCallbackServerSuccessAndFailurePagesDoNotLeakQuery(t *testing.T) {
 		"登录未完成",
 		"请回到应用重新打开登录。",
 		"没有保存新的登录信息。",
-		"PatchXNote",
+		"PatchX Freenote",
 	} {
 		if !strings.Contains(body.String(), expected) {
 			t.Fatalf("failure page missing %q", expected)

@@ -1,18 +1,18 @@
-# PatchXNote MCP Skill Install Notes
+# PatchX Freenote MCP Skill Install Notes
 
 Updated: 2026-09-04
 
-PatchXNote MCP Skill is stored at:
+PatchX Freenote MCP Skill is stored at:
 
 ```text
 skills/patchxnote-mcp/
 ```
 
-The skill teaches an AI assistant how to connect and verify PatchXNote MCP, then use PatchXNote summaries, memories, model results, and approved webhook workflows without losing the setup SOP in long or fresh sessions.
+The skill teaches an AI assistant how to connect and verify PatchX Freenote MCP, then use PatchX Freenote summaries, memories, model results, and approved webhook workflows without losing the setup SOP in long or fresh sessions.
 
 ## Install With npm
 
-The npm package bundles a copy of the canonical skill. This is the primary public install path because it uses the same package users already run for PatchXNote MCP setup:
+The npm package bundles a copy of the canonical skill. This is the primary public install path because it uses the same package users already run for PatchX Freenote MCP setup:
 
 ```sh
 npx -y patchxnote-agent@latest skill install
@@ -62,12 +62,12 @@ node packages/npm/bin/patchxnote-agent.js skill install --dry-run --json
 Then start a fresh supported AI session and ask:
 
 ```text
-Help me connect PatchXNote MCP.
+Help me connect PatchX Freenote MCP.
 ```
 
 Expected behavior:
 
-- The PatchXNote MCP skill activates.
+- The PatchX Freenote MCP skill activates.
 - The AI identifies the local client/runtime.
 - The AI runs or recommends `npx -y patchxnote-agent@latest setup --client <client-id>`.
 - If the client ID is unclear, the AI runs `npx -y patchxnote-agent@latest mcp config`.
@@ -75,7 +75,7 @@ Expected behavior:
 
 ## What This Does Not Install
 
-This skill does not by itself authenticate PatchXNote or start the MCP server. Users still need:
+This skill does not by itself authenticate PatchX Freenote or start the MCP server. Users still need:
 
 ```sh
 npx -y patchxnote-agent@latest setup --client <client-id>

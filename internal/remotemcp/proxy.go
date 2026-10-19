@@ -115,7 +115,7 @@ func (p *Proxy) forward(ctx context.Context, line []byte) ([]byte, bool) {
 		hasToken = false
 	}
 	if method == "tools/call" && (!hasToken || accessToken == "") {
-		return marshalResponse(errorResponse(requestID, codeAuthRequired, "auth_required", "PatchXNote MCP authorization is required")), true
+		return marshalResponse(errorResponse(requestID, codeAuthRequired, "auth_required", "PatchX Freenote MCP authorization is required")), true
 	}
 	response, err := p.client.Do(ctx, line, accessToken)
 	if err == nil && response.AuthFailed && p.tokenProvider != nil {
@@ -128,7 +128,7 @@ func (p *Proxy) forward(ctx context.Context, line []byte) ([]byte, bool) {
 		}
 	}
 	if err != nil {
-		return marshalResponse(errorResponse(requestID, codeToolError, "transport_error", "PatchXNote remote MCP request failed")), true
+		return marshalResponse(errorResponse(requestID, codeToolError, "transport_error", "PatchX Freenote remote MCP request failed")), true
 	}
 	if response.NoResponse {
 		return nil, false
@@ -140,7 +140,7 @@ func (p *Proxy) forward(ctx context.Context, line []byte) ([]byte, bool) {
 		return marshalResponse(httpErrorResponse(requestID, response.StatusCode)), true
 	}
 	if err := validJSONRPCResponse(response.Body, requestID); err != nil {
-		return marshalResponse(errorResponse(requestID, codeToolError, "remote_protocol_error", "PatchXNote remote MCP response was invalid")), true
+		return marshalResponse(errorResponse(requestID, codeToolError, "remote_protocol_error", "PatchX Freenote remote MCP response was invalid")), true
 	}
 	return response.Body, true
 }
@@ -162,7 +162,7 @@ func tokenErrorResponse(id json.RawMessage, err error) rpcResponse {
 			return httpErrorResponse(id, apiErr.StatusCode)
 		}
 	}
-	return errorResponse(id, codeToolError, "token_refresh_failed", "PatchXNote MCP credential refresh failed; retry without signing out")
+	return errorResponse(id, codeToolError, "token_refresh_failed", "PatchX Freenote MCP credential refresh failed; retry without signing out")
 }
 
 func requestEnvelope(line []byte) (json.RawMessage, string, bool, error) {
@@ -210,12 +210,12 @@ func errorResponse(id json.RawMessage, rpcCode int, code string, message string)
 func httpErrorResponse(id json.RawMessage, statusCode int) rpcResponse {
 	switch statusCode {
 	case 401:
-		return errorResponse(id, codeAuthRequired, "auth_required", "PatchXNote MCP authorization is required")
+		return errorResponse(id, codeAuthRequired, "auth_required", "PatchX Freenote MCP authorization is required")
 	case 403:
-		return errorResponse(id, codePermissionDenied, "permission_denied", "PatchXNote MCP permission was denied")
+		return errorResponse(id, codePermissionDenied, "permission_denied", "PatchX Freenote MCP permission was denied")
 	case 429:
-		return errorResponse(id, codeRateLimited, "rate_limited", "PatchXNote MCP rate limit exceeded")
+		return errorResponse(id, codeRateLimited, "rate_limited", "PatchX Freenote MCP rate limit exceeded")
 	default:
-		return errorResponse(id, codeToolError, "remote_http_error", "PatchXNote remote MCP returned an HTTP error")
+		return errorResponse(id, codeToolError, "remote_http_error", "PatchX Freenote remote MCP returned an HTTP error")
 	}
 }

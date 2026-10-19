@@ -1,4 +1,4 @@
-# PatchXNote MCP 官网开写前流程缺口清单
+# PatchX Freenote MCP 官网开写前流程缺口清单
 
 **日期：** 2026-08-28
 
@@ -199,7 +199,7 @@ POST /v1/agent/auth/otp/requests
 POST /v1/agent/auth/otp/verifications
 GET  /v1/agent/oauth/authorize
   Authorization: Bearer <agent access token>
-  X-PatchXNote-OAuth-Response: redirect_json
+  X-PatchX Freenote-OAuth-Response: redirect_json
 ```
 
 V1 建议：
@@ -288,7 +288,7 @@ git diff --check
 
 这些作为 V1 官网实现输入：
 
-1. 首版语言：中文为主，保留 PatchXNote、MCP、AI Agent 等英文技术词；后续再加英文站。
+1. 首版语言：中文为主，保留 PatchX Freenote、MCP、AI Agent 等英文技术词；后续再加英文站。
 2. URL 形式：保留 `/mcp/clients/{id}` 和 `/mcp/platforms/{id}` 可分享路径。
 3. 上线方式：先本地和测试环境验收；生产上线前再单独确认域名、缓存和 noindex。
 4. 正式 remote MCP 域名：页面先从 GoServer 配置/快照读取；没有正式域名前，不把测试 URL 包装成生产入口。

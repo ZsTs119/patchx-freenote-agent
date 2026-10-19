@@ -50,7 +50,7 @@ func newSetupCommand(state *rootState) *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "setup",
-		Short: "Set up PatchXNote MCP in a supported local client",
+		Short: "Set up PatchX Freenote MCP in a supported local client",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			runtimeState, err := loadRuntime(state)
@@ -257,7 +257,7 @@ func tryBrowserSetupSession(cmd *cobra.Command, runtimeState runtimeState, plan 
 	if loginURL == "" {
 		loginURL = created.VerificationURI
 	}
-	fmt.Fprintf(cmd.ErrOrStderr(), "Open PatchXNote login: %s\n", loginURL)
+	fmt.Fprintf(cmd.ErrOrStderr(), "Open PatchX Freenote login: %s\n", loginURL)
 	if created.UserCode != "" {
 		fmt.Fprintf(cmd.ErrOrStderr(), "Setup code: %s\n", created.UserCode)
 	}
@@ -443,7 +443,7 @@ func printSetupPlan(cmd *cobra.Command, plan clientsetup.ClientPlan, dryRun bool
 	}
 	if plan.ManualRequired {
 		fmt.Fprintf(cmd.OutOrStdout(), "Manual setup required: %s\n", plan.ManualReason)
-		fmt.Fprintf(cmd.OutOrStdout(), "After adding the server, ask the client to list PatchXNote MCP tools.\n")
+		fmt.Fprintf(cmd.OutOrStdout(), "After adding the server, ask the client to list PatchX Freenote MCP tools.\n")
 	}
 }
 
@@ -453,12 +453,12 @@ func printSetupResult(cmd *cobra.Command, plan clientsetup.ClientPlan, result cl
 		fmt.Fprintf(cmd.OutOrStdout(), "No files changed for %s.\n", plan.Client.ID)
 	case "installed":
 		if result.Changed {
-			fmt.Fprintf(cmd.OutOrStdout(), "Installed PatchXNote MCP config for %s.\n", plan.Client.ID)
+			fmt.Fprintf(cmd.OutOrStdout(), "Installed PatchX Freenote MCP config for %s.\n", plan.Client.ID)
 			if result.BackupPath != "" {
 				fmt.Fprintf(cmd.OutOrStdout(), "Backup: %s\n", result.BackupPath)
 			}
 		} else {
-			fmt.Fprintf(cmd.OutOrStdout(), "PatchXNote MCP config already exists for %s.\n", plan.Client.ID)
+			fmt.Fprintf(cmd.OutOrStdout(), "PatchX Freenote MCP config already exists for %s.\n", plan.Client.ID)
 		}
 		fmt.Fprintf(cmd.OutOrStdout(), "Next: %s\n", plan.Client.RequiresRestart)
 	case "manual_required":

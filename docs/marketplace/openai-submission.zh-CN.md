@@ -8,7 +8,7 @@
 packages/plugins/openai/patchxnote-agent/
 ```
 
-当前定位：skills-only package。它只打包 PatchXNote MCP Skill，不声明 `.app.json`、`.mcp.json` 或远程 MCP 连接。
+当前定位：skills-only package。它只打包 PatchX Freenote MCP Skill，不声明 `.app.json`、`.mcp.json` 或远程 MCP 连接。
 
 ## 当前文件
 
@@ -33,8 +33,8 @@ node scripts/validate-patchxnote-skill-packages.mjs
 - OpenAI Platform 组织具备 Apps Management write 权限。
 - 发布者个人或企业身份已验证。
 - plugin name、publisher、website、support URL、privacy policy URL、terms URL 彼此一致。
-- reviewer/demo account 不要求把 PatchXNote 手机验证码、OAuth code、token 或 webhook secret 粘贴进聊天。
-- 默认能力描述只写 PatchXNote MCP setup、summary/memory/model-result、用户确认 webhook workflow。
+- reviewer/demo account 不要求把 PatchX Freenote 手机验证码、OAuth code、token 或 webhook secret 粘贴进聊天。
+- 默认能力描述只写 PatchX Freenote MCP setup、summary/memory/model-result、用户确认 webhook workflow。
 - 如果要提交 skills-plus-MCP，必须先有真实 public Streamable HTTP MCP URL、OAuth 方案和审查材料。
 
 ## 不做的事
@@ -48,9 +48,9 @@ node scripts/validate-patchxnote-skill-packages.mjs
 OpenAI plugin card 最多保留三条短 prompt：
 
 ```text
-Help me connect PatchXNote MCP.
-List my latest 5 PatchXNote mobile summaries.
-Check my PatchXNote MCP tools.
+Help me connect PatchX Freenote MCP.
+List my latest 5 PatchX Freenote mobile summaries.
+Check my PatchX Freenote MCP tools.
 ```
 
 更完整的 review prompt 见 `docs/marketplace/starter-prompts.md` 和 `docs/marketplace/review-test-cases.md`。

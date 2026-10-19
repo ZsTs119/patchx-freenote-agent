@@ -1,4 +1,4 @@
-# PatchXNote MCP 官网信息架构
+# PatchX Freenote MCP 官网信息架构
 
 **定位：** 官网第一屏先建立产品识别和核心转化，不把所有客户端、卖点和安装细节塞进首屏。客户端选择、安装方式、安全说明和平台接入放到后续屏幕。
 
@@ -9,12 +9,12 @@
 第一屏只保留：
 
 - 顶部导航：`PATCHX`、`MCP`、`Clients`、`Security`、`Docs`、`Download App`、`Get started`。
-- 产品名：`PatchXNote MCP`。
+- 产品名：`PatchX Freenote MCP`。
 - 主标题：`隐私归你，AI 由你掌控`。
 - 副标题：`把你的真实对话，安全接入 Cursor、VS Code、Codex 和更多 AI 工具。`
 - 主 CTA：`连接我的 AI 工具`。
 - 次 CTA：`查看支持的编辑器`。
-- 右侧或中心：高级黑风格 PatchXNote 录音卡主视觉。
+- 右侧或中心：高级黑风格 PatchX Freenote 录音卡主视觉。
 - 底部下一屏提示：`Cursor / VS Code / Codex / Claude Code / 更多编辑器` 的轻量文字或单色图标。
 
 第一屏不放：
@@ -42,7 +42,7 @@
 ### 第二屏 / 客户端选择页
 
 - 标题：`选择你的 AI 工具`。
-- 副标题：`同一个 PatchXNote MCP，接入你已经在用的编辑器、CLI 和云平台。`
+- 副标题：`同一个 PatchX Freenote MCP，接入你已经在用的编辑器、CLI 和云平台。`
 - 顶部切换：`编辑器`、`云平台`、`本地 MCP`。
 - 主区域：按当前切换项展示对应渠道卡片。
 - 点击卡片：进入对应详情页，详情页复用同一套模板，只替换客户端名称、主动作、命令、配置和注意事项。
@@ -120,13 +120,13 @@ URL 建议：
 每个本地客户端详情页提供同一个安全验证提示：
 
 ```text
-List the PatchXNote MCP tools and show only their names.
+List the PatchX Freenote MCP tools and show only their names.
 ```
 
 已登录用户可以继续复制：
 
 ```text
-Read my recent PatchXNote summaries from the mobile platform. Return titles and timestamps only.
+Read my recent PatchX Freenote summaries from the mobile platform. Return titles and timestamps only.
 ```
 
 这个提示不要求模型导出原始转写、provider payload 或完整模型输入输出。
@@ -142,7 +142,7 @@ Read my recent PatchXNote summaries from the mobile platform. Return titles and 
 保留：
 
 - 顶部简化品牌：`PATCHX` + `MCP`。
-- 标题：`登录 PatchXNote`。
+- 标题：`登录 PatchX Freenote`。
 - 说明：`登录后继续授权当前 AI 工具。`
 - 手机号输入框。
 - 验证码输入框。
@@ -177,7 +177,7 @@ Read my recent PatchXNote summaries from the mobile platform. Return titles and 
 - 顶部简化品牌：`PATCHX` + `MCP`。
 - 一个银色完成符号：连接环、短刻线或金属确认符号。
 - 标题：`授权已完成`。
-- 说明：`授权信息已返回本地运行时。请回到编辑器或终端，等待 PatchXNote MCP 完成连接验证。`
+- 说明：`授权信息已返回本地运行时。请回到编辑器或终端，等待 PatchX Freenote MCP 完成连接验证。`
 - 主 CTA：`返回 AI 编辑器`。
 - 次 CTA：`查看设置指南`。
 - 底部小字：`凭据保存在本机安全存储，MCP 配置不包含密钥。`

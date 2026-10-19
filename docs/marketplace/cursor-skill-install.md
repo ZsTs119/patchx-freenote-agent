@@ -2,7 +2,7 @@
 
 Updated: 2026-09-04
 
-Cursor documents Skills as portable Agent Skills packages that can live in a repository or be installed from GitHub links. PatchXNote MCP Skill should remain standard Agent Skills format:
+Cursor documents Skills as portable Agent Skills packages that can live in a repository or be installed from GitHub links. PatchX Freenote MCP Skill should remain standard Agent Skills format:
 
 ```text
 skills/patchxnote-mcp/SKILL.md
@@ -25,7 +25,7 @@ npx -y patchxnote-agent@latest skill install --agent cursor
 
 ## Cursor MCP Setup Still Required
 
-Skill installation only teaches Cursor's agent how to perform the PatchXNote flow. MCP setup still requires:
+Skill installation only teaches Cursor's agent how to perform the PatchX Freenote flow. MCP setup still requires:
 
 ```sh
 npx -y patchxnote-agent@latest setup --client cursor
@@ -44,7 +44,7 @@ Use the printed absolute-path MCP config in Cursor.
 Do not claim Cursor first-class skill support until all of these pass:
 
 - skill installation path verified in a clean Cursor environment
-- skill activates for PatchXNote setup prompt
+- skill activates for PatchX Freenote setup prompt
 - skill does not activate for generic summarization
 - `setup --client cursor` runs in the same runtime Cursor uses for MCP
 - browser OAuth completes without codes/tokens in chat

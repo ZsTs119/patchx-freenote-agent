@@ -1,10 +1,10 @@
-# PatchXNote Agent Engineering Rules
+# PatchX Freenote Agent Engineering Rules
 
-This document keeps the PatchXNote Agent CLI and local MCP bridge from drifting away from the product and security model.
+This document keeps the PatchX Freenote Agent CLI and local MCP bridge from drifting away from the product and security model.
 
 ## Architecture
 
-PatchXNote Agent has three layers:
+PatchX Freenote Agent has three layers:
 
 1. `patchxnote` Go binary
    The local runtime for login, account inspection, MCP stdio serving, local cache management, and installer integration.
@@ -12,13 +12,13 @@ PatchXNote Agent has three layers:
 2. npm installer/launcher wrapper
    A thin package that supports commands such as `npx -y patchxnote-agent install`, `npx -y patchxnote-agent login`, and `npx -y patchxnote-agent mcp serve`. It installs or verifies the versioned Go binary, then delegates runtime work to that binary.
 
-3. PatchXNote server APIs
+3. PatchX Freenote server APIs
    The remote source of truth. The agent never bypasses server authorization and never reconstructs server facts from local guesses.
 
 The expected runtime shape is:
 
 ```text
-Agent client -> local MCP stdio -> patchxnote binary -> PatchXNote API
+Agent client -> local MCP stdio -> patchxnote binary -> PatchX Freenote API
 ```
 
 ## Repository Layout
@@ -66,7 +66,7 @@ Package responsibilities:
 - `internal/config`: Viper-backed non-secret config loading, default values, env binding, and config path resolution.
 - `internal/auth`: login session state, token refresh orchestration, scope checks, and logout behavior.
 - `internal/keychain`: OS secure-storage adapter boundary. Keep platform differences behind this package.
-- `internal/api`: PatchXNote server client, request/response mapping, retry policy, and stable API error mapping.
+- `internal/api`: PatchX Freenote server client, request/response mapping, retry policy, and stable API error mapping.
 - `internal/mcp`: MCP stdio server, tool registry, tool schemas, and JSON-RPC error mapping.
 - `internal/cache`: local cache and search index for authorized read-only projections.
 - `internal/webhook`: local webhook target metadata, keychain-backed secret lookup, provider payload building, and send result normalization.
@@ -84,14 +84,14 @@ The dependency direction is:
 cmd/patchxnote -> internal/cli -> internal/{config,auth,api,mcp,cache,webhook,renderdoc,modelio,localfile,output,diag,version}
 internal/auth -> internal/{config,keychain,api}
 internal/mcp -> internal/{auth,api,cache,config,keychain,webhook,renderdoc,modelio,localfile,diag}
-internal/api -> external PatchXNote server APIs
+internal/api -> external PatchX Freenote server APIs
 ```
 
 Avoid reverse dependencies from lower-level packages back into `internal/cli`.
 
 ## Non-Goals For V1
 
-V1 is intentionally not a full PatchXNote client.
+V1 is intentionally not a full PatchX Freenote client.
 
 It does not:
 
@@ -286,7 +286,7 @@ Each tool must define:
 
 Do not use generic names such as `search`, `list`, or `get_user`.
 
-Server-backed PatchXNote data tools should stay read-only unless a separate server contract allows otherwise. Webhook tools are the accepted V1 exception: they may write local non-secret config, write URL/signing secret material through `internal/keychain`, and perform manual external HTTP sends when explicitly invoked. They must never return full webhook URLs or signing secrets.
+Server-backed PatchX Freenote data tools should stay read-only unless a separate server contract allows otherwise. Webhook tools are the accepted V1 exception: they may write local non-secret config, write URL/signing secret material through `internal/keychain`, and perform manual external HTTP sends when explicitly invoked. They must never return full webhook URLs or signing secrets.
 
 Model IO trace discovery returns lightweight metadata and request IDs only. Model IO field tools are explicit inspection tools for trusted local agents. They must return only the requested field, keep large content behind explicit output files, and avoid scattering field selection logic outside `internal/modelio`.
 

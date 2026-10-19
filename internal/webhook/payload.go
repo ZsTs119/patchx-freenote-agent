@@ -33,7 +33,7 @@ func RenderRequest(target Target, webhookURL string, signingSecret string, messa
 		return RenderedRequest{}, fmt.Errorf("webhook markdown is required")
 	}
 	if strings.TrimSpace(message.Title) == "" {
-		message.Title = "PatchXNote 记录"
+		message.Title = "PatchX Freenote 记录"
 	}
 	switch target.Type {
 	case TargetTypeFeishu:

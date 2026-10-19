@@ -212,8 +212,8 @@ function validateRegistryMetadata() {
   if (!packageJson || !serverJson) {
     return;
   }
-  if (packageJson.mcpName !== "io.github.zsts119/patchxnote-agent") {
-    fail("packages/npm/package.json: mcpName must be io.github.zsts119/patchxnote-agent");
+  if (packageJson.mcpName !== "io.github.ZsTs119/patchxnote-agent") {
+    fail("packages/npm/package.json: mcpName must be io.github.ZsTs119/patchxnote-agent");
   }
   if (!Array.isArray(packageJson.files) || !packageJson.files.includes("skills")) {
     fail("packages/npm/package.json: files must include skills");
@@ -348,11 +348,11 @@ for (const warning of warnings) {
   console.warn(`Warning: ${warning}`);
 }
 if (errors.length > 0) {
-  console.error("PatchXNote skill package validation failed:");
+  console.error("PatchX Freenote skill package validation failed:");
   for (const error of errors) {
     console.error(`- ${error}`);
   }
   process.exit(1);
 }
 
-console.log("PatchXNote skill package validation passed.");
+console.log("PatchX Freenote skill package validation passed.");
