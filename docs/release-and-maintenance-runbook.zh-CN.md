@@ -2,9 +2,9 @@
 
 这份文档用于后续开发新功能、更新文档、发布 GitHub Release 和 npm 包时保持同一套事实源。它沉淀的是当前 `patchxnote-agent` 公测发布链路，不替代具体 feature 设计文档。
 
-## 本次品牌兼容更新
+## 最近发布：0.2.16
 
-已发布版本 `0.2.15`：展示名统一为 PatchX Freenote，原仓库改名为 `ZsTs119/patchx-freenote-agent`；npm 包、Skill slug、MCP 登记 ID、CLI／配置／凭据身份保持兼容。进度与发布证据见 `docs/plans/2026-09-16-patchx-freenote-agent-brand-rename-checklist.md`。发行与兼容验收见 `docs/evidence/2026-09-16-patchx-freenote-branding.zh-CN.md`。
+Agent CLI/npm `0.2.16` 已发布，配套 WorkBuddy 连接器的 CLI 授权，修复刷新错误分类和失效凭据处理；继承 `0.2.15` 的品牌与 Registry 身份。发行、定向测试和 Windows 实际包验证见 [0.2.16 发布记录](evidence/2026-10-19-release-0.2.16.zh-CN.md)。用户已提交 WorkBuddy 更新，官方效果待审核通过后确认。
 
 ## 当前发布事实
 
@@ -25,9 +25,9 @@
 - GitHub Release workflow：`.github/workflows/release.yml`
 - macOS 安装冒烟 workflow：`.github/workflows/macos-install-smoke.yml`
 - 默认服务端：生产 API `https://freenote.patch-x.cn`，具体默认值以 `internal/config/config.go` 为准
-- 当前已发布版本：`0.2.15`；npm、GitHub Release 和官方 Registry 已可查，skills.sh 新来源已收录。
-- 当前能力：继承 `0.2.14`，展示品牌统一为 PatchX Freenote，原 GitHub 仓库改名；npm／Skill／MCP ID、CLI、配置、凭据、OAuth 和服务地址保持兼容。
-- 当前发布证据：`docs/evidence/2026-09-16-patchx-freenote-branding.zh-CN.md`。
+- 当前 CLI/npm 已发布版本：`0.2.16`；npm 与 GitHub Release 已回读确认；MCP Registry 本轮未更新，保留 `0.2.15` 记录。
+- 当前能力：继承 `0.2.15`，增加 WorkBuddy 前置 CLI 授权配置和刷新失败恢复修正；npm／Skill／MCP ID、CLI、配置、凭据、OAuth 和服务地址保持兼容。
+- 当前发布证据：`docs/evidence/2026-10-19-release-0.2.16.zh-CN.md`。
 - 0.2.13 已有验证：实际 npm README/Skill 与源码一致，Windows 发布包生产 stdio 查询、Windows/macOS 安装、Linux 制品校验通过。本次修正版按对应证据补验，既有业务结果不冒充新版验收；平台 UI 单列。
 - 上一版 `0.2.13` 发布证据：`docs/evidence/2026-09-11-release-0.2.13.zh-CN.md`。
 
@@ -584,14 +584,14 @@ node scripts/package-channel.mjs --channel workbuddy --env test
 
 | 渠道 | 取用方式 |
 | --- | --- |
-| `workbuddy` | 使用输出目录中的 `PatchXFreeNote-workbuddy-connector-<version>.zip` 上传；ZIP 根目录包含 metadata、MCP 配置、图标和 Skill。旁边的 `bundle/` 供查看生成内容。 |
+| `workbuddy` | 使用输出目录中的 `PatchX Freenote-workbuddy-connector-<version>.zip` 上传；ZIP 根目录包含 metadata、MCP 配置、CLI 前置授权配置、图标和 Skill。旁边的 `bundle/` 供查看生成内容。 |
 | `codex` | 取用输出的 `bundle/`，其中包含 `.agents/plugins/marketplace.json` 与 `packages/plugins/openai/patchxfreenote/`。按平台提交方式选取插件目录或保留清单与目录关系。 |
 | `claude-code` | 取用输出的 `bundle/`，其中包含 `.claude-plugin/marketplace.json` 与 `packages/plugins/claude/patchxfreenote/`。按平台提交方式选取插件目录或保留清单与目录关系。 |
 | `coze` | 上传 `PatchXFreeNote-coze-plugin-<version>.zip` 到扣子“扩展 → 插件 → 上传插件包”；包根目录为 Agent Plugins 1.0.0 的 `plugin.json`、`mcp.json`、`skills/`，图标在 `assets/icon.svg`。 |
 
 渠道展示名称统一为 `PatchXFreeNote`，由配置中的 `common.branding.displayName` 控制，同时用于 ZIP 文件名前缀；插件 manifest 与 marketplace 的机器标识使用 `common.branding.pluginName`（当前为 `patchxfreenote`），生成目录和 marketplace 引用同步调整。生成副本的标题、描述、示例和图标说明使用新名称。`patchxnote-agent` npm 包、`patchxnote` CLI/MCP 服务标识、`patchxnote_*` 工具名和 `patchxnote-mcp` Skill 标识保持现有值。
 
-新建 WorkBuddy 连接器时，生成 metadata 的 `source` 读取 `channels.workbuddy.connectorSource`，当前为 `patchxfreenote`。WorkBuddy 以此区分连接器身份，仅改展示名称或 ZIP 文件名不会创建新身份。对应 OAuth 回调为 `workbuddy://workbuddy/mcp/connector%3Apatchxfreenote/oauth/callback`；目标 GoServer 必须部署支持该回调的版本，旧 `patchxnote-agent` 回调继续兼容。仅重新生成包不会更新在线服务器。Skill 中的 `{{CONNECTOR_SOURCE}}` 在构建时同步替换。
+WorkBuddy metadata 的 `source` 读取 `channels.workbuddy.connectorSource`，当前为 `patchxfreenote`；升级时保持该身份。0.1.2 起要求 WorkBuddy 至少 5.0.0，使用 `preAuth: "cli"`、`cli.json` 与 stdio；CLI 固定版本取自 `channels.workbuddy.cliPackageVersion`（当前 0.2.16），auth/status/unAuth/MCP 共用 `workbuddy` profile 和所选服务地址。CLI 授权使用现有本机 loopback 回调；旧远程连接器的 `workbuddy://workbuddy/mcp/connector%3Apatchxfreenote/oauth/callback` 属于历史路径，本轮不修改 GoServer 回调配置。Skill 中的 `{{CONNECTOR_SOURCE}}` 在构建时同步替换。
 
 生成器直接读取公共 Skill 源，不要求先执行副本同步。生产插件的公共 Skill 仅替换展示名称；WorkBuddy 使用配置中列出的已有渠道说明覆盖。测试插件额外调整生成副本中的环境提示、接入 reference 和现有命令的 `--server-base-url`，不会修改用户配置或公共源。生产服务的公开主页/下载链接仍保留其原用途。
 

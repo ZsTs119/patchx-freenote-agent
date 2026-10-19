@@ -21,12 +21,12 @@ Connect your synced PatchX Freenote records to AI assistants. Find records, revi
 
 | Channel | Public entry | What is available |
 | --- | --- | --- |
-| npm | [patchxnote-agent](https://www.npmjs.com/package/patchxnote-agent) | Versioned CLI installer/launcher and bundled Skill; current release `0.2.15`. |
-| GitHub Release | [v0.2.15](https://github.com/ZsTs119/patchx-freenote-agent/releases/tag/v0.2.15) | Six Windows/macOS/Linux binaries, checksums, and artifact attestations. |
-| MCP official Registry | [Search the retained ID](https://registry.modelcontextprotocol.io/?q=patchxnote) · [Version record](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.ZsTs119%2Fpatchxnote-agent/versions/0.2.15) | Registered as `io.github.ZsTs119/patchxnote-agent`. |
+| npm | [patchxnote-agent](https://www.npmjs.com/package/patchxnote-agent) | Versioned CLI installer/launcher and bundled Skill; current release `0.2.16`. |
+| GitHub Release | [v0.2.16](https://github.com/ZsTs119/patchx-freenote-agent/releases/tag/v0.2.16) | Six Windows/macOS/Linux binaries, checksums, and artifact attestations. |
+| MCP official Registry | [Search the retained ID](https://registry.modelcontextprotocol.io/?q=patchxnote) · [0.2.15 record](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.ZsTs119%2Fpatchxnote-agent/versions/0.2.15) | Registered as `io.github.ZsTs119/patchxnote-agent`. |
 | Vercel skills.sh | [patchxnote-mcp](https://skills.sh/zsts119/patchx-freenote-agent/patchxnote-mcp) | New repository source, searchable as `PatchX Freenote`; Skill ID remains `patchxnote-mcp`. |
 
-These links show publication and directory listing. The [0.2.15 verification record](./docs/evidence/2026-09-16-patchx-freenote-branding.zh-CN.md) documents artifact checks, Windows installation, local protocol discovery, and Registry readback; client/platform acceptance is tracked separately.
+These links show publication and directory listing. The [0.2.16 release record](./docs/evidence/2026-10-19-release-0.2.16.zh-CN.md) covers scoped authorization tests, artifact checks, actual Windows installation, and MCP protocol verification. This release does not update the Registry entry; WorkBuddy client acceptance follows connector approval.
 
 ## Choose Your Connection
 
@@ -350,7 +350,7 @@ npx -y --registry https://registry.npmjs.org patchxnote-agent@latest mcp config
 npx -y --registry https://registry.npmjs.org patchxnote-agent@latest mcp status --output json
 ```
 
-After authorization, add `--verify` to `mcp status` to verify access. If the native binary is on PATH, `patchxnote version` reports its version and release commit. The current published release is `0.2.15`.
+After authorization, add `--verify` to `mcp status` to verify access. If the native binary is on PATH, `patchxnote version` reports its version and release commit. The current published release is `0.2.16`.
 
 ## Troubleshooting
 
@@ -412,7 +412,13 @@ Search covers record basics cached during the current local MCP session. Linux h
 [GitHub Releases](https://github.com/ZsTs119/patchx-freenote-agent/releases)
 
 <details>
-<summary>Release highlights from 0.2.6 to 0.2.15</summary>
+<summary>Release highlights from 0.2.6 to 0.2.16</summary>
+
+### 0.2.16 Highlights
+
+- Supports the WorkBuddy connector's CLI pre-auth and MCP calls using the same profile.
+- Preserves login state on temporary refresh failures and requests authorization again for rejected refresh credentials.
+- Retains 0.2.15 branding and distribution identities; scoped tests and published Windows package checks passed.
 
 ### 0.2.15 Highlights
 
@@ -478,7 +484,7 @@ For architecture, local development, and checks appropriate to your change, read
 
 ## Release Notes For Operators
 
-The [runbook](./docs/release-and-maintenance-runbook.zh-CN.md) covers version synchronization, GitHub Release assets, npm Trusted Publishing, and release verification. Current evidence: [0.2.15](./docs/evidence/2026-09-16-patchx-freenote-branding.zh-CN.md).
+The [runbook](./docs/release-and-maintenance-runbook.zh-CN.md) covers version synchronization, GitHub Release assets, npm Trusted Publishing, and release verification. Current evidence: [0.2.16](./docs/evidence/2026-10-19-release-0.2.16.zh-CN.md).
 
 ## License
 

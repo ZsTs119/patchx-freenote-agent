@@ -21,12 +21,12 @@ PatchX Freenote 原名 PatchXNote。现有 `patchxnote-agent` 命令、`patchxno
 
 | 渠道 | 公开入口 | 当前可获取的内容 |
 | --- | --- | --- |
-| npm | [patchxnote-agent](https://www.npmjs.com/package/patchxnote-agent) | CLI 安装／启动壳及随包 Skill；当前发行版本 `0.2.15`。 |
-| GitHub Release | [v0.2.15](https://github.com/ZsTs119/patchx-freenote-agent/releases/tag/v0.2.15) | Windows/macOS/Linux 六平台二进制、校验清单及制品来源证明。 |
-| MCP 官方 Registry | [按保留标识搜索](https://registry.modelcontextprotocol.io/?q=patchxnote) · [版本记录](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.ZsTs119%2Fpatchxnote-agent/versions/0.2.15) | 登记名为 `io.github.ZsTs119/patchxnote-agent`。 |
+| npm | [patchxnote-agent](https://www.npmjs.com/package/patchxnote-agent) | CLI 安装／启动壳及随包 Skill；当前发行版本 `0.2.16`。 |
+| GitHub Release | [v0.2.16](https://github.com/ZsTs119/patchx-freenote-agent/releases/tag/v0.2.16) | Windows/macOS/Linux 六平台二进制、校验清单及制品来源证明。 |
+| MCP 官方 Registry | [按保留标识搜索](https://registry.modelcontextprotocol.io/?q=patchxnote) · [0.2.15 记录](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.ZsTs119%2Fpatchxnote-agent/versions/0.2.15) | 登记名为 `io.github.ZsTs119/patchxnote-agent`。 |
 | Vercel skills.sh | [patchxnote-mcp](https://skills.sh/zsts119/patchx-freenote-agent/patchxnote-mcp) | 新仓库来源，可搜索 `PatchX Freenote`；Skill 标识仍为 `patchxnote-mcp`。 |
 
-这些链接用于核对公开发行和目录收录。[0.2.15 验证记录](./docs/evidence/2026-09-16-patchx-freenote-branding.zh-CN.md)包含制品校验、Windows 安装、本地协议发现和 Registry 回读；各客户端／平台的接入验收单独记录。
+这些链接用于核对公开发行和目录收录。[0.2.16 发布记录](./docs/evidence/2026-10-19-release-0.2.16.zh-CN.md)包含定向授权测试、制品校验、Windows 实际安装与 MCP 协议验证；本轮未更新 Registry 记录，WorkBuddy 官方效果待连接器更新通过后确认。
 
 ## 选择接入方式
 
@@ -350,7 +350,7 @@ npx -y --registry https://registry.npmjs.org patchxnote-agent@latest mcp config
 npx -y --registry https://registry.npmjs.org patchxnote-agent@latest mcp status --output json
 ```
 
-完成授权后，可以给 `mcp status` 加上 `--verify` 核对访问状态。原生二进制已加入 PATH 时，`patchxnote version` 可查看版本和发行提交。当前已发布版本为 `0.2.15`。
+完成授权后，可以给 `mcp status` 加上 `--verify` 核对访问状态。原生二进制已加入 PATH 时，`patchxnote version` 可查看版本和发行提交。当前已发布版本为 `0.2.16`。
 
 ## 常见问题排查
 
@@ -412,7 +412,13 @@ npx -y --registry https://registry.npmjs.org patchxnote-agent@latest install --p
 [GitHub Releases](https://github.com/ZsTs119/patchx-freenote-agent/releases)
 
 <details>
-<summary>0.2.6 至 0.2.15 更新重点</summary>
+<summary>0.2.6 至 0.2.16 更新重点</summary>
+
+### 0.2.16 更新重点
+
+- 配套 WorkBuddy 连接器的 CLI 前置授权与同 profile MCP 调用。
+- 临时刷新失败保留登录状态并提示重试；失效刷新凭据引导重新授权。
+- 继承 0.2.15 的品牌和发行身份，完成计划内定向测试及已发布 Windows 包验证。
 
 ### 0.2.15 更新重点
 
@@ -478,7 +484,7 @@ npx -y --registry https://registry.npmjs.org patchxnote-agent@latest install --p
 
 ## 发布维护说明
 
-[维护手册](./docs/release-and-maintenance-runbook.zh-CN.md)包含版本同步、GitHub Release 制品、npm Trusted Publishing 和发布验证流程。当前证据：[0.2.15](./docs/evidence/2026-09-16-patchx-freenote-branding.zh-CN.md)。
+[维护手册](./docs/release-and-maintenance-runbook.zh-CN.md)包含版本同步、GitHub Release 制品、npm Trusted Publishing 和发布验证流程。当前证据：[0.2.16](./docs/evidence/2026-10-19-release-0.2.16.zh-CN.md)。
 
 ## 许可证
 
