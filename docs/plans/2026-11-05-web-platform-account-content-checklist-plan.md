@@ -2,7 +2,7 @@
 
 **日期：** 2026-11-05
 
-**状态：** COMPLETE / SCOPED_VALIDATION_PASS / NOTE_TEST_AGENT_PATHS_PASS / PRIMARY_SELF_REVIEW_PASS；已实现并完成计划内验收；用户已授权Git交付，见第7节；未发布。
+**状态：** COMPLETE / SCOPED_VALIDATION_PASS / NOTE_TEST_AGENT_PATHS_PASS / PRIMARY_SELF_REVIEW_PASS；已实现并完成计划内验收；Git已交付，Agent 0.2.17的GitHub Release/npm已发布，见第8节与发布记录。
 
 **目标：** 本地 Agent/CLI/MCP 默认读取本人账号的 App、PC、Web 内容，支持指定来源筛选，并打通列表、详情、当前会话缓存搜索、模型结果读取和本地导出。
 
@@ -282,7 +282,10 @@ PATCHXNOTE_MCP_MODE=remote node scripts/smoke-account-content.mjs \
 
 - [x] 将本次43个具名用例接入Release发行流水线，仅命中已核实的账号内容变更文件；未知范围保持原选择，不将其伪装成已测。
 - [x] 同步版本与说明，执行发布元数据、定向选择、本次检查及制品打包检查。
-- [ ] 推送发行提交和tag，确认GitHub六平台资产、校验清单与来源证明。
-- [ ] 用既有Trusted Publishing发布npm，回读实际版本、latest和包完整性。
-- [ ] 实际安装发布包，核对版本/commit、本地MCP发现与无凭据错误；沿用已有业务证据，不再次操作GoServer。
-- [ ] 完成[0.2.17发布记录](../evidence/2026-11-05-release-0.2.17.zh-CN.md)，提交推送收尾文档并核验远端/工作区clean。
+- [x] 推送发行提交和tag，确认GitHub六平台资产、校验清单与来源证明。
+- [x] 用既有Trusted Publishing发布npm，回读实际版本、latest和包完整性。
+- [x] 实际安装发布包，核对版本/commit、本地MCP发现与无凭据错误；沿用已有业务证据，不再次操作GoServer。
+- [x] 完成[0.2.17发布记录](../evidence/2026-11-05-release-0.2.17.zh-CN.md)，提交推送收尾文档并核验远端/工作区clean。
+
+
+**0.2.17发布收口：** 发行commit `e26671c8b0595c00c0d9474c73a30d665a7bfa79`；Release run `41961178242`、npm run `41961706078`均成功。43个具名检查在发行CI通过，全仓Go、安装器全量与WorkBuddy专项均跳过。Registry实际latest=0.2.17，包9文件与tag源码一致；Windows真实包安装/MCP、Linux版本与三份来源证明通过。未操作GoServer或WorkBuddy。Windows任务临时目录递归删除被自动审批以 `blocked by policy` 拦截，目录保留在系统Temp并单独记录；Git工作区收口不受影响。完整证据见本版发布记录及ignored `.tmp/account-content/release/`。

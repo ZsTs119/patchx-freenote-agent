@@ -139,7 +139,7 @@ npx -y skills add ZsTs119/patchx-freenote-agent --skill patchxnote-mcp --agent c
 The client transport and the source of its tools are separate:
 
 - `mcp serve` speaks **stdio** to the local client. In default `auto` mode, matching, unexpired browser OAuth credentials select a proxy to the hosted MCP service; otherwise it uses the local implementation.
-- The local implementation provides **19 tool definitions** in `0.2.15`. Their data calls still require appropriate authentication. A proxied or directly connected hosted service supplies its own tool set and may differ.
+- The local implementation provides **19 tool definitions** in `0.2.17`. Their data calls still require appropriate authentication. A proxied or directly connected hosted service supplies its own tool set and may differ.
 - Use the connected endpoint's `tools/list` result as the source of truth for available tools. Local filesystem and webhook capabilities listed below describe the local implementation.
 - `mcp login` is the browser OAuth entry. Terminal-only `patchxnote login` remains the separate legacy Agent login. `mcp serve` does not open a login browser when the editor starts.
 
