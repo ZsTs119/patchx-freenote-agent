@@ -44,4 +44,31 @@ assert.equal(selectTests('v0.2.15', authFiles, () => before, () => after).runtim
 assert.equal(selectTests('v0.2.15', [...authFiles, 'internal/config/paths.go'], () => before, () => after).runtimeWorkbuddyAuthOnly, false);
 assert.equal(selectTests('v0.2.15', ['README.md'], () => before, () => after).runtimeWorkbuddyAuthOnly, false);
 assert.equal(selectTests(null, authFiles, () => before, () => after).runtimeWorkbuddyAuthOnly, false);
+
+const accountContentFiles = [
+  "internal/api/client.go",
+  "internal/api/client_test.go",
+  "internal/cache/memory.go",
+  "internal/cache/memory_test.go",
+  "internal/cli/mcp_login_test.go",
+  "internal/cli/model_io.go",
+  "internal/cli/model_io_test.go",
+  "internal/cli/webhook.go",
+  "internal/mcp/model_io_tools.go",
+  "internal/mcp/model_io_tools_test.go",
+  "internal/mcp/server.go",
+  "internal/mcp/tools.go",
+  "internal/mcp/tools_test.go",
+  "internal/mcp/webhook_tools.go",
+  "internal/mcp/webhook_tools_test.go",
+  "internal/modelio/modelio.go",
+  "internal/modelio/modelio_test.go",
+  "internal/remotemcp/proxy_test.go"
+];
+assert.equal(selectTests('v0.2.16', accountContentFiles, () => before, () => after).runtimeAccountContentOnly, true);
+assert.equal(selectTests('v0.2.16', [...accountContentFiles, 'internal/keychain/native.go'], () => before, () => after).runtimeAccountContentOnly, false);
+assert.equal(selectTests(null, accountContentFiles, () => before, () => after).runtimeAccountContentOnly, false);
+assert.equal(selectTests('v0.2.16', ['README.md'], () => before, () => after).runtimeAccountContentOnly, false);
+assert.equal(selectTests('v0.2.16', authFiles, () => before, () => after).runtimeAccountContentOnly, false);
+assert.equal(selectTests('v0.2.16', ['internal/mcp/tools.go'], () => before, () => after).runtimeAccountContentOnly, false);
 console.log('Release identity and affected-test selection checks passed.');

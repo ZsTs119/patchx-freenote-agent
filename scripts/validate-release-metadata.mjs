@@ -72,6 +72,28 @@ const workbuddyAuthFiles = new Set([
   'internal/remotemcp/proxy.go', 'internal/remotemcp/proxy_test.go'
 ]);
 
+// Reviewed Scheme B runtime surface; other runtime changes keep their existing gate.
+const accountContentFiles = new Set([
+  "internal/api/client.go",
+  "internal/api/client_test.go",
+  "internal/cache/memory.go",
+  "internal/cache/memory_test.go",
+  "internal/cli/mcp_login_test.go",
+  "internal/cli/model_io.go",
+  "internal/cli/model_io_test.go",
+  "internal/cli/webhook.go",
+  "internal/mcp/model_io_tools.go",
+  "internal/mcp/model_io_tools_test.go",
+  "internal/mcp/server.go",
+  "internal/mcp/tools.go",
+  "internal/mcp/tools_test.go",
+  "internal/mcp/webhook_tools.go",
+  "internal/mcp/webhook_tools_test.go",
+  "internal/modelio/modelio.go",
+  "internal/modelio/modelio_test.go",
+  "internal/remotemcp/proxy_test.go"
+]);
+
 export function selectTests(base, changed, readBase, readCurrent) {
   const runtime = changed.filter(file => /\.go$|^(cmd\/|internal\/|go\.(mod|sum)$|\.goreleaser\.yaml$)/.test(file));
   const runtimeChanged = !base || runtime.length > 0;
@@ -86,7 +108,9 @@ export function selectTests(base, changed, readBase, readCurrent) {
   const wrapperChanged = !base || changed.some(file => /^packages\/npm\/(bin\/|test\/)/.test(file));
   const runtimeWorkbuddyAuthOnly = !!base && runtime.length > 0 &&
     runtime.every(file => workbuddyAuthFiles.has(file));
-  return { runtimeChanged, runtimeBrandingOnly, runtimeWorkbuddyAuthOnly, wrapperChanged };
+  const runtimeAccountContentOnly = !!base && runtime.length > 0 && !runtimeBrandingOnly && !runtimeWorkbuddyAuthOnly &&
+    runtime.every(file => accountContentFiles.has(file));
+  return { runtimeChanged, runtimeBrandingOnly, runtimeWorkbuddyAuthOnly, runtimeAccountContentOnly, wrapperChanged };
 }
 
 function main() {
@@ -108,7 +132,7 @@ function main() {
     file => execFileSync('git', ['show', `${base}:${file}`], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }),
     file => fs.readFileSync(path.join(root, file), 'utf8'));
   if (process.env.GITHUB_OUTPUT) {
-    fs.appendFileSync(process.env.GITHUB_OUTPUT, `runtime_changed=${selected.runtimeChanged}\nruntime_branding_only=${selected.runtimeBrandingOnly}\nruntime_workbuddy_auth_only=${selected.runtimeWorkbuddyAuthOnly}\nwrapper_changed=${selected.wrapperChanged}\n`);
+    fs.appendFileSync(process.env.GITHUB_OUTPUT, `runtime_changed=${selected.runtimeChanged}\nruntime_branding_only=${selected.runtimeBrandingOnly}\nruntime_workbuddy_auth_only=${selected.runtimeWorkbuddyAuthOnly}\nruntime_account_content_only=${selected.runtimeAccountContentOnly}\nwrapper_changed=${selected.wrapperChanged}\n`);
   }
   console.log(JSON.stringify({ name: expectedName, version: pkg.version, targets, base, ...selected }, null, 2));
 }

@@ -1,6 +1,6 @@
 # PatchX Freenote Agent npm wrapper
 
-> Unreleased source update: the next Agent supports account-wide mobile/desktop/web reads on GoServer Scheme B (0.20.85). Version 0.2.16 remains the published package; use its discovered tool schema until upgrading. Existing explicit mobile/desktop calls remain valid.
+> Version 0.2.17 supports account-wide mobile/desktop/web reads on GoServer Scheme B (0.20.85). Existing explicit mobile/desktop calls and valid authorization remain compatible. Discover the connected MCP tool schema before using optional platform parameters.
 
 [English README](https://github.com/ZsTs119/patchx-freenote-agent#readme) | [简体中文说明](https://github.com/ZsTs119/patchx-freenote-agent/blob/main/README.zh-CN.md) | [飞书公开使用指南](https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd)
 
@@ -8,7 +8,7 @@ This npm package is the installer and thin launcher wrapper for PatchX Freenote 
 
 PatchX Freenote Agent is the local AI assistant connector for PatchX Freenote. It lets an MCP-capable AI assistant find PatchX Freenote records, inspect AI-generated results, create Markdown drafts, and manually send user-approved messages to Feishu, DingTalk, or another webhook.
 
-Version `0.2.16` defaults to the production API at `https://freenote.patch-x.cn`. When upgrading from test, update or remove explicit server-address overrides in your CLI and MCP host configuration, then run `mcp login` in the same runtime and profile that launches MCP. Test credentials and records do not migrate to production.
+Version `0.2.17` defaults to the production API at `https://freenote.patch-x.cn`. When upgrading from test, update or remove explicit server-address overrides in your CLI and MCP host configuration, then run `mcp login` in the same runtime and profile that launches MCP. Test credentials and records do not migrate to production.
 
 This release supports the WorkBuddy connector's CLI authorization flow. Temporary token-refresh failures preserve the login session and return a retryable error; rejected refresh credentials require authorization again. WorkBuddy's connector update and official client verification are tracked separately.
 

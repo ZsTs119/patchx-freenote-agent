@@ -2,6 +2,12 @@
 
 这份文档用于后续开发新功能、更新文档、发布 GitHub Release 和 npm 包时保持同一套事实源。它沉淀的是当前 `patchxnote-agent` 公测发布链路，不替代具体 feature 设计文档。
 
+## 0.2.17 发布执行（2026-11-05）
+
+本轮仅交付GitHub Release及npm，具体状态以[0.2.17发布记录](evidence/2026-11-05-release-0.2.17.zh-CN.md)为准。账号内容/Scheme B运行时改动命中独立 `runtime_account_content_only` 选择时，Release执行 `scripts/test-account-content.sh` 的43个具名检查；不运行全仓Go、未变化安装器或WorkBuddy专项。发布选择基于上一tag的完整差异，超出已确认文件仍保持原有验证策略。
+
+沿用当前 `codex/workbuddy-connector-package` 发行分支（与0.2.16相同），普通推送发行commit后打tag；不要求将本期分支合回main。npm workflow仍从main调度，并checkout指定发行tag。WorkBuddy固定引用与各渠道、GoServer、MCP Registry本轮保持。
+
 ## 最近发布：0.2.16
 
 Agent CLI/npm `0.2.16` 已发布，配套 WorkBuddy 连接器的 CLI 授权，修复刷新错误分类和失效凭据处理；继承 `0.2.15` 的品牌与 Registry 身份。发行、定向测试和 Windows 实际包验证见 [0.2.16 发布记录](evidence/2026-10-19-release-0.2.16.zh-CN.md)。用户已提交 WorkBuddy 更新，官方效果待审核通过后确认。

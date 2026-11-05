@@ -1,6 +1,6 @@
 # PatchX Freenote Agent
 
-> Unreleased source update (2026-11-05): account content defaults to all mobile/desktop/web sources, with an optional platform filter. Requires GoServer Scheme B (0.20.85 contract); the published 0.2.16 local implementation still has its previous behavior. Existing explicit mobile/desktop calls remain valid. See the [implementation and acceptance plan](docs/plans/2026-11-05-web-platform-account-content-checklist-plan.md).
+> Version 0.2.17: account content defaults to all mobile/desktop/web sources, with an optional platform filter. Requires GoServer Scheme B (0.20.85 contract). Existing explicit mobile/desktop calls and valid authorization remain compatible. See the [release record](docs/evidence/2026-11-05-release-0.2.17.zh-CN.md).
 
 PatchX Freenote was formerly called PatchXNote. Existing `patchxnote-agent` commands, `patchxnote-mcp` Skill installs, MCP configuration and credentials remain compatible.
 
@@ -23,12 +23,12 @@ Connect your synced PatchX Freenote records to AI assistants. Find records, revi
 
 | Channel | Public entry | What is available |
 | --- | --- | --- |
-| npm | [patchxnote-agent](https://www.npmjs.com/package/patchxnote-agent) | Versioned CLI installer/launcher and bundled Skill; current release `0.2.16`. |
-| GitHub Release | [v0.2.16](https://github.com/ZsTs119/patchx-freenote-agent/releases/tag/v0.2.16) | Six Windows/macOS/Linux binaries, checksums, and artifact attestations. |
+| npm | [patchxnote-agent](https://www.npmjs.com/package/patchxnote-agent) | Versioned CLI installer/launcher and bundled Skill; current release `0.2.17`. |
+| GitHub Release | [v0.2.17](https://github.com/ZsTs119/patchx-freenote-agent/releases/tag/v0.2.17) | Six Windows/macOS/Linux binaries, checksums, and artifact attestations. |
 | MCP official Registry | [Search the retained ID](https://registry.modelcontextprotocol.io/?q=patchxnote) · [0.2.15 record](https://registry.modelcontextprotocol.io/v0.1/servers/io.github.ZsTs119%2Fpatchxnote-agent/versions/0.2.15) | Registered as `io.github.ZsTs119/patchxnote-agent`. |
 | Vercel skills.sh | [patchxnote-mcp](https://skills.sh/zsts119/patchx-freenote-agent/patchxnote-mcp) | New repository source, searchable as `PatchX Freenote`; Skill ID remains `patchxnote-mcp`. |
 
-These links show publication and directory listing. The [0.2.16 release record](./docs/evidence/2026-10-19-release-0.2.16.zh-CN.md) covers scoped authorization tests, artifact checks, actual Windows installation, and MCP protocol verification. This release does not update the Registry entry; WorkBuddy client acceptance follows connector approval.
+The [0.2.17 release record](./docs/evidence/2026-11-05-release-0.2.17.zh-CN.md) tracks the scoped checks, release artifacts and actual package verification. This release covers GitHub Release and npm only; MCP Registry and channel-specific packages are unchanged.
 
 ## Choose Your Connection
 
@@ -354,7 +354,7 @@ npx -y --registry https://registry.npmjs.org patchxnote-agent@latest mcp config
 npx -y --registry https://registry.npmjs.org patchxnote-agent@latest mcp status --output json
 ```
 
-After authorization, add `--verify` to `mcp status` to verify access. If the native binary is on PATH, `patchxnote version` reports its version and release commit. The current published release is `0.2.16`.
+After authorization, add `--verify` to `mcp status` to verify access. If the native binary is on PATH, `patchxnote version` reports its version and release commit. The current release version is `0.2.17`.
 
 ## Troubleshooting
 
@@ -416,7 +416,13 @@ Search covers record basics cached during the current local MCP session. Linux h
 [GitHub Releases](https://github.com/ZsTs119/patchx-freenote-agent/releases)
 
 <details>
-<summary>Release highlights from 0.2.6 to 0.2.16</summary>
+<summary>Release highlights from 0.2.6 to 0.2.17</summary>
+
+### 0.2.17 Highlights
+
+- Read account content across mobile, desktop, and web with optional source filtering and legacy content-scope compatibility.
+- Keep local cache, details and exports aligned while preserving Auth/OAuth and remote MCP flows.
+- This release covers GitHub Release and npm; see the versioned release record.
 
 ### 0.2.16 Highlights
 
@@ -488,7 +494,7 @@ For architecture, local development, and checks appropriate to your change, read
 
 ## Release Notes For Operators
 
-The [runbook](./docs/release-and-maintenance-runbook.zh-CN.md) covers version synchronization, GitHub Release assets, npm Trusted Publishing, and release verification. Current evidence: [0.2.16](./docs/evidence/2026-10-19-release-0.2.16.zh-CN.md).
+The [runbook](./docs/release-and-maintenance-runbook.zh-CN.md) covers version synchronization, GitHub Release assets, npm Trusted Publishing, and release verification. Current evidence: [0.2.17](./docs/evidence/2026-11-05-release-0.2.17.zh-CN.md).
 
 ## License
 
