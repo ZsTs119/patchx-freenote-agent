@@ -23,7 +23,7 @@ func defaultModelIOTools(server *Server) []Tool {
 func modelIOTraceListTool(server *Server) Tool {
 	return Tool{
 		Name:        "patchxnote_list_model_io_traces",
-		Description: "List lightweight PatchX Freenote Agent model IO trace metadata and request IDs for one platform.",
+		Description: "List lightweight PatchX Freenote Agent model IO trace metadata and request IDs for the current account; optionally filter by mobile, desktop, or web.",
 		InputSchema: objectSchema(map[string]any{
 			"platform":     platformProperty(),
 			"request_id":   stringProperty(1, 160),
@@ -36,7 +36,7 @@ func modelIOTraceListTool(server *Server) Tool {
 			"date_to":      stringProperty(1, 64),
 			"limit":        integerProperty(1, 50),
 			"cursor":       stringProperty(1, 512),
-		}, []string{"platform"}),
+		}, nil),
 		Annotations: readOnlyAnnotations(),
 		handler:     server.handleListModelIOTraces,
 		validator:   validateListModelIOTracesArgs,
@@ -173,7 +173,7 @@ func validateListModelIOTracesArgs(raw json.RawMessage) error {
 	if err != nil {
 		return err
 	}
-	if err := requirePlatform(args); err != nil {
+	if err := optionalPlatformValue(args, "platform"); err != nil {
 		return err
 	}
 	if err := optionalString(args, "request_id", 1, 160); err != nil {

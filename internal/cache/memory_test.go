@@ -125,7 +125,7 @@ func TestMemoryIndexUpsertAndSearch(t *testing.T) {
 	}
 }
 
-func TestSearchMemoriesRequiresQueryAndPlatform(t *testing.T) {
+func TestSearchMemoriesRequiresQueryAndValidOptionalPlatform(t *testing.T) {
 	store := memoryStoreFunc(func(ctx context.Context, platform string) ([]Memory, error) {
 		return nil, nil
 	})
@@ -135,5 +135,39 @@ func TestSearchMemoriesRequiresQueryAndPlatform(t *testing.T) {
 	}
 	if _, err := SearchMemories(context.Background(), store, MemorySearchParams{Platform: "agent", Query: "event"}); err == nil {
 		t.Fatal("expected platform validation error")
+	}
+}
+
+func TestAccountContentSearchAllAndWebPreservesSameID(t *testing.T) {
+	ctx := context.Background()
+	index := NewMemoryIndex()
+	for _, p := range []string{"mobile", "desktop", "web"} {
+		if err := index.UpsertMemories(ctx, []Memory{{ID: "same", Platform: p, Title: "Synthetic record"}}); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for _, p := range []string{"", "mobile", "desktop", "web"} {
+		got, err := SearchMemories(ctx, index, MemorySearchParams{Platform: p, Query: "Synthetic"})
+		if err != nil {
+			t.Fatal(err)
+		}
+		want := 1
+		if p == "" {
+			want = 3
+		}
+		if len(got.Items) != want {
+			t.Fatalf("platform=%s count=%d want=%d", p, len(got.Items), want)
+		}
+		seen := map[string]bool{}
+		for _, item := range got.Items {
+			if seen[item.Platform] || (p != "" && item.Platform != p) {
+				t.Fatal("source collision")
+			}
+			seen[item.Platform] = true
+		}
+	}
+	empty, err := SearchMemories(ctx, index, MemorySearchParams{Query: "missing"})
+	if err != nil || len(empty.Items) != 0 {
+		t.Fatal("empty search")
 	}
 }

@@ -109,9 +109,9 @@ These exclusions are product decisions, not missing features.
 
 ## Authentication Model
 
-Agent access must be independent from App/PC installation access.
+Agent access remains independent from App/PC/Web installation access.
 
-The current App/PC contract allows one active `mobile` installation and one active `desktop` installation per account. A local agent must not consume either slot or trigger installation replacement. The server should provide an agent-specific access model before public release.
+Use the existing Agent-specific session and OAuth flows. Agent login must not consume mobile, desktop, or web installation slots or trigger installation replacement.
 
 The CLI may still use phone OTP as the human login ceremony, but the resulting credential must have agent-specific audience, scope, and revocation semantics.
 
@@ -122,11 +122,10 @@ agent:account.read
 agent:hardware.read
 agent:quota.read
 agent:model_usage.read
-agent:content.read:mobile
-agent:content.read:desktop
+agent:content.read
 ```
 
-Grant content scopes explicitly. Do not silently read both mobile and desktop structured results.
+Under Scheme B (GoServer contract 0.20.85), `agent:content.read` and either legacy `agent:content.read:mobile` / `agent:content.read:desktop` authorize account content reads. Preserve the credential scope expression. Omit platform to read all available sources; filter explicitly by mobile/desktop/web. Local search covers only loaded metadata, keyed by source and record ID within the active account. Keep both local-tool and OAuth remote-proxy routes; normal token rotation does not clear the same account cache.
 
 ## Server Contract Pinning
 

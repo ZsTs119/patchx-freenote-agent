@@ -215,6 +215,7 @@ func (s *Server) authRequiredHandler(ctx context.Context, arguments json.RawMess
 
 func (s *Server) accessToken(ctx context.Context, requiredScopes ...string) (string, error) {
 	if s.credentials == nil {
+		s.memoryCache.BindAccount("")
 		return "", authRequiredError()
 	}
 	credential, ok, err := s.credentials.Credential(ctx)
@@ -222,8 +223,10 @@ func (s *Server) accessToken(ctx context.Context, requiredScopes ...string) (str
 		return "", err
 	}
 	if !ok || credential.AccessToken == "" {
+		s.memoryCache.BindAccount("")
 		return "", authRequiredError()
 	}
+	s.memoryCache.BindAccount(credential.AccountID)
 	for _, scope := range requiredScopes {
 		if !hasScope(credential.Scopes, scope) {
 			return "", rpcErr(codeToolError, "permission_denied", "PatchX Freenote Agent does not have permission for this tool")
@@ -234,7 +237,7 @@ func (s *Server) accessToken(ctx context.Context, requiredScopes ...string) (str
 
 func hasScope(scopes []string, required string) bool {
 	for _, scope := range scopes {
-		if scope == required {
+		if scope == required || (required == "agent:content.read" && (scope == "agent:content.read:mobile" || scope == "agent:content.read:desktop")) {
 			return true
 		}
 	}

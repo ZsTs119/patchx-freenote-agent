@@ -45,13 +45,25 @@ type MemorySearchResult struct {
 }
 
 type MemoryIndex struct {
-	mu       sync.Mutex
-	memories map[string]Memory
+	mu        sync.Mutex
+	memories  map[string]Memory
+	accountID string
 }
 
 func NewMemoryIndex() *MemoryIndex {
 	return &MemoryIndex{
 		memories: make(map[string]Memory),
+	}
+}
+
+// BindAccount retains loaded content across token rotation, but clears it when
+// the authenticated account changes or the session is cleared.
+func (i *MemoryIndex) BindAccount(accountID string) {
+	i.mu.Lock()
+	defer i.mu.Unlock()
+	if i.accountID != accountID {
+		i.memories = make(map[string]Memory)
+		i.accountID = accountID
 	}
 }
 
@@ -74,7 +86,7 @@ func (i *MemoryIndex) ListMemories(ctx context.Context, platform string) ([]Memo
 
 	var memories []Memory
 	for _, memory := range i.memories {
-		if memory.Platform == platform {
+		if platform == "" || memory.Platform == platform {
 			memories = append(memories, memory)
 		}
 	}
@@ -85,8 +97,8 @@ func SearchMemories(ctx context.Context, store MemoryStore, params MemorySearchP
 	if store == nil {
 		return MemorySearchResult{}, fmt.Errorf("memory cache store is required")
 	}
-	if params.Platform != "mobile" && params.Platform != "desktop" {
-		return MemorySearchResult{}, fmt.Errorf("platform must be mobile or desktop")
+	if params.Platform != "" && params.Platform != "mobile" && params.Platform != "desktop" && params.Platform != "web" {
+		return MemorySearchResult{}, fmt.Errorf("platform must be mobile, desktop, or web when set")
 	}
 	query := strings.ToLower(strings.TrimSpace(params.Query))
 	if query == "" {
@@ -109,7 +121,7 @@ func SearchMemories(ctx context.Context, store MemoryStore, params MemorySearchP
 		Items: make([]Memory, 0, min(limit, len(memories))),
 	}
 	for _, memory := range memories {
-		if memory.Platform != params.Platform {
+		if params.Platform != "" && memory.Platform != params.Platform {
 			continue
 		}
 		if !memoryMatches(memory, query) {

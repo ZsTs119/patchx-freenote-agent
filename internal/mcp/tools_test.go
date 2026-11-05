@@ -494,3 +494,144 @@ func toolFixtureModelIOExport() api.AgentModelIOExport {
 func fixedToolTime() time.Time {
 	return time.Date(2026, 8, 6, 10, 0, 0, 0, time.UTC)
 }
+
+type accountContentAPI struct{ fakeToolAPI }
+
+func (f *accountContentAPI) ListMemories(ctx context.Context, token string, params api.ListMemoriesParams) (api.AgentMemoryPage, error) {
+	f.listParams = params
+	items := []api.AgentMemory{}
+	for _, p := range []string{"mobile", "desktop", "web"} {
+		if params.Platform == "" || p == params.Platform {
+			items = append(items, api.AgentMemory{ID: "same", Platform: p, Title: "Synthetic record", ObjectType: "event"})
+		}
+	}
+	return api.AgentMemoryPage{Items: items, NextCursor: "cursor_next"}, nil
+}
+func (f *accountContentAPI) GetMemory(ctx context.Context, token, platform, id string) (api.AgentMemory, error) {
+	if id == "shared" && platform == "" {
+		return api.AgentMemory{}, &api.Error{StatusCode: 400, Code: "invalid_request"}
+	}
+	if platform == "" {
+		platform = "web"
+	}
+	return api.AgentMemory{ID: id, Platform: platform, Title: "Synthetic record"}, nil
+}
+func accountContentResultCount(t *testing.T, s *Server, name string, args map[string]any) int {
+	t.Helper()
+	res := callWebhookTool(t, s, name, args)
+	if res["error"] != nil {
+		t.Fatalf("content tool %s failed: %v", name, res["error"])
+	}
+	var page struct {
+		Items []api.AgentMemory `json:"items"`
+	}
+	if json.Unmarshal([]byte(toolTextResult(t, res)), &page) != nil {
+		t.Fatal("page decode")
+	}
+	return len(page.Items)
+}
+func TestAccountContentToolSchema(t *testing.T) {
+	s := NewServer(Options{})
+	for _, tool := range s.toolList {
+		properties := tool.InputSchema["properties"].(map[string]any)
+		raw, ok := properties["platform"]
+		if !ok {
+			continue
+		}
+		enum := raw.(map[string]any)["enum"].([]string)
+		if strings.Join(enum, ",") != "mobile,desktop,web" {
+			t.Errorf("tool=%s missing Web", tool.Name)
+		}
+		if req, ok := tool.InputSchema["required"].([]string); ok {
+			for _, v := range req {
+				if v == "platform" {
+					t.Errorf("tool=%s requires platform", tool.Name)
+				}
+			}
+		}
+	}
+}
+func TestAccountContentPermissionsAndQueries(t *testing.T) {
+	for _, scope := range []string{"agent:content.read:mobile", "agent:content.read:desktop", "agent:content.read"} {
+		t.Run(scope, func(t *testing.T) {
+			store := keychain.NewMemoryStore()
+			_ = store.Put(context.Background(), "default", keychain.Credential{AccountID: "acct_fixture", AccessToken: "synthetic", Scopes: []string{scope}})
+			apiClient := &accountContentAPI{}
+			s := NewServer(Options{Authenticator: auth.NewManager(store, "default"), API: apiClient})
+			for _, p := range []string{"", "mobile", "desktop", "web"} {
+				args := map[string]any{"cursor": "cursor_prev"}
+				if p != "" {
+					args["platform"] = p
+				}
+				want := 1
+				if p == "" {
+					want = 3
+				}
+				if got := accountContentResultCount(t, s, "patchxnote_list_memories", args); got != want {
+					t.Fatalf("count=%d want=%d", got, want)
+				}
+				if apiClient.listParams.Platform != p || apiClient.listParams.Cursor != "cursor_prev" {
+					t.Fatal("query/cursor not forwarded")
+				}
+				res := callWebhookTool(t, s, "patchxnote_get_memory", map[string]any{"memory_id": "unique_web"})
+				if res["error"] != nil || !strings.Contains(toolTextResult(t, res), `"platform": "web"`) {
+					t.Fatal("unique detail omitted platform")
+				}
+			}
+		})
+	}
+	store := keychain.NewMemoryStore()
+	_ = store.Put(context.Background(), "default", keychain.Credential{AccountID: "acct_fixture", AccessToken: "synthetic", Scopes: []string{"agent:account.read"}})
+	s := NewServer(Options{Authenticator: auth.NewManager(store, "default"), API: &accountContentAPI{}})
+	for _, p := range []string{"", "web"} {
+		args := map[string]any{}
+		if p != "" {
+			args["platform"] = p
+		}
+		assertRPCError(t, callWebhookTool(t, s, "patchxnote_list_memories", args), codeToolError, "permission_denied")
+	}
+}
+func TestAccountContentCacheAccountAndRefresh(t *testing.T) {
+	ctx := context.Background()
+	store := keychain.NewMemoryStore()
+	credential := keychain.Credential{AccountID: "account_a", AccessToken: "synthetic_a", Scopes: []string{"agent:content.read:mobile"}}
+	_ = store.Put(ctx, "default", credential)
+	s := NewServer(Options{Authenticator: auth.NewManager(store, "default"), API: &accountContentAPI{}})
+	if accountContentResultCount(t, s, "patchxnote_list_memories", map[string]any{}) != 3 {
+		t.Fatal("initial list")
+	}
+	credential.AccessToken = "synthetic_refreshed"
+	_ = store.Put(ctx, "default", credential)
+	if accountContentResultCount(t, s, "patchxnote_search_memories", map[string]any{"query": "Synthetic"}) != 3 {
+		t.Fatal("same account refresh cleared cache")
+	}
+	if accountContentResultCount(t, s, "patchxnote_search_memories", map[string]any{"query": "Synthetic", "platform": "web"}) != 1 {
+		t.Fatal("Web search")
+	}
+	credential.AccountID = "account_b"
+	_ = store.Put(ctx, "default", credential)
+	if accountContentResultCount(t, s, "patchxnote_search_memories", map[string]any{"query": "Synthetic"}) != 0 {
+		t.Fatal("old account cache retained")
+	}
+	_ = store.Delete(ctx, "default")
+	assertRPCError(t, callWebhookTool(t, s, "patchxnote_search_memories", map[string]any{"query": "Synthetic"}), codeAuthRequired, "auth_required")
+}
+
+func TestAccountContentAmbiguityAndContentScope(t *testing.T) {
+	server := NewServer(Options{Authenticator: authenticatedManager(t), API: &accountContentAPI{}})
+	ambiguous := callWebhookTool(t, server, "patchxnote_get_memory", map[string]any{"memory_id": "shared"})
+	assertRPCError(t, ambiguous, codeToolError, "invalid_request")
+	if !strings.Contains(ambiguous["error"].(map[string]any)["message"].(string), "web") {
+		t.Fatal("missing source recovery hint")
+	}
+	resolved := callWebhookTool(t, server, "patchxnote_get_memory", map[string]any{"memory_id": "shared", "platform": "web"})
+	if resolved["error"] != nil || !strings.Contains(toolTextResult(t, resolved), `"platform": "web"`) {
+		t.Fatal("source resolution failed")
+	}
+	store := keychain.NewMemoryStore()
+	_ = store.Put(context.Background(), "default", keychain.Credential{AccountID: "acct_fixture", AccessToken: "synthetic", Scopes: []string{"agent:account.read"}})
+	server = NewServer(Options{Authenticator: auth.NewManager(store, "default"), API: &accountContentAPI{}})
+	for _, name := range []string{"patchxnote_get_memory", "patchxnote_get_model_io_parsed_result", "patchxnote_render_webhook_message"} {
+		assertRPCError(t, callWebhookTool(t, server, name, map[string]any{"memory_id": "unique_web"}), codeToolError, "permission_denied")
+	}
+}

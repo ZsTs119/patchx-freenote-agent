@@ -185,7 +185,7 @@ func (c *Client) ListMemories(ctx context.Context, accessToken string, params Li
 		return AgentMemoryPage{}, err
 	}
 	query := url.Values{}
-	query.Set("platform", params.Platform)
+	setOptionalQuery(query, "platform", params.Platform)
 	if params.Limit > 0 {
 		query.Set("limit", fmt.Sprintf("%d", params.Limit))
 	}
@@ -206,7 +206,7 @@ func (c *Client) GetMemory(ctx context.Context, accessToken string, platform str
 		return AgentMemory{}, fmt.Errorf("memory id is required")
 	}
 	query := url.Values{}
-	query.Set("platform", platform)
+	setOptionalQuery(query, "platform", platform)
 
 	var response AgentMemory
 	err := c.doJSON(ctx, http.MethodGet, "/v1/agent/memories/"+url.PathEscape(memoryID), query, accessToken, "", nil, &response, true, http.StatusOK)
@@ -263,7 +263,7 @@ func (c *Client) ListModelIOTraces(ctx context.Context, accessToken string, para
 		return AgentModelIOTracePage{}, fmt.Errorf("limit must be between 1 and 50 when set")
 	}
 	query := url.Values{}
-	query.Set("platform", params.Platform)
+	setOptionalQuery(query, "platform", params.Platform)
 	setOptionalQuery(query, "request_id", params.RequestID)
 	setOptionalQuery(query, "task_type", params.TaskType)
 	setOptionalQuery(query, "state", params.State)
@@ -448,10 +448,10 @@ func isRetryableAPIError(err error) bool {
 
 func validatePlatform(platform string) error {
 	switch platform {
-	case "mobile", "desktop":
+	case "", "mobile", "desktop", "web":
 		return nil
 	default:
-		return fmt.Errorf("platform must be mobile or desktop")
+		return fmt.Errorf("platform must be mobile, desktop, or web when set")
 	}
 }
 
@@ -464,7 +464,7 @@ func optionalPlatformQuery(platform string) (url.Values, error) {
 		return nil, err
 	}
 	query := url.Values{}
-	query.Set("platform", platform)
+	setOptionalQuery(query, "platform", platform)
 	return query, nil
 }
 

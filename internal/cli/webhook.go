@@ -436,7 +436,7 @@ func newWebhookDraftCommand(state *rootState) *cobra.Command {
 		},
 	}
 	cmd.Flags().StringVar(&memoryID, "memory-id", "", "PatchX Freenote memory ID")
-	cmd.Flags().StringVar(&platform, "platform", "", "Optional memory platform: mobile or desktop")
+	cmd.Flags().StringVar(&platform, "platform", "", "Optional memory platform: mobile, desktop, or web")
 	cmd.Flags().StringVar(&templateName, "template", "default", "Template name or local template file path")
 	cmd.Flags().StringVar(&outDir, "out", "", "Draft output directory")
 	cmd.Flags().BoolVar(&includeModelIO, "include-model-io", false, "Also export explicit model IO JSON into the draft directory")
@@ -504,7 +504,7 @@ func newWebhookSendCommand(state *rootState) *cobra.Command {
 	cmd.Flags().StringVar(&filePath, "file", "", "Markdown file to send")
 	cmd.Flags().StringVar(&draftDir, "draft", "", "Draft directory containing message.md")
 	cmd.Flags().StringVar(&memoryID, "memory-id", "", "PatchX Freenote memory ID")
-	cmd.Flags().StringVar(&platform, "platform", "", "Optional memory platform: mobile or desktop")
+	cmd.Flags().StringVar(&platform, "platform", "", "Optional memory platform: mobile, desktop, or web")
 	cmd.Flags().StringVar(&templateName, "template", "default", "Template name or local template file path")
 	cmd.Flags().StringVar(&title, "title", "", "Override title for --file")
 	cmd.Flags().BoolVar(&saveDraft, "save-draft", false, "Write memory-backed draft files before sending")
@@ -562,7 +562,7 @@ func newWebhookExportModelIOCommand(state *rootState) *cobra.Command {
 	}
 	cmd.Flags().StringVar(&memoryID, "memory-id", "", "PatchX Freenote memory ID")
 	cmd.Flags().StringVar(&requestID, "request-id", "", "PatchX Freenote model request/run ID")
-	cmd.Flags().StringVar(&platform, "platform", "", "Optional platform: mobile or desktop")
+	cmd.Flags().StringVar(&platform, "platform", "", "Optional platform: mobile, desktop, or web")
 	cmd.Flags().StringVar(&outFile, "out", "", "Output JSON file")
 	cmd.Flags().BoolVar(&force, "force", false, "Overwrite existing output file")
 	return cmd
@@ -714,7 +714,7 @@ func friendlyAgentAPIError(err error) error {
 		return err
 	}
 	if apiErr.StatusCode == 400 && apiErr.Code == "invalid_request" {
-		return fmt.Errorf("request is invalid; if this memory exists on both mobile and desktop, rerun with --platform mobile or --platform desktop")
+		return fmt.Errorf("request is invalid; if this record exists on multiple platforms, rerun with --platform mobile, --platform desktop, or --platform web")
 	}
 	if apiErr.StatusCode == 401 {
 		return fmt.Errorf("agent login required; run patchxnote login")

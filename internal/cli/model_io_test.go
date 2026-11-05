@@ -190,3 +190,40 @@ func cliModelIOFixture() api.AgentModelIOExport {
 		ProviderAttemptsJSON: []byte(`[{"content":"供应商尝试"}]`),
 	}
 }
+
+func TestAccountContentCLIListAndExport(t *testing.T) {
+	for _, p := range []string{"", "mobile", "desktop", "web"} {
+		t.Run("platform_"+p, func(t *testing.T) {
+			store := keychain.NewMemoryStore()
+			seedCredential(t, store)
+			export := cliModelIOFixture()
+			export.Memory.Platform = "web"
+			export.Trace.Platform = "web"
+			fake := &fakeAgentAPI{tracePage: api.AgentModelIOTracePage{Items: []api.AgentModelIOTraceSummary{{RequestID: "run_web", Platform: "web"}}, NextCursor: "next"}, modelIO: export}
+			deps := webhookTestDeps(t, store, nil, fake)
+			args := []string{"--output", "json", "model-io", "list", "--cursor", "current"}
+			if p != "" {
+				args = append(args, "--platform", p)
+			}
+			stdout, stderr, err := executeForTestWithDeps(t, deps, args...)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if stderr != "" || fake.traceParams.Platform != p || fake.traceParams.Cursor != "current" || !strings.Contains(stdout, `"platform": "web"`) || !strings.Contains(stdout, `"next_cursor": "next"`) {
+				t.Fatal("CLI list compatibility")
+			}
+			dest := filepath.Join(t.TempDir(), "result.json")
+			args = []string{"model-io", "export", "--memory-id", "mem_web", "--out", dest}
+			if p != "" {
+				args = append(args, "--platform", p)
+			}
+			if _, _, err = executeForTestWithDeps(t, deps, args...); err != nil {
+				t.Fatal(err)
+			}
+			raw, err := os.ReadFile(dest)
+			if err != nil || !json.Valid(raw) || !strings.Contains(string(raw), `"platform": "web"`) {
+				t.Fatal("export lost resolved source")
+			}
+		})
+	}
+}

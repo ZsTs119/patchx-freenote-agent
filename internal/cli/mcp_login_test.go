@@ -413,3 +413,29 @@ func assertNoMCPSecretLeak(t *testing.T, output string, values ...string) {
 		}
 	}
 }
+
+func TestAccountContentMCPModeCompatibility(t *testing.T) {
+	for _, mode := range []string{"auto", "local", "remote"} {
+		for _, hasOAuth := range []bool{false, true} {
+			t.Run(fmt.Sprintf("%s_%t", mode, hasOAuth), func(t *testing.T) {
+				t.Setenv("PATCHXNOTE_MCP_MODE", mode)
+				keys := keychain.NewMemoryStore()
+				store := oauthflow.NewStore(keys, "default")
+				base := "https://example.test"
+				if hasOAuth {
+					if err := store.Save(context.Background(), mcpCredentialForTest(base, "synthetic_access", "synthetic_refresh", time.Now().UTC().Add(time.Hour))); err != nil {
+						t.Fatal(err)
+					}
+				}
+				actual, err := shouldUseRemoteMCP(context.Background(), runtimeState{Config: config.Config{Server: config.ServerConfig{BaseURL: base}}}, store, "")
+				if err != nil {
+					t.Fatal(err)
+				}
+				want := mode == "remote" || (mode == "auto" && hasOAuth)
+				if actual != want {
+					t.Fatalf("mode=%s hasOAuth=%t remote=%t", mode, hasOAuth, actual)
+				}
+			})
+		}
+	}
+}

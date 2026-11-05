@@ -68,24 +68,24 @@ func defaultTools(server *Server) []Tool {
 		},
 		{
 			Name:        "patchxnote_list_memories",
-			Description: "List PatchX Freenote readable record entries for one selected platform, including formal saved results and model-generated outputs.",
+			Description: "List PatchX Freenote readable record entries for the current account across mobile, desktop, and web by default; optionally filter by platform. Includes formal saved results and model-generated outputs.",
 			InputSchema: objectSchema(map[string]any{
 				"platform": platformProperty(),
 				"limit":    integerProperty(1, 50),
 				"cursor":   stringProperty(1, 512),
-			}, []string{"platform"}),
+			}, nil),
 			Annotations: readOnlyAnnotations(),
 			handler:     server.handleListMemories,
 			validator:   validateListMemoriesArgs,
 		},
 		{
 			Name:        "patchxnote_search_memories",
-			Description: "Search the local authorized PatchX Freenote memory metadata cache for one selected platform.",
+			Description: "Search only records already loaded in the current account session cache. Omit platform to search all loaded sources, or filter by mobile, desktop, or web.",
 			InputSchema: objectSchema(map[string]any{
 				"platform": platformProperty(),
 				"query":    stringProperty(1, 128),
 				"limit":    integerProperty(1, 50),
-			}, []string{"platform", "query"}),
+			}, []string{"query"}),
 			Annotations: readOnlyAnnotations(),
 			handler:     server.handleSearchMemories,
 			validator:   validateSearchMemoriesArgs,
@@ -96,7 +96,7 @@ func defaultTools(server *Server) []Tool {
 			InputSchema: objectSchema(map[string]any{
 				"platform":  platformProperty(),
 				"memory_id": stringProperty(1, 160),
-			}, []string{"platform", "memory_id"}),
+			}, []string{"memory_id"}),
 			Annotations: readOnlyAnnotations(),
 			handler:     server.handleGetMemory,
 			validator:   validateGetMemoryArgs,
@@ -171,7 +171,7 @@ func (s *Server) handleListMemories(ctx context.Context, arguments json.RawMessa
 	if err != nil {
 		return CallToolResult{}, err
 	}
-	token, err := s.accessToken(ctx, "agent:content.read:"+params.Platform)
+	token, err := s.accessToken(ctx, "agent:content.read")
 	if err != nil {
 		return CallToolResult{}, err
 	}
@@ -193,7 +193,7 @@ func (s *Server) handleSearchMemories(ctx context.Context, arguments json.RawMes
 	if err != nil {
 		return CallToolResult{}, rpcErr(codeInvalidParams, "invalid_params", err.Error())
 	}
-	if _, err := s.accessToken(ctx, "agent:content.read:"+params.Platform); err != nil {
+	if _, err := s.accessToken(ctx, "agent:content.read"); err != nil {
 		return CallToolResult{}, err
 	}
 	result, err := cache.SearchMemories(ctx, s.memoryCache, params)
@@ -208,7 +208,7 @@ func (s *Server) handleGetMemory(ctx context.Context, arguments json.RawMessage)
 	if err != nil {
 		return CallToolResult{}, err
 	}
-	token, err := s.accessToken(ctx, "agent:content.read:"+params.Platform)
+	token, err := s.accessToken(ctx, "agent:content.read")
 	if err != nil {
 		return CallToolResult{}, err
 	}
@@ -217,7 +217,7 @@ func (s *Server) handleGetMemory(ctx context.Context, arguments json.RawMessage)
 	}
 	memory, err := s.api.GetMemory(ctx, token, params.Platform, params.MemoryID)
 	if err != nil {
-		return CallToolResult{}, err
+		return CallToolResult{}, friendlyAgentMCPError(err)
 	}
 	if err := s.memoryCache.UpsertMemories(ctx, apiMemoriesToCache([]api.AgentMemory{memory})); err != nil {
 		return CallToolResult{}, err
@@ -333,8 +333,9 @@ func objectSchema(properties map[string]any, required []string) map[string]any {
 
 func platformProperty() map[string]any {
 	return map[string]any{
-		"type": "string",
-		"enum": []string{"mobile", "desktop"},
+		"type":        "string",
+		"enum":        []string{"mobile", "desktop", "web"},
+		"description": "Optional content source. Omit to read the current account across all sources.",
 	}
 }
 
@@ -374,7 +375,7 @@ func validateListMemoriesArgs(raw json.RawMessage) error {
 	if err != nil {
 		return err
 	}
-	if err := requirePlatform(args); err != nil {
+	if err := optionalPlatformValue(args, "platform"); err != nil {
 		return err
 	}
 	if err := optionalInt(args, "limit", 1, 50); err != nil {
@@ -391,7 +392,7 @@ func validateSearchMemoriesArgs(raw json.RawMessage) error {
 	if err != nil {
 		return err
 	}
-	if err := requirePlatform(args); err != nil {
+	if err := optionalPlatformValue(args, "platform"); err != nil {
 		return err
 	}
 	if err := requireString(args, "query", 1, 128); err != nil {
@@ -408,7 +409,7 @@ func validateGetMemoryArgs(raw json.RawMessage) error {
 	if err != nil {
 		return err
 	}
-	if err := requirePlatform(args); err != nil {
+	if err := optionalPlatformValue(args, "platform"); err != nil {
 		return err
 	}
 	if err := requireString(args, "memory_id", 1, 160); err != nil {
@@ -429,17 +430,6 @@ func decodeArgs(raw json.RawMessage) (map[string]json.RawMessage, error) {
 		return map[string]json.RawMessage{}, nil
 	}
 	return args, nil
-}
-
-func requirePlatform(args map[string]json.RawMessage) error {
-	var platform string
-	if err := requireInto(args, "platform", &platform); err != nil {
-		return err
-	}
-	if platform != "mobile" && platform != "desktop" {
-		return fmt.Errorf("platform must be mobile or desktop")
-	}
-	return nil
 }
 
 func requireString(args map[string]json.RawMessage, key string, minLength int, maxLength int) error {

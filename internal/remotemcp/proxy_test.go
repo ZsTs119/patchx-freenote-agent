@@ -174,3 +174,47 @@ func TestProxyClassifiesTokenFailures(t *testing.T) {
 		})
 	}
 }
+
+func TestAccountContentProxyPreservesSourceAndCursor(t *testing.T) {
+	for _, platform := range []string{"", "mobile", "desktop", "web"} {
+		params := map[string]any{"name": "patchxnote_list_memories", "arguments": map[string]any{"cursor": "same_cursor", "limit": 1}}
+		if platform != "" {
+			params["arguments"].(map[string]any)["platform"] = platform
+		}
+		encoded, _ := json.Marshal(params)
+		body, _ := json.Marshal(map[string]any{"jsonrpc": "2.0", "id": "same-id", "method": "tools/call", "params": params})
+		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			var request struct {
+				Params json.RawMessage `json:"params"`
+			}
+			if json.NewDecoder(r.Body).Decode(&request) != nil {
+				t.Error("request decode")
+			}
+			if string(request.Params) != string(encoded) {
+				t.Error("proxy changed platform/cursor")
+			}
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"jsonrpc":"2.0","id":"same-id","result":{"content":[{"type":"text","text":"synthetic"}]}}`))
+		}))
+		client, err := New(Options{ServerBaseURL: server.URL})
+		if err != nil {
+			server.Close()
+			t.Fatal(err)
+		}
+		proxy, err := NewProxy(ProxyOptions{Client: client, TokenProvider: &fakeTokenProvider{access: "synthetic"}})
+		if err != nil {
+			server.Close()
+			t.Fatal(err)
+		}
+		var out bytes.Buffer
+		err = proxy.Serve(context.Background(), strings.NewReader(string(body)+"\n"), &out)
+		server.Close()
+		if err != nil {
+			t.Fatal(err)
+		}
+		var response map[string]any
+		if json.Unmarshal(out.Bytes(), &response) != nil || response["id"] != "same-id" || response["error"] != nil {
+			t.Fatal("proxy response changed")
+		}
+	}
+}

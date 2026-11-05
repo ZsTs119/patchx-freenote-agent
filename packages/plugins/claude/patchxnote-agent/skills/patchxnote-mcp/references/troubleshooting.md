@@ -87,12 +87,12 @@ Run both commands in the same runtime that launches MCP. Do not remove mobile/de
 
 Check:
 
-- Did the user select `mobile` or `desktop`?
+- Is a source filter applied? Scheme B defaults to all sources and accepts mobile/desktop/web. Older installed tool schemas may still require explicit mobile/desktop.
 - Is the account authenticated in this runtime?
 - Is `patchxnote_search_memories` searching only current-session cache?
 - Does `patchxnote_list_memories` need pagination?
 
-Do not infer that no PatchX Freenote data exists across every platform unless both platforms were queried and accepted by the user.
+Do not infer that the whole account has no data from one source or one cached page. Check the default account query and its pagination; local cache search only covers loaded metadata.
 
 ## Tool Count Drift
 

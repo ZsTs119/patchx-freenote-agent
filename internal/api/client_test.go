@@ -673,13 +673,13 @@ func TestPOSTIsNotRetried(t *testing.T) {
 	}
 }
 
-func TestListMemoriesRequiresPlatform(t *testing.T) {
+func TestListMemoriesRejectsUnsupportedPlatformAndLimit(t *testing.T) {
 	client := newTestClient(t, "http://example.test", 0)
-	_, err := client.ListMemories(context.Background(), strings.Repeat("e", 32), ListMemoriesParams{})
+	_, err := client.ListMemories(context.Background(), strings.Repeat("e", 32), ListMemoriesParams{Platform: "watch"})
 	if err == nil {
 		t.Fatal("expected platform validation error")
 	}
-	_, err = client.ListModelIOTraces(context.Background(), strings.Repeat("e", 32), ListModelIOTracesParams{})
+	_, err = client.ListModelIOTraces(context.Background(), strings.Repeat("e", 32), ListModelIOTracesParams{Platform: "watch"})
 	if err == nil {
 		t.Fatal("expected model io trace platform validation error")
 	}
@@ -691,7 +691,7 @@ func TestListMemoriesRequiresPlatform(t *testing.T) {
 
 func TestDeliveryAndModelIOValidateInputs(t *testing.T) {
 	client := newTestClient(t, "http://example.test", 0)
-	if _, err := client.GetMemoryDeliveryDocument(context.Background(), "token", "web", "mem_fixture"); err == nil {
+	if _, err := client.GetMemoryDeliveryDocument(context.Background(), "token", "watch", "mem_fixture"); err == nil {
 		t.Fatal("expected invalid platform error")
 	}
 	if _, err := client.GetMemoryModelIO(context.Background(), "token", "", ""); err == nil {
@@ -776,4 +776,80 @@ func writeJSONResponse(t *testing.T, w http.ResponseWriter, statusCode int, valu
 
 func serverURLForTest(r *http.Request) string {
 	return "http://" + r.Host + "/patchnote-test-api"
+}
+
+func TestAccountContentAPIOptionalPlatformAndOrigins(t *testing.T) {
+	for _, platform := range []string{"", "mobile", "desktop", "web"} {
+		t.Run("platform_"+platform, func(t *testing.T) {
+			calls := 0
+			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				calls++
+				if r.URL.Query().Get("platform") != platform || r.URL.Query().Has("platform") != (platform != "") {
+					t.Error("platform query was not preserved")
+				}
+				if strings.HasSuffix(r.URL.Path, "/memories") || strings.HasSuffix(r.URL.Path, "/model-io-traces") {
+					if r.URL.Query().Get("cursor") != "cursor_all_2" {
+						t.Error("cursor not forwarded")
+					}
+				}
+				w.Header().Set("Content-Type", "application/json")
+				_, _ = w.Write([]byte(`{"id":"mem_web","platform":"web","items":[{"id":"mem_mobile","platform":"mobile"},{"id":"mem_web","platform":"web"}],"next_cursor":"cursor_all_3","memory":{"id":"mem_web","platform":"web"},"trace":{"request_id":"run_web","platform":"web"}}`))
+			}))
+			defer server.Close()
+			c := newTestClient(t, server.URL, 0)
+			ctx := context.Background()
+			page, err := c.ListMemories(ctx, "fixture", ListMemoriesParams{Platform: platform, Cursor: "cursor_all_2"})
+			if err != nil {
+				t.Fatal(err)
+			}
+			if len(page.Items) != 2 || page.Items[0].Platform != "mobile" || page.Items[1].Platform != "web" || page.NextCursor != "cursor_all_3" {
+				t.Fatal("response origin/cursor changed")
+			}
+			item, err := c.GetMemory(ctx, "fixture", platform, "mem_web")
+			if err != nil || item.Platform != "web" {
+				t.Fatalf("get memory: %v", err)
+			}
+			if _, err = c.GetMemoryDeliveryDocument(ctx, "fixture", platform, "mem_web"); err != nil {
+				t.Fatal(err)
+			}
+			if _, err = c.GetMemoryModelIO(ctx, "fixture", platform, "mem_web"); err != nil {
+				t.Fatal(err)
+			}
+			if _, err = c.GetModelRunIOTrace(ctx, "fixture", platform, "run_web"); err != nil {
+				t.Fatal(err)
+			}
+			if _, err = c.ListModelIOTraces(ctx, "fixture", ListModelIOTracesParams{Platform: platform, Cursor: "cursor_all_2"}); err != nil {
+				t.Fatal(err)
+			}
+			if calls != 6 {
+				t.Fatalf("requests=%d", calls)
+			}
+		})
+	}
+}
+
+func TestAccountContentAPIAccountLookupAmbiguity(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		if !r.URL.Query().Has("platform") {
+			w.WriteHeader(http.StatusBadRequest)
+			_, _ = w.Write([]byte(`{"error":{"code":"invalid_request","message":"ambiguous fixture"}}`))
+			return
+		}
+		if r.URL.Query().Get("platform") != "web" {
+			t.Error("wrong disambiguating source")
+		}
+		_, _ = w.Write([]byte(`{"id":"shared","platform":"web"}`))
+	}))
+	defer server.Close()
+	c := newTestClient(t, server.URL, 0)
+	_, err := c.GetMemory(context.Background(), "fixture", "", "shared")
+	apiErr, ok := err.(*Error)
+	if !ok || apiErr.Code != "invalid_request" || apiErr.StatusCode != 400 {
+		t.Fatalf("ambiguity error not preserved: %v", err)
+	}
+	item, err := c.GetMemory(context.Background(), "fixture", "web", "shared")
+	if err != nil || item.ID != "shared" || item.Platform != "web" {
+		t.Fatal("explicit source lookup failed")
+	}
 }

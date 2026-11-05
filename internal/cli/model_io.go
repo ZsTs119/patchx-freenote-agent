@@ -75,7 +75,7 @@ func newModelIOListCommand(state *rootState) *cobra.Command {
 			return writeModelIOTraceList(cmd, state, page)
 		},
 	}
-	cmd.Flags().StringVar(&flags.platform, "platform", "", "Required platform: mobile or desktop")
+	cmd.Flags().StringVar(&flags.platform, "platform", "", "Optional source platform: mobile, desktop, or web; omitted reads all sources")
 	cmd.Flags().StringVar(&flags.requestID, "request-id", "", "Filter by model request/run ID")
 	cmd.Flags().StringVar(&flags.taskType, "task-type", "", "Filter by model task type")
 	cmd.Flags().StringVar(&flags.state, "state", "", "Filter by trace state")
@@ -86,7 +86,6 @@ func newModelIOListCommand(state *rootState) *cobra.Command {
 	cmd.Flags().StringVar(&flags.dateTo, "date-to", "", "Filter created_at < RFC3339 timestamp")
 	cmd.Flags().IntVar(&flags.limit, "limit", 20, "Page size, 1-50")
 	cmd.Flags().StringVar(&flags.cursor, "cursor", "", "Opaque cursor returned by a previous list call")
-	_ = cmd.MarkFlagRequired("platform")
 	return cmd
 }
 
@@ -178,7 +177,7 @@ func newModelIOExportCommand(state *rootState) *cobra.Command {
 func addModelIOLookupFlags(cmd *cobra.Command, flags *modelIOLookupFlags, requireOut bool) {
 	cmd.Flags().StringVar(&flags.memoryID, "memory-id", "", "PatchX Freenote memory ID")
 	cmd.Flags().StringVar(&flags.requestID, "request-id", "", "PatchX Freenote model request/run ID")
-	cmd.Flags().StringVar(&flags.platform, "platform", "", "Optional platform: mobile or desktop")
+	cmd.Flags().StringVar(&flags.platform, "platform", "", "Optional source platform: mobile, desktop, or web")
 	cmd.Flags().StringVar(&flags.outFile, "out", "", "Output file")
 	cmd.Flags().BoolVar(&flags.force, "force", false, "Overwrite existing output file")
 	if requireOut {
@@ -204,8 +203,8 @@ func fetchModelIOTracePage(ctx context.Context, runtime runtimeState, params api
 }
 
 func validateModelIOListFlags(params api.ListModelIOTracesParams) error {
-	if params.Platform != "mobile" && params.Platform != "desktop" {
-		return fmt.Errorf("--platform must be mobile or desktop")
+	if params.Platform != "" && params.Platform != "mobile" && params.Platform != "desktop" && params.Platform != "web" {
+		return fmt.Errorf("--platform must be mobile, desktop, or web when set")
 	}
 	if params.Limit < 1 || params.Limit > 50 {
 		return fmt.Errorf("--limit must be between 1 and 50")

@@ -4,13 +4,13 @@ Use this reference when the user wants to use PatchX Freenote data after MCP set
 
 ## Common Read Workflows
 
-Recent mobile memories:
+Recent memories across the current account (Scheme B):
 
 ```json
-{"platform":"mobile","limit":5}
+{"limit":5}
 ```
 
-Use `patchxnote_list_memories` for list entry points. Every content request must include `platform` as `mobile` or `desktop`. Do not merge platforms unless a future server contract explicitly adds that behavior.
+Use `patchxnote_list_memories` for list entry points. With Scheme B, omit `platform` for all account sources, or filter by `mobile`, `desktop`, or `web` (for example `{"platform":"web","limit":5}`). Retain each item platform and pass server cursors unchanged. Discover the connected tool schema first; older installed tools may still require mobile/desktop until upgraded.
 
 Current user:
 
@@ -20,12 +20,12 @@ Current user:
 
 Record detail:
 
-- Use `patchxnote_get_memory` with the returned `id` and explicit `platform`.
+- Use `patchxnote_get_memory` with the returned `id` and its `platform`. Platform may be omitted for a unique account record; if the server reports an ambiguous ID, specify its source.
 - Treat metadata titles and snippets as record labels, not guaranteed original filenames.
 
 Search:
 
-- Use `patchxnote_search_memories` only for data already cached in the current authorized MCP session.
+- In the local-tool branch, `patchxnote_search_memories` searches only metadata already loaded in the current account session. Omit platform to search all loaded sources, or filter Web/App/PC. The OAuth proxy uses the server tool description and does not share this local cache.
 - If search results are missing, list first, then search again if appropriate.
 
 ## Counting Summary Records
@@ -35,7 +35,7 @@ For "which files did I summarize" or "how many summaries":
 1. Inspect live tool availability if the available tools are uncertain.
 2. Page `patchxnote_list_memories` with `limit` up to 50 and the returned cursor.
 3. Keep `event_summary` separate from `daily_digest`.
-4. If counting source objects rather than rows, deduplicate `event_summary` records by `client_object_id`.
+4. If counting source objects rather than rows, deduplicate `event_summary` records within the current account by (`platform`, `client_object_id`), preserving different origins.
 5. State whether the count is complete, page-limited, filtered by platform, or based on currently returned records only.
 
 Do not claim metadata titles are original local filenames.

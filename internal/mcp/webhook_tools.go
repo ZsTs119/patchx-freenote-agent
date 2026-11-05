@@ -580,10 +580,7 @@ func (s *Server) withAgentAccessToken(ctx context.Context, platform string, call
 	if s.api == nil {
 		return fmt.Errorf("PatchX Freenote API client is not configured")
 	}
-	requiredScopes := []string{}
-	if platform != "" {
-		requiredScopes = append(requiredScopes, "agent:content.read:"+platform)
-	}
+	requiredScopes := []string{"agent:content.read"}
 	accessToken, err := s.accessToken(ctx, requiredScopes...)
 	if err != nil {
 		return err
@@ -596,6 +593,7 @@ func (s *Server) withAgentAccessToken(ctx context.Context, platform string, call
 				return refreshErr
 			}
 			if refreshedOK && refreshed.AccessToken != "" {
+				s.memoryCache.BindAccount(refreshed.AccountID)
 				for _, scope := range requiredScopes {
 					if !hasScope(refreshed.Scopes, scope) {
 						return rpcErr(codeToolError, "permission_denied", "PatchX Freenote Agent does not have permission for this tool")
@@ -967,8 +965,8 @@ func optionalPlatformValue(args map[string]json.RawMessage, key string) error {
 	if err := json.Unmarshal(raw, &value); err != nil {
 		return fmt.Errorf("%s must be a string", key)
 	}
-	if value != "mobile" && value != "desktop" {
-		return fmt.Errorf("%s must be mobile or desktop", key)
+	if value != "mobile" && value != "desktop" && value != "web" {
+		return fmt.Errorf("%s must be mobile, desktop, or web", key)
 	}
 	return nil
 }
@@ -1054,7 +1052,7 @@ func friendlyAgentMCPError(err error) error {
 		return err
 	}
 	if apiErr.StatusCode == 400 && apiErr.Code == "invalid_request" {
-		return rpcErr(codeToolError, "invalid_request", "request is invalid; if this memory exists on both mobile and desktop, provide platform mobile or desktop")
+		return rpcErr(codeToolError, "invalid_request", "request is invalid; if this record exists on multiple platforms, provide platform mobile, desktop, or web")
 	}
 	if apiErr.StatusCode == 401 {
 		return authRequiredError()

@@ -136,7 +136,7 @@ func TestValidateLookupAndField(t *testing.T) {
 	for _, lookup := range []Lookup{
 		{},
 		{MemoryID: "mem", RequestID: "req"},
-		{MemoryID: "mem", Platform: "web"},
+		{MemoryID: "mem", Platform: "watch"},
 	} {
 		if err := ValidateLookup(lookup); err == nil {
 			t.Fatalf("expected invalid lookup to fail: %+v", lookup)
@@ -215,5 +215,16 @@ func fixtureExport() api.AgentModelIOExport {
 		ParsedResultJSON:     json.RawMessage(`{"content":"解析结果"}`),
 		PackagedResultJSON:   json.RawMessage(`{"content":"封装结构"}`),
 		ProviderAttemptsJSON: json.RawMessage(`[{"content":"供应商尝试"}]`),
+	}
+}
+
+func TestAccountContentLookupAcceptsAllAndWeb(t *testing.T) {
+	for _, p := range []string{"", "mobile", "desktop", "web"} {
+		if err := ValidateLookup(Lookup{MemoryID: "mem_web", Platform: p}); err != nil {
+			t.Fatalf("platform=%s err=%v", p, err)
+		}
+	}
+	if err := ValidateLookup(Lookup{MemoryID: "mem_web", Platform: "all"}); err == nil {
+		t.Fatal("all is not a platform")
 	}
 }

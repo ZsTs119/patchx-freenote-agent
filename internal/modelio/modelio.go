@@ -72,8 +72,8 @@ func ValidateLookup(lookup Lookup) error {
 		return fmt.Errorf("exactly one of memory_id or request_id is required")
 	}
 	platform := strings.TrimSpace(lookup.Platform)
-	if platform != "" && platform != "mobile" && platform != "desktop" {
-		return fmt.Errorf("platform must be mobile or desktop")
+	if platform != "" && platform != "mobile" && platform != "desktop" && platform != "web" {
+		return fmt.Errorf("platform must be mobile, desktop, or web when set")
 	}
 	return nil
 }

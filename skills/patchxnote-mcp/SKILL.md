@@ -69,7 +69,9 @@ npx -y patchxnote-agent@latest mcp status --verify
 Then call the MCP tools `patchxnote_get_current_user` and `patchxnote_list_memories` with:
 
 ```json
-{"platform":"mobile","limit":5}
+{"limit":5}
 ```
+
+Inspect `tools/list` first: Scheme B tools make platform optional and support mobile/desktop/web. Use the default above for all account sources, or `{"platform":"web","limit":5}` to filter Web. If an older installed tool still requires platform, use its explicit mobile/desktop schema until upgrading. Existing valid authorization remains usable.
 
 Report only the evidence actually obtained: configured, authenticated, tools listed, real tool called, published, indexed, or platform accepted.

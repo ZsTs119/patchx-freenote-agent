@@ -1,5 +1,7 @@
 # PatchX Freenote Agent
 
+> 未发布源码增量（2026-11-05）：本人内容默认读取App/PC/Web全部来源，可指定平台筛选；依赖GoServer方案B（0.20.85合同）。已发布0.2.16的本地实现仍按原行为使用，原mobile/desktop显式调用保持。见[实施与验收计划](docs/plans/2026-11-05-web-platform-account-content-checklist-plan.md)。
+
 PatchX Freenote 原名 PatchXNote。现有 `patchxnote-agent` 命令、`patchxnote-mcp` Skill、MCP 配置及本机凭据继续兼容。
 
 [English](./README.md) | [简体中文](./README.zh-CN.md)
@@ -36,7 +38,7 @@ PatchX Freenote 原名 PatchXNote。现有 `patchxnote-agent` 命令、`patchxno
 | 支持 Remote MCP 和 OAuth 的平台 | `https://freenote.patch-x.cn/mcp` | 配置自定义连接器并完成平台授权流程；此方式不要求在本机安装 Node.js。 |
 | 支持 Agent Skills 的 AI 助手 | 安装 [PatchX Freenote MCP Skill](#patchx-freenote-mcp-skill) | 提供接入和使用说明，配合 MCP 连接使用。 |
 
-记录应已同步到 PatchX Freenote，并对当前账号可读。录音卡连接、音频处理和录音仍由 App/PC 完成。查询时选择对应来源：`mobile` 或 `desktop`。
+记录应已同步到 PatchX Freenote，并对当前账号可读。录音卡连接、音频处理和录音仍由 App/PC 完成。默认查询本人账号全部来源，可用 `mobile`、`desktop` 或 `web` 筛选；记录保留原来源。
 
 ## 快速开始
 
@@ -79,7 +81,7 @@ npx -y patchxnote-agent@latest mcp status --verify --output json
 <summary>复制完整接入提示给 AI 助手</summary>
 
 ```text
-请帮我接入 PatchX Freenote MCP，并在客户端支持 Agent Skills 时安装 PatchX Freenote MCP Skill。请使用生产服务地址 https://freenote.patch-x.cn/，接入页面为 https://freenote.patch-x.cn/mcp/setup/；如现有配置显式指定了旧测试地址，请先将本次接入使用的服务地址调整为上述生产地址。首先，如果当前是支持本地命令执行的环境，请在本机执行 npx -y patchxnote-agent@latest skill install，让后续新会话或长上下文能记住 PatchX Freenote SOP；如果当前客户端不支持 Skill 安装，不要判定为不能接入，请继续按客户端能力完成 MCP 接入。请识别你所在的 MCP 客户端：如果是 Codex、Cursor、VS Code、Claude Desktop、Claude Code、Windsurf 等本地 MCP 客户端，请在当前本机、并且在后续会启动 MCP 服务的同一个运行时执行 npx -y patchxnote-agent@latest setup --client <client-id>；如果是不支持本机命令但支持 Remote MCP、自定义连接器、自定义 MCP 服务或工具插件的 AI 客户端/云平台，请创建名为 PatchX Freenote MCP 的自定义 MCP 连接器，并使用这个 PatchX Freenote Remote MCP URL 完成接入：https://freenote.patch-x.cn/mcp。如果不确定客户端 ID 或配置格式，本地客户端先执行 npx -y patchxnote-agent@latest mcp config 并使用打印出的通用 stdio 配置，远程客户端则优先寻找 Remote MCP Server URL / MCP Server URL / Custom Connector 配置入口。登录时请打开浏览器让我完成 PatchX Freenote 手机号验证码授权，不要让我把验证码、OAuth code、授权码、access token、refresh token 或 webhook secret 粘贴到聊天里。完成后请调用 patchxnote_get_current_user 和 patchxnote_list_memories，参数 {"platform":"mobile","limit":5} 验证可用。参考资料：https://github.com/ZsTs119/patchx-freenote-agent 和 https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd。
+请帮我接入 PatchX Freenote MCP，并在客户端支持 Agent Skills 时安装 PatchX Freenote MCP Skill。请使用生产服务地址 https://freenote.patch-x.cn/，接入页面为 https://freenote.patch-x.cn/mcp/setup/；如现有配置显式指定了旧测试地址，请先将本次接入使用的服务地址调整为上述生产地址。首先，如果当前是支持本地命令执行的环境，请在本机执行 npx -y patchxnote-agent@latest skill install，让后续新会话或长上下文能记住 PatchX Freenote SOP；如果当前客户端不支持 Skill 安装，不要判定为不能接入，请继续按客户端能力完成 MCP 接入。请识别你所在的 MCP 客户端：如果是 Codex、Cursor、VS Code、Claude Desktop、Claude Code、Windsurf 等本地 MCP 客户端，请在当前本机、并且在后续会启动 MCP 服务的同一个运行时执行 npx -y patchxnote-agent@latest setup --client <client-id>；如果是不支持本机命令但支持 Remote MCP、自定义连接器、自定义 MCP 服务或工具插件的 AI 客户端/云平台，请创建名为 PatchX Freenote MCP 的自定义 MCP 连接器，并使用这个 PatchX Freenote Remote MCP URL 完成接入：https://freenote.patch-x.cn/mcp。如果不确定客户端 ID 或配置格式，本地客户端先执行 npx -y patchxnote-agent@latest mcp config 并使用打印出的通用 stdio 配置，远程客户端则优先寻找 Remote MCP Server URL / MCP Server URL / Custom Connector 配置入口。登录时请打开浏览器让我完成 PatchX Freenote 手机号验证码授权，不要让我把验证码、OAuth code、授权码、access token、refresh token 或 webhook secret 粘贴到聊天里。完成后请调用 patchxnote_get_current_user 和 patchxnote_list_memories，如果发现的工具Schema允许省略platform，使用参数 {"limit":5} 默认读取本人全部来源；旧版Schema仍要求平台时使用 {"platform":"mobile","limit":5}，核对返回记录及来源。参考资料：https://github.com/ZsTs119/patchx-freenote-agent 和 https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd。
 ```
 
 </details>
@@ -226,7 +228,7 @@ fallback 配置会使用已安装二进制的绝对路径：
 | `patchxnote_list_recorder_cards` | 查看已绑定录音卡，只返回脱敏标识。 |
 | `patchxnote_get_quota_summary` | 查看当前账号额度。 |
 | `patchxnote_get_model_usage_summary` | 查看当月 AI 使用情况和扣费额度。 |
-| `patchxnote_list_memories` | 按 `mobile` 或 `desktop` 查看可读记录入口。 |
+| `patchxnote_list_memories` | 按 `mobile`、`desktop` 或 `web` 查看可读记录入口。 |
 | `patchxnote_search_memories` | 搜索当前会话已缓存的记录基础信息。 |
 | `patchxnote_get_memory` | 查看单条记录的安全基础信息。 |
 
@@ -252,7 +254,7 @@ fallback 配置会使用已安装二进制的绝对路径：
 | `patchxnote_get_model_io_parsed_result` | 查看或导出 AI 解析后的结果。 |
 | `patchxnote_get_model_io_packaged_result` | 查看或导出最终整理结果。 |
 
-记录类工具必须显式传入 `platform`：`mobile` 或 `desktop`。记录列表现在会包含正式保存结果，也会包含服务端已有 model IO 的模型整理输出。`patchxnote model-io list` 仍然是更底层的 AI 调用列表，适合按任务类型、状态或 request_id 排查。
+记录类工具的 `platform` 可省略，默认读取本人账号全部来源；指定 `mobile`、`desktop` 或 `web` 时筛选。详情使用返回ID及来源；同ID存在多来源时显式补充平台。记录列表现在会包含正式保存结果，也会包含服务端已有 model IO 的模型整理输出。`patchxnote model-io list` 仍然是更底层的 AI 调用列表，适合按任务类型、状态或 request_id 排查。
 
 webhook MCP 工具复用 CLI 的本地配置、钥匙串、模板和发送模块。工具不会返回完整 webhook URL 或签名密钥；只有 MCP client 明确调用发送工具时才会发起外部网络请求。
 
@@ -288,6 +290,8 @@ patchxnote auth status
 查看 AI 整理记录和导出结果：
 
 ```sh
+patchxnote model-io list
+patchxnote model-io list --platform web
 patchxnote model-io list --platform mobile
 patchxnote model-io source-text --request-id <request_id> --platform mobile --out ./source.txt
 patchxnote model-io provider-response --request-id <request_id> --platform mobile --out ./provider-response.json
@@ -296,7 +300,7 @@ patchxnote model-io packaged-result --request-id <request_id> --platform mobile 
 patchxnote model-io export --request-id <request_id> --platform mobile --out ./model-io.json
 ```
 
-需要底层 AI 调用记录时，`request_id` 来自 `patchxnote model-io list --platform mobile|desktop`。MCP `patchxnote_list_memories` 会返回 `id` 和 `platform`，可用于记录渲染、草稿、webhook 和 model IO 字段工具；如果这条入口来自模型整理输出，这个 `id` 也可以就是 `request_id`。
+需要底层 AI 调用记录时，`request_id` 来自 `patchxnote model-io list --platform mobile|desktop|web`。MCP `patchxnote_list_memories` 会返回 `id` 和 `platform`，可用于记录渲染、草稿、webhook 和 model IO 字段工具；如果这条入口来自模型整理输出，这个 `id` 也可以就是 `request_id`。
 
 配置和发送 webhook：
 
@@ -362,7 +366,7 @@ npx -y --registry https://registry.npmjs.org patchxnote-agent@latest mcp status 
 | MCP Host 启动失败 | 如果首次启动较慢或客户端拒绝 `npx`，先运行 `npx -y patchxnote-agent@latest install --print-config`，再使用它打印出的绝对 `command` 路径。 |
 | setup 把登录态写到了错误环境 | 在真正启动 MCP server 的同一个 OS/运行时执行 setup。Windows 桌面应用、WSL 终端、VS Code Remote 默认不共享钥匙串。 |
 | 需要撤销 setup 修改 | 恢复 setup 打印的时间戳 `.bak-YYYYMMDDTHHMMSSZ` 备份文件，或只删除客户端配置里的 `patchxnote` MCP server 项。 |
-| 记录列表为空 | 检查是否选择了正确的 `platform`：`mobile` 或 `desktop`；底层 AI 调用记录请用 `model-io list`。 |
+| 记录列表为空 | 检查是否选择了正确的 `platform`：`mobile`、`desktop` 或 `web`；底层 AI 调用记录请用 `model-io list`。 |
 | webhook 没发出去 | 确认别名存在、目标启用，并检查下游平台返回的错误信息。 |
 | checksum 校验失败 | 稍后重试或固定已知版本；安装器会拒绝未校验二进制。 |
 | `skill install` 提示目标已存在且内容不同 | 目标目录里已有非托管或手动修改过的 `patchxnote-mcp` skill。先检查或备份；只有确认要让 PatchX Freenote Agent 替换该 skill 目录时，再执行 `--force`。 |
@@ -400,7 +404,7 @@ npx -y --registry https://registry.npmjs.org patchxnote-agent@latest install --p
 - PatchX Freenote 服务端数据访问保持只读；Agent 不绑定硬件、不读取原始音频、不触发模型运行，也不处理支付或 Admin API。
 - 本地 webhook 配置和用户已确认的发送属于支持的本地操作。发送须明确触发，不会在后台自动发生。
 - 凭据保存在系统原生安全存储中，MCP 配置不包含 bearer token 或 webhook 密钥。Windows、WSL 和远程环境不会自动共享凭据。
-- 记录按登录账号及 `mobile`／`desktop` 平台限定范围。原文文本、AI 结果、导出文件和 webhook 目标可能包含私密信息。
+- 记录按登录账号读取，并保留 `mobile`／`desktop`／`web` 原来源；platform为可选筛选。原文文本、AI 结果、导出文件和 webhook 目标可能包含私密信息。
 - 分享前确认内容，使用可信 MCP 客户端。安全问题按 [SECURITY.md](./SECURITY.md) 的流程报告，不要在公开 Issue 中发布凭据或私密记录。
 
 ## 当前限制

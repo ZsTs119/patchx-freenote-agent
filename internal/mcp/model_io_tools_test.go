@@ -3,6 +3,7 @@ package mcp
 import (
 	"context"
 	"encoding/json"
+	"github.com/ZsTs119/patchxnote-agent/internal/keychain"
 	"os"
 	"path/filepath"
 	"strings"
@@ -103,7 +104,10 @@ func TestListModelIOTracesTool(t *testing.T) {
 func TestListModelIOTracesToolValidation(t *testing.T) {
 	server := newWebhookTestServer(t, true)
 	missingPlatform := callWebhookTool(t, server, "patchxnote_list_model_io_traces", map[string]any{"limit": 10})
-	assertRPCError(t, missingPlatform, codeInvalidParams, "invalid_params")
+	if missingPlatform["error"] != nil {
+		t.Fatal("default account trace list rejected")
+	}
+	assertRPCError(t, callWebhookTool(t, server, "patchxnote_list_model_io_traces", map[string]any{"platform": "watch"}), codeInvalidParams, "invalid_params")
 
 	badTask := callWebhookTool(t, server, "patchxnote_list_model_io_traces", map[string]any{"platform": "mobile", "task_type": "unknown"})
 	assertRPCError(t, badTask, codeInvalidParams, "invalid_params")
@@ -199,4 +203,39 @@ func (f *largeModelIOAPI) GetMemoryModelIO(ctx context.Context, accessToken stri
 	export := toolFixtureModelIOExport()
 	export.ProviderResponseJSON = json.RawMessage(`{"content":"` + strings.Repeat("x", maxToolOutputBytes+2048) + `"}`)
 	return export, nil
+}
+
+type accountContentRefreshProvider struct {
+	scopes        []string
+	refreshScopes []string
+	calls         int
+}
+
+func (p *accountContentRefreshProvider) Credential(context.Context) (keychain.Credential, bool, error) {
+	return keychain.Credential{AccountID: "acct_fixture", AccessToken: "synthetic_old", Scopes: p.scopes}, true, nil
+}
+func (p *accountContentRefreshProvider) RefreshNow(context.Context) (keychain.Credential, bool, error) {
+	p.calls++
+	return keychain.Credential{AccountID: "acct_fixture", AccessToken: "synthetic_new", Scopes: p.refreshScopes}, true, nil
+}
+func TestAccountContentPermissionAfterRefresh(t *testing.T) {
+	for _, scope := range []string{"agent:content.read:mobile", "agent:content.read:desktop", "agent:content.read", "agent:account.read"} {
+		provider := &accountContentRefreshProvider{scopes: []string{"agent:content.read:mobile"}, refreshScopes: []string{scope}}
+		server := NewServer(Options{Credentials: provider, API: &fakeToolAPI{}})
+		calls := 0
+		err := server.withAgentAccessToken(context.Background(), "web", func(token string) error {
+			calls++
+			if calls == 1 {
+				return &api.Error{StatusCode: 401, Code: "unauthorized"}
+			}
+			return nil
+		})
+		allowed := scope != "agent:account.read"
+		if provider.calls != 1 || (allowed && (err != nil || calls != 2)) || (!allowed && (err == nil || calls != 1)) {
+			t.Fatalf("scope=%s refreshes=%d calls=%d err=%v", scope, provider.calls, calls, err)
+		}
+		if provider.scopes[0] != "agent:content.read:mobile" || provider.refreshScopes[0] != scope {
+			t.Fatal("credential scopes rewritten")
+		}
+	}
 }

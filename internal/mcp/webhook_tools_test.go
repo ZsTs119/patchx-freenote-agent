@@ -299,3 +299,49 @@ func callWebhookTool(t *testing.T, server *Server, name string, arguments map[st
 	}
 	return responses[0]
 }
+
+func (f *accountContentAPI) GetMemoryDeliveryDocument(ctx context.Context, token, platform, id string) (api.AgentDeliveryDocument, error) {
+	out := toolFixtureDeliveryDocument()
+	out.Memory.Platform = "web"
+	out.Trace.Platform = "web"
+	return out, nil
+}
+func (f *accountContentAPI) GetMemoryModelIO(ctx context.Context, token, platform, id string) (api.AgentModelIOExport, error) {
+	out := toolFixtureModelIOExport()
+	out.Memory.Platform = "web"
+	out.Trace.Platform = "web"
+	return out, nil
+}
+func TestAccountContentMCPWebDraftAndExport(t *testing.T) {
+	for _, platform := range []string{"", "web"} {
+		s := newWebhookTestServerWithAPI(t, true, &accountContentAPI{})
+		args := map[string]any{"memory_id": "mem_web", "out": filepath.Join(t.TempDir(), "draft"), "include_model_io": true, "save_draft": true}
+		if platform != "" {
+			args["platform"] = platform
+		}
+		rendered := callWebhookTool(t, s, "patchxnote_render_webhook_message", args)
+		if rendered["error"] != nil {
+			t.Fatal(rendered["error"])
+		}
+		metadata, err := os.ReadFile(filepath.Join(args["out"].(string), "metadata.json"))
+		if err != nil || !strings.Contains(string(metadata), `"platform": "web"`) {
+			t.Fatal("draft lost actual origin")
+		}
+		args = map[string]any{"memory_id": "mem_web", "out": filepath.Join(t.TempDir(), "model.json")}
+		if platform != "" {
+			args["platform"] = platform
+		}
+		exported := callWebhookTool(t, s, "patchxnote_export_model_io", args)
+		if exported["error"] != nil {
+			t.Fatal(exported["error"])
+		}
+		raw, err := os.ReadFile(args["out"].(string))
+		if err != nil || !json.Valid(raw) || !strings.Contains(string(raw), `"platform": "web"`) {
+			t.Fatal("model export source")
+		}
+		res := callWebhookTool(t, s, "patchxnote_get_model_io_parsed_result", map[string]any{"memory_id": "mem_web", "platform": "web"})
+		if res["error"] != nil {
+			t.Fatal(res["error"])
+		}
+	}
+}

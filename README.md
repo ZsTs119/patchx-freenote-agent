@@ -1,5 +1,7 @@
 # PatchX Freenote Agent
 
+> Unreleased source update (2026-11-05): account content defaults to all mobile/desktop/web sources, with an optional platform filter. Requires GoServer Scheme B (0.20.85 contract); the published 0.2.16 local implementation still has its previous behavior. Existing explicit mobile/desktop calls remain valid. See the [implementation and acceptance plan](docs/plans/2026-11-05-web-platform-account-content-checklist-plan.md).
+
 PatchX Freenote was formerly called PatchXNote. Existing `patchxnote-agent` commands, `patchxnote-mcp` Skill installs, MCP configuration and credentials remain compatible.
 
 [English](./README.md) | [简体中文](./README.zh-CN.md)
@@ -36,7 +38,7 @@ These links show publication and directory listing. The [0.2.16 release record](
 | Platform that supports Remote MCP and OAuth | `https://freenote.patch-x.cn/mcp` | Configure a custom connector and complete that platform's authorization flow; no local Node.js installation is required for this route. |
 | Assistant that supports Agent Skills | Install [PatchX Freenote MCP Skill](#patchx-freenote-mcp-skill) | Adds setup and usage instructions; complements the MCP connection. |
 
-Records must already be synced to PatchX Freenote and available to your account. Recorder-card connection, audio processing, and recording remain in the App/PC clients. Read records from the platform you select: `mobile` or `desktop`.
+Records must already be synced to PatchX Freenote and available to your account. Recorder-card connection, audio processing, and recording remain in the App/PC clients. Read your account records across `mobile`, `desktop`, and `web`; specify `platform` only to filter a source.
 
 ## Quickstart
 
@@ -79,7 +81,7 @@ Create a custom MCP connector named **PatchX Freenote MCP**, set its server URL 
 <summary>Copy the complete prompt for an AI assistant</summary>
 
 ```text
-Help me connect PatchX Freenote MCP and install the PatchX Freenote MCP Skill when the client supports Agent Skills. Use the production service at https://freenote.patch-x.cn/ and the setup page at https://freenote.patch-x.cn/mcp/setup/; if existing configuration explicitly points to the old test service, update the server address used for this connection to production first. First, if this is a local command-capable environment, run npx -y patchxnote-agent@latest skill install on this machine so future or long sessions remember the PatchX Freenote SOP; if the current client does not support Skill installation, do not treat that as a connection blocker and continue with MCP setup according to the client's capabilities. Identify the MCP client you are running in: if this is a local MCP client such as Codex, Cursor, VS Code, Claude Desktop, Claude Code, or Windsurf, run npx -y patchxnote-agent@latest setup --client <client-id> on this machine in the same OS/runtime that will later launch the MCP server. If this is an AI client or cloud platform that cannot run local commands but supports Remote MCP, custom connectors, custom MCP services, or tool plugins, create a custom MCP connector named PatchX Freenote MCP and connect it with this PatchX Freenote Remote MCP URL: https://freenote.patch-x.cn/mcp. If you are not sure which client ID or config format to use, local clients should first run npx -y patchxnote-agent@latest mcp config and use the printed generic stdio config, while remote clients should look for a Remote MCP Server URL, MCP Server URL, or Custom Connector setup entry. For login, open the browser and let me complete PatchX Freenote phone-code authorization there; do not ask me to paste OTP codes, OAuth codes, authorization codes, access tokens, refresh tokens, or webhook secrets into chat. After setup, call patchxnote_get_current_user and patchxnote_list_memories with {"platform":"mobile","limit":5} to verify it works. References: https://github.com/ZsTs119/patchx-freenote-agent and https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd
+Help me connect PatchX Freenote MCP and install the PatchX Freenote MCP Skill when the client supports Agent Skills. Use the production service at https://freenote.patch-x.cn/ and the setup page at https://freenote.patch-x.cn/mcp/setup/; if existing configuration explicitly points to the old test service, update the server address used for this connection to production first. First, if this is a local command-capable environment, run npx -y patchxnote-agent@latest skill install on this machine so future or long sessions remember the PatchX Freenote SOP; if the current client does not support Skill installation, do not treat that as a connection blocker and continue with MCP setup according to the client's capabilities. Identify the MCP client you are running in: if this is a local MCP client such as Codex, Cursor, VS Code, Claude Desktop, Claude Code, or Windsurf, run npx -y patchxnote-agent@latest setup --client <client-id> on this machine in the same OS/runtime that will later launch the MCP server. If this is an AI client or cloud platform that cannot run local commands but supports Remote MCP, custom connectors, custom MCP services, or tool plugins, create a custom MCP connector named PatchX Freenote MCP and connect it with this PatchX Freenote Remote MCP URL: https://freenote.patch-x.cn/mcp. If you are not sure which client ID or config format to use, local clients should first run npx -y patchxnote-agent@latest mcp config and use the printed generic stdio config, while remote clients should look for a Remote MCP Server URL, MCP Server URL, or Custom Connector setup entry. For login, open the browser and let me complete PatchX Freenote phone-code authorization there; do not ask me to paste OTP codes, OAuth codes, authorization codes, access tokens, refresh tokens, or webhook secrets into chat. After setup, call patchxnote_get_current_user and patchxnote_list_memories with {"limit":5} when the discovered schema makes platform optional; otherwise retain {"platform":"mobile","limit":5} for the older installed schema. Verify the returned records and sources. References: https://github.com/ZsTs119/patchx-freenote-agent and https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd
 ```
 
 </details>
@@ -226,7 +228,7 @@ The fallback config uses the installed binary path:
 | `patchxnote_list_recorder_cards` | List bound recorder cards with masked identifiers only. |
 | `patchxnote_get_quota_summary` | Show current quota. |
 | `patchxnote_get_model_usage_summary` | Show current-month AI usage and charged quota. |
-| `patchxnote_list_memories` | List records for `mobile` or `desktop`. |
+| `patchxnote_list_memories` | List account records across all sources, or filter `mobile`, `desktop`, or `web`. |
 | `patchxnote_search_memories` | Search record basics cached in the current MCP session. |
 | `patchxnote_get_memory` | Show safe basic information for one record. |
 
@@ -252,7 +254,7 @@ The fallback config uses the installed binary path:
 | `patchxnote_get_model_io_parsed_result` | Inspect or export the parsed AI result. |
 | `patchxnote_get_model_io_packaged_result` | Inspect or export the final result. |
 
-Record tools require an explicit `platform` argument: `mobile` or `desktop`. The record list now includes formal saved results plus readable model-generated outputs when the server has model IO data. `patchxnote model-io list` remains the lower-level AI processing list for finding request IDs and filtering by task or state.
+Record tools accept optional `platform`: `mobile`, `desktop`, or `web`. Omit it for account-wide reads; use the returned ID and source for follow-up requests. Ambiguous IDs require an explicit source. The record list now includes formal saved results plus readable model-generated outputs when the server has model IO data. `patchxnote model-io list` remains the lower-level AI processing list for finding request IDs and filtering by task or state.
 
 Webhook MCP tools share the same local config, keychain, templates, and sender modules as the CLI. They do not return full webhook URLs or signing secrets, and send calls perform external network requests only when the MCP client explicitly invokes the send tool.
 
@@ -288,6 +290,8 @@ patchxnote auth status
 List AI processing runs and export results:
 
 ```sh
+patchxnote model-io list
+patchxnote model-io list --platform web
 patchxnote model-io list --platform mobile
 patchxnote model-io source-text --request-id <request_id> --platform mobile --out ./source.txt
 patchxnote model-io provider-response --request-id <request_id> --platform mobile --out ./provider-response.json
@@ -296,7 +300,7 @@ patchxnote model-io packaged-result --request-id <request_id> --platform mobile 
 patchxnote model-io export --request-id <request_id> --platform mobile --out ./model-io.json
 ```
 
-Get `request_id` from `patchxnote model-io list --platform mobile|desktop` when you need a lower-level AI processing run. MCP `patchxnote_list_memories` returns `id` and `platform` for record rendering, drafts, webhook workflows, and model IO field tools; for model-generated entries, that `id` can be the same value as `request_id`.
+Get `request_id` from `patchxnote model-io list` (optionally `--platform mobile`, `desktop`, or `web`) when you need a lower-level AI processing run. MCP `patchxnote_list_memories` returns `id` and `platform` for record rendering, drafts, webhook workflows, and model IO field tools; for model-generated entries, that `id` can be the same value as `request_id`.
 
 Configure and send webhooks:
 
@@ -362,7 +366,7 @@ After authorization, add `--verify` to `mcp status` to verify access. If the nat
 | MCP host cannot start the server | If first start is slow or the client rejects `npx`, run `npx -y patchxnote-agent@latest install --print-config` once and use the printed absolute `command` path. |
 | Setup writes credentials in the wrong place | Run setup from the same OS/runtime that will launch MCP. Windows desktop apps, WSL terminals, and VS Code Remote do not automatically share keychain credentials. |
 | Need to undo setup | Restore the timestamped `.bak-YYYYMMDDTHHMMSSZ` file printed by setup, or remove only the `patchxnote` MCP server entry from the client config. |
-| Record list is empty | Check that you selected the correct `platform`: `mobile` or `desktop`; use `model-io list` for lower-level AI processing runs. |
+| Record list is empty | Omit `platform` for all account sources, or check the selected `mobile`, `desktop`, or `web` filter; use `model-io list` for lower-level AI processing runs. |
 | Webhook did not send | Confirm the alias exists, the target is enabled, and check the provider error returned by the command. |
 | Checksum verification fails | Retry later or pin a known version; the installer refuses unchecked binaries. |
 | `skill install` says the target already exists and differs | The target contains an unmanaged or manually edited `patchxnote-mcp` skill. Inspect or back it up first; rerun with `--force` only when you want PatchX Freenote Agent to replace that skill folder. |
@@ -400,7 +404,7 @@ Choose the action you need; these are separate maintenance operations:
 - PatchX Freenote server data access is read-only. Agent does not bind hardware, read raw audio, trigger model runs, handle payments, or expose Admin APIs.
 - Local webhook configuration and user-approved sending are supported local actions. Sending is explicit, with no automatic background delivery.
 - Credentials use OS-native secure storage; MCP config contains no bearer tokens or webhook secrets. Windows, WSL, and remote runtimes do not automatically share credentials.
-- Records are scoped to the authenticated account and selected `mobile` or `desktop` platform. Source text, AI results, exported files, and webhook destinations may be sensitive.
+- Records belong to the authenticated account and retain their original `mobile`, `desktop`, or `web` source; platform is an optional filter. Source text, AI results, exported files, and webhook destinations may be sensitive.
 - Review content before sharing and use trusted MCP clients. Report vulnerabilities through [SECURITY.md](./SECURITY.md), without posting credentials or private records in public issues.
 
 ## Current Limitations

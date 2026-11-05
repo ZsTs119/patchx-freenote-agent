@@ -40,8 +40,8 @@ Do not add write tools, hardware connect/release tools, model-run execute tools,
 - Never log, print, persist in plaintext, commit, or include in examples: access tokens, refresh tokens, installation proof, OTP/review codes, raw phone numbers, full MAC, SK/credential, provider keys, raw audio, complete transcripts, user instructions, or model/provider payloads.
 - Local credential material must live in OS-native secure storage when available. Config files may store only non-secret settings such as profile name, base URL, selected platform scope, and local cache path.
 - MCP config files must not contain bearer tokens or refresh credentials.
-- Do not let Agent login consume or replace `mobile` or `desktop` installations. Agent access must be independent from App/PC installation slots.
-- Structured content is platform-scoped. Never merge mobile and desktop results unless the server contract explicitly adds that product behavior.
+- Do not let Agent login consume or replace mobile, desktop, or web installations. Agent access retains its independent sessions.
+- GoServer Scheme B (0.20.85) makes Agent content reads account-wide by default. Platform is an optional mobile/desktop/web source filter; preserve each result origin and server pagination. Accept canonical content-read scope and the two legacy content scopes without rewriting credentials.
 
 ## CLI Rules
 
