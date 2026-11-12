@@ -2,6 +2,17 @@ name: Release Binaries
 
 on:
   workflow_dispatch:
+    inputs:
+      compat_source_tag:
+        description: Tagged functional source for a compatibility build
+        required: false
+        default: v0.2.17
+      compat_binary_version:
+        description: Set to build compatibility artifacts without publishing a release
+        required: false
+      compat_build_date:
+        description: Optional UTC timestamp to reproduce a locally verified build
+        required: false
   push:
     tags:
       - "v*.*.*"
@@ -28,6 +39,7 @@ permissions:
 
 jobs:
   release:
+    if: ${{ !inputs.compat_binary_version }}
     runs-on: ubuntu-latest
     env:
       GOMAXPROCS: "1"
@@ -96,3 +108,35 @@ jobs:
           subject-path: |
             dist/checksums.txt
             dist/patchxnote_*
+
+  compatibility:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.compat_binary_version != '' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version: 1.22.12
+      - name: Build sequentially from the selected tag
+        env:
+          SOURCE_TAG: ${{ inputs.compat_source_tag }}
+          BINARY_VERSION: ${{ inputs.compat_binary_version }}
+          BUILD_DATE: ${{ inputs.compat_build_date }}
+        run: bash scripts/build-compat-binaries.sh "$SOURCE_TAG" "$BINARY_VERSION" dist/compat
+      - name: Attest the rebuilt artifacts
+        uses: actions/attest@v4
+        with:
+          subject-path: |
+            dist/compat/checksums.txt
+            dist/compat/patchxnote_*
+      - name: Save artifacts for verification before release replacement
+        uses: actions/upload-artifact@v4
+        with:
+          name: compatibility-binaries
+          path: dist/compat/
