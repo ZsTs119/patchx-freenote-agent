@@ -104,5 +104,5 @@ jobs:
         run: npm dist-tag add "patchxnote-agent@${VERSION}" latest --registry https://registry.npmjs.org
       - name: Verify latest
         run: |
-          npm dist-tag ls patchxnote-agent --json --registry https://registry.npmjs.org > "$RUNNER_TEMP/patchxnote-dist-tags.json"
-          node -e 'const fs = require("node:fs"); const tags = JSON.parse(fs.readFileSync(process.argv[1], "utf8")); if (tags.latest !== process.env.VERSION) throw new Error(`latest is ${tags.latest}, expected ${process.env.VERSION}`); console.log(`latest: ${tags.latest}`);' "$RUNNER_TEMP/patchxnote-dist-tags.json"
+          npm dist-tag ls patchxnote-agent --registry https://registry.npmjs.org > "$RUNNER_TEMP/patchxnote-dist-tags.txt"
+          grep -Fx "latest: ${VERSION}" "$RUNNER_TEMP/patchxnote-dist-tags.txt"
