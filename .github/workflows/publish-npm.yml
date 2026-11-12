@@ -3,8 +3,16 @@ name: Publish npm Wrapper
 on:
   workflow_dispatch:
     inputs:
+      operation:
+        description: Publish a package or only move the latest tag
+        required: true
+        type: choice
+        default: publish
+        options:
+          - publish
+          - set-latest
       version:
-        description: "SemVer version to publish, without leading v"
+        description: "SemVer target version, without leading v"
         required: true
         type: string
 
@@ -14,6 +22,7 @@ permissions:
 
 jobs:
   publish:
+    if: ${{ inputs.operation != 'set-latest' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -72,3 +81,29 @@ jobs:
       - name: npm publish with Trusted Publishing
         working-directory: packages/npm
         run: npm publish --registry https://registry.npmjs.org --access public
+
+  set-latest:
+    if: ${{ inputs.operation == 'set-latest' }}
+    runs-on: ubuntu-latest
+    env:
+      VERSION: ${{ inputs.version }}
+    steps:
+      - name: Set up Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          registry-url: "https://registry.npmjs.org"
+          package-manager-cache: false
+      - name: Use npm with trusted dist-tag support
+        run: npm install --global npm@11.21.2 --registry https://registry.npmjs.org
+      - name: Confirm the target version already exists
+        run: |
+          actual=$(npm view "patchxnote-agent@${VERSION}" version --registry https://registry.npmjs.org)
+          test "$actual" = "$VERSION"
+      - name: Set latest with Trusted Publishing
+        run: npm dist-tag add "patchxnote-agent@${VERSION}" latest --registry https://registry.npmjs.org
+      - name: Verify latest
+        run: |
+          npm dist-tag ls patchxnote-agent --registry https://registry.npmjs.org
+          actual=$(npm view patchxnote-agent@latest version --prefer-online --registry https://registry.npmjs.org)
+          test "$actual" = "$VERSION"
