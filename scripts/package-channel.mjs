@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { parseArgs } from "node:util";
 import { createZipFromDirectory } from "./lib/package-zip.mjs";
 import { validateWorkBuddyConnector } from "./validate-workbuddy-connector.mjs";
+import { renderWorkBuddyBootstrap } from "./lib/workbuddy-bootstrap.mjs";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outputRoot = path.join(repoRoot, "dist", "channels");
@@ -171,6 +172,15 @@ function main() {
       : content);
   }
   for (const [name, content] of skill) packageFiles.set(path.posix.join(config.common.skillDestination, name), content);
+  if (channel.format === "workbuddy-zip") {
+    const rendered = renderWorkBuddyBootstrap(
+      parseJSON(packageFiles.get("cli.json"), "cli.json"),
+      parseJSON(packageFiles.get("mcp.json"), "mcp.json"),
+      { sourcePath: path.resolve(repoRoot, channel.bootstrap), serverBaseURL: environment.apiBaseURL, channel: channel.cliPackageTag }
+    );
+    packageFiles.set("cli.json", jsonBuffer(rendered.cli));
+    packageFiles.set("mcp.json", jsonBuffer(rendered.mcp));
+  }
   for (const [name, content] of packageFiles) {
     if ([".md", ".svg"].includes(path.posix.extname(name))) {
       packageFiles.set(name, Buffer.from(brandText(content.toString("utf8"), branding)));
@@ -216,7 +226,7 @@ function main() {
     if (channel.format === "agent-plugin-zip") validateAgentPlugin(bundle, environment, packageFiles, channel.maxPackageBytes);
     createZipFromDirectory(bundle, zipPath);
     if (channel.format === "workbuddy-zip") {
-      validateWorkBuddyConnector({ connectorRoot: bundle, expectedURL: environment.mcpURL, expectedCLIVersion: channel.cliPackageVersion, zipPath });
+      validateWorkBuddyConnector({ connectorRoot: bundle, expectedURL: environment.mcpURL, expectedCLITag: channel.cliPackageTag, zipPath });
     } else if (fs.statSync(zipPath).size >= channel.maxPackageBytes) {
       throw new Error("ZIP exceeds the channel size limit");
     }

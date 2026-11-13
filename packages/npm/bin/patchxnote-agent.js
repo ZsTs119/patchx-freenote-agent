@@ -539,6 +539,11 @@ async function assertExecutable(installPath) {
 
 async function ensureBinary(options = {}, io = {}) {
   const plan = createInstallPlan("install", options);
+  const installed = inspectInstalledBinary(plan);
+  if (installed.ok && installed.version === plan.version) return plan;
+  if (process.env.PATCHXNOTE_AGENT_REQUIRE_INSTALLED === "1") {
+    throw new Error("Agent installation is incomplete; reconnect to prepare it.");
+  }
   return withInstallLock(plan, async () => {
     const inspected = inspectInstalledBinary(plan);
     if (inspected.ok && inspected.version === plan.version) {
@@ -606,7 +611,9 @@ async function acquireInstallLock(lockDir) {
   for (;;) {
     try {
       await fs.promises.mkdir(lockDir);
+      await fs.promises.writeFile(path.join(lockDir, "owner.json"), JSON.stringify({ pid: process.pid }));
       return async () => {
+        await fs.promises.unlink(path.join(lockDir, "owner.json")).catch(() => {});
         await fs.promises.rmdir(lockDir).catch(() => {});
       };
     } catch (error) {
@@ -624,7 +631,15 @@ async function acquireInstallLock(lockDir) {
 
 async function removeStaleLock(lockDir) {
   const stat = await fs.promises.stat(lockDir);
-  if (Date.now() - stat.mtimeMs > staleLockMs) {
+  let owner;
+  try { owner = JSON.parse(await fs.promises.readFile(path.join(lockDir, "owner.json"), "utf8")); } catch {}
+  if (Number.isInteger(owner?.pid) && owner.pid > 0) {
+    try { process.kill(owner.pid, 0); return; } catch (error) {
+      if (error.code !== "ESRCH") return;
+    }
+    await fs.promises.unlink(path.join(lockDir, "owner.json")).catch(() => {});
+    await fs.promises.rmdir(lockDir);
+  } else if (Date.now() - stat.mtimeMs > staleLockMs) {
     await fs.promises.rmdir(lockDir);
   }
 }
@@ -1088,6 +1103,9 @@ if (require.main === module) {
 }
 
 module.exports = {
+  ensureBinary,
+  withInstallLock,
+  removeStaleLock,
   createSkillInstallPlan,
   installActionForSkillTarget,
   createInstallPlan,

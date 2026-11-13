@@ -3,6 +3,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { bootstrapCommand, runtimeActions } from "./lib/workbuddy-bootstrap.mjs";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..");
@@ -106,7 +107,7 @@ function validateConnectorMeta(meta) {
   }
 }
 
-function validateMCPConfig(config, expectedURL, expectedCLIVersion) {
+function validateMCPConfig(config, expectedURL, expectedCLITag = "latest") {
   if (!config || typeof config !== "object" || Array.isArray(config)) {
     fail("mcp.json must be an object");
   }
@@ -122,30 +123,26 @@ function validateMCPConfig(config, expectedURL, expectedCLIVersion) {
   if (!server || typeof server !== "object" || Array.isArray(server)) {
     fail("mcp.json server entry must be an object");
   }
-  if (config.preAuth !== "cli" || server.type !== "stdio" || server.command !== "npx") {
-    fail("mcp.json must use top-level CLI preAuth and the npx stdio launcher");
+  if (config.preAuth !== "cli" || server.type !== "stdio" || server.command !== "node") {
+    fail("mcp.json must use CLI preAuth and the managed Node bootstrap");
   }
   if (server.runtime?.type !== "node" || server.env?.PATCHXNOTE_MCP_MODE !== "remote") {
     fail("mcp.json must declare Node and use the existing remote proxy mode");
   }
   const args = server.args;
-  const packageName = args?.[1];
-  if (!Array.isArray(args) || args[0] !== "--yes" || !/^patchxnote-agent@\d+\.\d+\.\d+$/.test(packageName ?? "")) {
-    fail("mcp.json must pin the CLI package version");
+  if (!Array.isArray(args) || args[0] !== "-e" || !args[1]?.includes("brotliDecompressSync") ||
+      args[2] !== "--" || args[3] !== "run" || args[5] !== "serve" || args.length !== 6) {
+    fail("mcp.json must run the bundled bootstrap serve entry");
   }
-  if (expectedCLIVersion && packageName !== `patchxnote-agent@${expectedCLIVersion}`) {
-    fail("mcp.json CLI version differs from the channel configuration");
-  }
+  const options = JSON.parse(Buffer.from(args[4], "base64").toString("utf8"));
   const baseURL = expectedURL.replace(/\/mcp$/, "");
-  if (args[2] !== "mcp" || args[3] !== "serve" ||
-      args[args.indexOf("--profile") + 1] !== "workbuddy" ||
-      args[args.indexOf("--server-base-url") + 1] !== baseURL || "url" in server) {
-    fail("mcp.json must use mcp serve with the workbuddy profile and selected API base URL");
+  if (options.channel !== expectedCLITag || options.profile !== "workbuddy" || options.serverBaseURL !== baseURL || "url" in server) {
+    fail("mcp.json must follow the channel tag with the workbuddy profile and selected server");
   }
-  return { packageName, baseURL };
+  return { loaderArgs: args.slice(0, 3), encodedOptions: args[4], baseURL };
 }
 
-function validateCLIConfig(config, { packageName, baseURL }) {
+function validateCLIConfig(config, { loaderArgs, encodedOptions, baseURL }) {
   if (config.runtime?.type !== "node" || config.authWaitForExit !== true ||
       config.authUrlDomain !== new URL(baseURL).hostname) {
     fail("cli.json must declare Node and retain the browser callback process");
@@ -154,22 +151,16 @@ function validateCLIConfig(config, { packageName, baseURL }) {
   if (!matcher.test('{"authenticated":true}') || matcher.test('{"authenticated":false}')) {
     fail("cli.json statusMatch must distinguish authenticated true from false");
   }
+  if (config.versionCheck?.minVersion !== "1.0.0" ||
+      !new RegExp(config.versionCheck.versionPattern).test("workbuddy-ready=1.0.0")) {
+    fail("cli.json must check bootstrap readiness before authentication");
+  }
   for (const platform of ["darwin", "linux", "win32"]) {
-    const launcher = platform === "win32" ? "npx.cmd" : "npx";
-    for (const [action, command] of Object.entries({ init: "install", auth: "mcp login", status: "mcp status", unAuth: "mcp logout" })) {
-      const value = config[action]?.[platform];
-      if (typeof value !== "string" || !value.startsWith(`${launcher} --yes ${packageName} ${command}`)) {
-        fail(`cli.json ${action}.${platform} must use the same pinned CLI package`);
+    for (const [action, [mode, args]] of Object.entries(runtimeActions)) {
+      const value = action === "check" ? config.versionCheck.command[platform] : config[action]?.[platform];
+      if (value !== bootstrapCommand([...loaderArgs, mode, encodedOptions, ...args])) {
+        fail(`cli.json ${action}.${platform} differs from the shared bootstrap contract`);
       }
-      if (action !== "init" && (!value.includes("--profile workbuddy") || !value.includes(`--server-base-url ${baseURL}`))) {
-        fail(`cli.json ${action}.${platform} must use the same profile and API base URL`);
-      }
-    }
-    if (!config.auth[platform].includes("--no-browser") || !config.auth[platform].includes("--force")) {
-      fail(`cli.json auth.${platform} must open a fresh authorization through WorkBuddy`);
-    }
-    if (!config.status[platform].includes("--output json") || config.status[platform].includes("--verify")) {
-      fail(`cli.json status.${platform} must inspect local JSON state without refreshing`);
     }
   }
 }
@@ -334,7 +325,7 @@ function validateZipIfPresent(zipPath, connectorRoot) {
 export function validateWorkBuddyConnector({
   connectorRoot = defaultConnectorRoot,
   expectedURL = "https://freenote.patch-x.cn/mcp",
-  expectedCLIVersion,
+  expectedCLITag,
   zipPath
 } = {}) {
   if (!fs.existsSync(connectorRoot) || !fs.statSync(connectorRoot).isDirectory()) {
@@ -349,7 +340,7 @@ export function validateWorkBuddyConnector({
     assertFile(connectorRoot, path.join("skills", "patchxnote-mcp", "references", reference));
   }
   validateConnectorMeta(meta);
-  const cliContract = validateMCPConfig(mcpConfig, expectedURL, expectedCLIVersion);
+  const cliContract = validateMCPConfig(mcpConfig, expectedURL, expectedCLITag);
   validateCLIConfig(cliConfig, cliContract);
   validateIcon(iconPath);
   validateSkill(skillPath);

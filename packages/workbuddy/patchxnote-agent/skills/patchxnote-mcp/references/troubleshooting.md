@@ -6,7 +6,9 @@
 
 | 状态/错误 | 动作 |
 | --- | --- |
-| 安装下载失败、命令找不到 | 检查 WorkBuddy 运行时和 `cli.json` 安装步骤，确认 native CLI 已准备好 |
+| 缺少 prefix/lib/bin/cache 目录 | 新连接器会在 npm 前自动补齐；若仍发生，记录引导阶段及具体路径 |
+| 安装下载失败、命令找不到 | 有可用旧版时继续使用，下一次连接重试；首次安装无旧版时按安装阶段错误重试 |
+| 更新后仍显示旧版 | 查看是否因网络或启动检查失败回退；实际版本以 Ready/continuing 日志为准 |
 | `no_credential` / `refresh_expired` | 发起浏览器授权，完成后继续原任务 |
 | `invalid_credential` | 同 profile 使用 `mcp login --force` 重新取得凭据 |
 | `server_or_client_mismatch` | 核对同一 profile、API 和 CLI 默认 client_id；不要沿用另一环境的凭据 |
@@ -20,9 +22,7 @@
 
 状态命令：
 
-```sh
-npx --yes patchxnote-agent@{{CLI_PACKAGE_VERSION}} mcp status --output json --profile workbuddy --server-base-url {{API_BASE_URL}}
-```
+状态检查使用当前连接器的 status 入口，保持选定 npm 入口、binaryDir、workbuddy profile 和服务地址；不要用另一条 npx 命令的成功代替当前连接成功。
 
 仅需要核实服务端是否接受凭据时加 `--verify`；不要把它放入 WorkBuddy 的周期状态轮询。
 

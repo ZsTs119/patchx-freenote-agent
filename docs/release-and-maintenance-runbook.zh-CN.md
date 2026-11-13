@@ -1,5 +1,13 @@
 # PatchX Freenote Agent 发布与维护 Runbook
 
+## 0.2.18 / WorkBuddy 0.1.3 候选准备（2026-11-13）
+
+本轮实现 WorkBuddy 自动准备目录、下一次连接更新 npm/Go、失败回退和安装器快速路径，业务与授权协议沿用现有实现。执行状态见 [自动更新计划](plans/2026-11-13-workbuddy-auto-update-bootstrap-checklist.md)。
+
+发布顺序：先准备对应 GitHub 二进制和来源材料，再使用更新后的 `publish-npm.yml`（显式指定实际 workflow ref）以 `publish_tag=next` 发布 npm 候选；发布前后核对 `latest` 未变。当前审核过渡期间 `latest` 保持 `0.2.16`。新 WorkBuddy 包审核通过并确认上线时，使用单独的 `operation=set-latest` 切换；不能直接以默认 npm publish 提前移动 latest。
+
+本轮只运行 `scripts/workbuddy-bootstrap.test.mjs` 和 `packages/npm/test/workbuddy-update.test.js` 两组串行定向测试，以及候选内容、实际启动与标签检查。发布元数据脚本继续核对配套资产。只有本轮文件范围命中 `runtime_workbuddy_update_only` 时使用此选择，其他发行保持原有选测路径。此次未修改 Go 业务代码，不执行 Go 业务测试。
+
 这份文档用于后续开发新功能、更新文档、发布 GitHub Release 和 npm 包时保持同一套事实源。它沉淀的是当前 `patchxnote-agent` 公测发布链路，不替代具体 feature 设计文档。
 
 ## 0.2.17 已发布（2026-11-05）

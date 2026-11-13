@@ -3,7 +3,7 @@ name: patchxnote-mcp
 description: Connect PatchX Freenote in WorkBuddy, guide browser authorization, recover expired login, and read recording summaries, memories, quota and model results.
 license: UNLICENSED
 metadata:
-  version: "0.1.2-workbuddy"
+  version: "0.1.3-workbuddy"
   author: PatchX Freenote
   repository: https://github.com/ZsTs119/patchx-freenote-agent
   tags: patchx-freenote, patchxnote, mcp, workbuddy, recordings, notes
@@ -13,7 +13,7 @@ metadata:
 
 用于 WorkBuddy 的 PatchX Freenote 连接器。PatchX Freenote 原名 PatchXNote，现有 CLI、Skill 和工具标识继续使用 `patchxnote`。
 
-本包使用 **CLI 前置授权 + 本地 stdio 代理**。CLI 版本为 `{{CLI_PACKAGE_VERSION}}`，配置档案为 `workbuddy`，服务地址为 `{{API_BASE_URL}}`。WorkBuddy 先执行同目录 `cli.json` 的认证流程，再按 `mcp.json` 启动 MCP；两者使用同一份原生凭据。stdio 后面的业务服务仍是 `{{MCP_URL}}`。
+本包使用 **自动准备环境 + CLI 前置授权 + 本地 stdio 代理**。连接前跟随 npm `latest` 选择可用版本，配置档案为 `workbuddy`，服务地址为 `{{API_BASE_URL}}`。WorkBuddy 通过 `cli.json` 准备程序并授权，再按 `mcp.json` 启动同一版本的 MCP；两者使用同一份原生凭据。stdio 后面的业务服务仍是 `{{MCP_URL}}`。更新失败保留可用旧版，当前连接不会被热替换。
 
 ## 每次任务的起点
 
@@ -25,24 +25,14 @@ metadata:
 
 ## 授权恢复
 
-先阅读 `references/onboarding.md` 和 `references/troubleshooting.md`。遇到 `auth_required` 时，在 WorkBuddy 启动 MCP 的同一操作系统里检查：
-
-```sh
-npx --yes patchxnote-agent@{{CLI_PACKAGE_VERSION}} mcp status --output json --profile workbuddy --server-base-url {{API_BASE_URL}}
-```
+先阅读 `references/onboarding.md` 和 `references/troubleshooting.md`。遇到 `auth_required` 时，使用当前连接器声明的 status 入口检查；它读取本次选定版本的登录状态，不安装或更新。不要另外启动一条 npx 连接代替本连接器。
 
 - `no_credential`、`refresh_expired`、`invalid_credential`：发起浏览器授权。
 - 本地 `authenticated=true` 但工具仍提示鉴权失败：只做一次同参数的 `mcp status --verify --output json`。明确返回认证失效时重新授权；网络故障保留登录态并重试。
 - `token_refresh_failed` / `transport_error`：先报告连接或刷新暂时失败，不退出登录，不反复打开浏览器。
 - `permission_denied`、`rate_limited`：按对应问题处理，不当成首次登录。
 
-WorkBuddy 正常连接由 `preAuth` 自动发起授权。若需要在对话中直接恢复，使用已安装的同版本 CLI：
-
-```sh
-npx --yes patchxnote-agent@{{CLI_PACKAGE_VERSION}} mcp login --force --profile workbuddy --server-base-url {{API_BASE_URL}}
-```
-
-这个对话恢复命令由 CLI 打开浏览器；不要加 `--no-browser` 后只让用户等待一个未打开的页面。`cli.json` 的认证命令使用 `--no-browser` 是因为 WorkBuddy 会提取链接并打开浏览器，且配置了 `authWaitForExit` 保留回调进程。
+WorkBuddy 正常连接由 `preAuth` 自动发起授权，优先重新连接当前连接器。高级诊断若直接调用 CLI，必须从本次选择记录取得 npm 入口和 binaryDir，保持同一 profile、服务地址及 `--install-dir`；直接登录时由 CLI 打开浏览器。`cli.json` 使用 `--no-browser` 是因为 WorkBuddy 提取链接并打开浏览器，且 `authWaitForExit` 保留回调进程。
 
 等待用户在浏览器完成授权。成功后调用本连接器的账户工具、继续原任务；若当前 MCP 进程没有恢复，只刷新当前连接器再重试。取消或超时后停止本次等待，说明如何重试，不循环弹窗。
 
@@ -56,7 +46,7 @@ npx --yes patchxnote-agent@{{CLI_PACKAGE_VERSION}} mcp login --force --profile w
 
 ## 登录时效
 
-访问令牌默认 15 分钟，刷新令牌默认 30 天；实际以 CLI 返回的到期字段为准。访问令牌到期由程序自动续期并保存新凭据，正常使用不需要每 15 分钟重新登录。刷新成功后使用新的到期时间；刷新凭据过期或授权被撤销时才重新授权。
+登录时效以 CLI 返回的到期字段为准。访问令牌到期由程序自动续期并保存新凭据；刷新成功后使用新的到期时间。刷新凭据过期或授权被撤销时才重新授权，安装更新不清除登录态。
 
 ## 资料与处理原则
 

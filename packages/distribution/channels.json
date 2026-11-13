@@ -21,7 +21,8 @@
   "channels": {
     "workbuddy": {
       "format": "workbuddy-zip",
-      "cliPackageVersion": "0.2.16",
+      "cliPackageTag": "latest",
+      "bootstrap": "packages/workbuddy/patchxnote-agent/bootstrap.cjs",
       "connectorSource": "patchxfreenote",
       "manifest": "packages/workbuddy/patchxnote-agent/connector-meta.json",
       "manifestDestination": "connector-meta.json",

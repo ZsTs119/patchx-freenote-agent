@@ -15,6 +15,11 @@ on:
         description: "SemVer target version, without leading v"
         required: true
         type: string
+      publish_tag:
+        description: Candidate dist-tag; latest is changed separately with set-latest
+        required: true
+        default: next
+        type: string
 
 permissions:
   contents: read
@@ -66,11 +71,20 @@ jobs:
       - name: Validate release metadata and select affected tests
         id: validation
         run: |
-          node scripts/validate-release-metadata.test.mjs
           node scripts/validate-release-metadata.mjs
 
+      - name: Test release metadata
+        if: ${{ steps.validation.outputs.runtime_workbuddy_update_only != 'true' }}
+        run: node scripts/validate-release-metadata.test.mjs
+
+      - name: Test WorkBuddy update path
+        if: ${{ steps.validation.outputs.runtime_workbuddy_update_only == 'true' }}
+        run: |
+          node --test --test-concurrency=1 scripts/workbuddy-bootstrap.test.mjs
+          node --test --test-concurrency=1 packages/npm/test/workbuddy-update.test.js
+
       - name: Test npm wrapper
-        if: ${{ steps.validation.outputs.wrapper_changed == 'true' }}
+        if: ${{ steps.validation.outputs.wrapper_changed == 'true' && steps.validation.outputs.runtime_workbuddy_update_only != 'true' }}
         working-directory: packages/npm
         run: npm test
 
@@ -78,9 +92,27 @@ jobs:
         working-directory: packages/npm
         run: npm pack --dry-run
 
-      - name: npm publish with Trusted Publishing
+      - name: Record latest before candidate publication
+        id: tags_before
+        env:
+          PUBLISH_TAG: ${{ inputs.publish_tag }}
+        run: |
+          test -n "$PUBLISH_TAG"
+          test "$PUBLISH_TAG" != latest
+          npm dist-tag ls patchxnote-agent --registry https://registry.npmjs.org > "$RUNNER_TEMP/patchxnote-tags-before.txt"
+          grep '^latest: ' "$RUNNER_TEMP/patchxnote-tags-before.txt" > "$RUNNER_TEMP/patchxnote-latest-before.txt"
+
+      - name: npm publish candidate with Trusted Publishing
         working-directory: packages/npm
-        run: npm publish --registry https://registry.npmjs.org --access public
+        env:
+          PUBLISH_TAG: ${{ inputs.publish_tag }}
+        run: npm publish --registry https://registry.npmjs.org --access public --tag "$PUBLISH_TAG"
+
+      - name: Verify candidate publication preserved latest
+        if: ${{ always() && steps.tags_before.outcome == 'success' }}
+        run: |
+          npm dist-tag ls patchxnote-agent --registry https://registry.npmjs.org > "$RUNNER_TEMP/patchxnote-tags-after.txt"
+          grep -Fx -f "$RUNNER_TEMP/patchxnote-latest-before.txt" "$RUNNER_TEMP/patchxnote-tags-after.txt"
 
   set-latest:
     if: ${{ inputs.operation == 'set-latest' }}

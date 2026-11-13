@@ -1,5 +1,13 @@
 # PatchX Freenote Agent npm wrapper
 
+## WorkBuddy automatic updates (0.2.18 candidate)
+
+The updated WorkBuddy connector prepares managed Node/npm directories before installation and follows npm `latest` at the next connection. It keeps the selected npm package and Go binary in separate version directories. Failed updates use the previous working version; an active MCP connection keeps its original process. Existing credentials and the `workbuddy` profile are retained.
+
+The launcher checks an already installed binary before waiting for an installation lock. WorkBuddy passes the selected `--install-dir` to every command, so cached npm versions do not overwrite each other's binaries. Status polling does not check for updates.
+
+Candidates are published with `--tag next`. Until the updated connector is approved, production `latest` remains `0.2.16`; publishing a higher version is not the same as promoting it to latest.
+
 > Version 0.2.17 supports account-wide mobile/desktop/web reads on GoServer Scheme B (0.20.85). Existing explicit mobile/desktop calls and valid authorization remain compatible. Discover the connected MCP tool schema before using optional platform parameters.
 
 [English README](https://github.com/ZsTs119/patchx-freenote-agent#readme) | [简体中文说明](https://github.com/ZsTs119/patchx-freenote-agent/blob/main/README.zh-CN.md) | [飞书公开使用指南](https://patchx2025.feishu.cn/wiki/PnVRwYT7IirFPckairGcWPnHnCd)

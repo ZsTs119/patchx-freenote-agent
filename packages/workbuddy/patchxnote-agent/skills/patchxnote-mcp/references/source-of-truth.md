@@ -1,6 +1,6 @@
 # WorkBuddy 包与参考资料
 
-本包：`{{PACKAGE_VERSION}}`；source：`{{CONNECTOR_SOURCE}}`；CLI：`patchxnote-agent@{{CLI_PACKAGE_VERSION}}`。
+本包：`{{PACKAGE_VERSION}}`；source：`{{CONNECTOR_SOURCE}}`；更新目标：npm `patchxnote-agent` 的 `latest` 标签。实际运行版本以引导日志和本次选择记录为准。
 
 - 接入：MCP stdio + CLI preAuth；WorkBuddy 最低版本 5.0.0。
 - 环境：`{{ENVIRONMENT}}`；API：`{{API_BASE_URL}}`；后端 MCP：`{{MCP_URL}}`。

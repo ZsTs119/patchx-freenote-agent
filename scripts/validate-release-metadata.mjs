@@ -106,11 +106,15 @@ export function selectTests(base, changed, readBase, readCurrent) {
     } catch { return false; }
   });
   const wrapperChanged = !base || changed.some(file => /^packages\/npm\/(bin\/|test\/)/.test(file));
+  const workbuddyUpdateFiles = /^(docs\/|packages\/workbuddy\/|packages\/npm\/bin\/|packages\/npm\/test\/workbuddy-update\.test\.js$|packages\/npm\/(package\.json|README\.md)$|packages\/distribution\/channels\.json$|scripts\/(package-channel\.mjs|validate-workbuddy-connector\.mjs|workbuddy-bootstrap\.test\.mjs|validate-release-metadata\.mjs|build-compat-binaries\.sh|lib\/workbuddy-bootstrap\.mjs)$|\.github\/workflows\/(publish-npm|release)\.yml$|README(?:\.zh-CN)?\.md$|server\.json$)/;
+  const runtimeWorkbuddyUpdateOnly = !!base && runtime.length === 0 && changed.length > 0 &&
+    changed.some(file => file === 'packages/workbuddy/patchxnote-agent/bootstrap.cjs') &&
+    changed.every(file => workbuddyUpdateFiles.test(file));
   const runtimeWorkbuddyAuthOnly = !!base && runtime.length > 0 &&
     runtime.every(file => workbuddyAuthFiles.has(file));
   const runtimeAccountContentOnly = !!base && runtime.length > 0 && !runtimeBrandingOnly && !runtimeWorkbuddyAuthOnly &&
     runtime.every(file => accountContentFiles.has(file));
-  return { runtimeChanged, runtimeBrandingOnly, runtimeWorkbuddyAuthOnly, runtimeAccountContentOnly, wrapperChanged };
+  return { runtimeChanged, runtimeBrandingOnly, runtimeWorkbuddyAuthOnly, runtimeAccountContentOnly, runtimeWorkbuddyUpdateOnly, wrapperChanged };
 }
 
 function main() {
@@ -124,6 +128,8 @@ function main() {
     base = execFileSync('git', ['describe', '--tags', '--match', 'v[0-9]*', '--abbrev=0', 'HEAD^'], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
     // Include local edits in preflight; clean CI compares the same release content.
     changed = execFileSync('git', ['diff', '--name-only', base], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim().split('\n').filter(Boolean);
+    const untracked = execFileSync('git', ['ls-files', '--others', '--exclude-standard'], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim().split('\n').filter(Boolean);
+    changed = [...new Set([...changed, ...untracked])];
   } catch {
     // Without a comparison baseline, retain the existing full validation.
     base = null;
@@ -132,7 +138,7 @@ function main() {
     file => execFileSync('git', ['show', `${base}:${file}`], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }),
     file => fs.readFileSync(path.join(root, file), 'utf8'));
   if (process.env.GITHUB_OUTPUT) {
-    fs.appendFileSync(process.env.GITHUB_OUTPUT, `runtime_changed=${selected.runtimeChanged}\nruntime_branding_only=${selected.runtimeBrandingOnly}\nruntime_workbuddy_auth_only=${selected.runtimeWorkbuddyAuthOnly}\nruntime_account_content_only=${selected.runtimeAccountContentOnly}\nwrapper_changed=${selected.wrapperChanged}\n`);
+    fs.appendFileSync(process.env.GITHUB_OUTPUT, `runtime_changed=${selected.runtimeChanged}\nruntime_branding_only=${selected.runtimeBrandingOnly}\nruntime_workbuddy_auth_only=${selected.runtimeWorkbuddyAuthOnly}\nruntime_account_content_only=${selected.runtimeAccountContentOnly}\nruntime_workbuddy_update_only=${selected.runtimeWorkbuddyUpdateOnly}\nwrapper_changed=${selected.wrapperChanged}\n`);
   }
   console.log(JSON.stringify({ name: expectedName, version: pkg.version, targets, base, ...selected }, null, 2));
 }
