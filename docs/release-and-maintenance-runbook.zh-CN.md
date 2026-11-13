@@ -1,8 +1,10 @@
 # PatchX Freenote Agent 发布与维护 Runbook
 
-## 0.2.18 / WorkBuddy 0.1.3 候选准备（2026-11-13）
+## 0.2.18 / WorkBuddy 0.1.3 候选已发布（2026-11-13）
 
 本轮实现 WorkBuddy 自动准备目录、下一次连接更新 npm/Go、失败回退和安装器快速路径，业务与授权协议沿用现有实现。执行状态见 [自动更新计划](plans/2026-11-13-workbuddy-auto-update-bootstrap-checklist.md)。
+
+GitHub v0.2.18 与 npm next=0.2.18 已发布，latest 仍为 0.2.16。公开候选在 Windows 完成真实安装、MCP 初始化、19 个工具发现与账户读取，发行二进制来源证明通过；Mac/新版 WorkBuddy 界面和平台审核仍待用户验证。发行提交 e0679be；Release run 43370809253、npm run 43371217424 均成功。以下旧版记录保留历史语境。
 
 发布顺序：先准备对应 GitHub 二进制和来源材料，再使用更新后的 `publish-npm.yml`（显式指定实际 workflow ref）以 `publish_tag=next` 发布 npm 候选；发布前后核对 `latest` 未变。当前审核过渡期间 `latest` 保持 `0.2.16`。新 WorkBuddy 包审核通过并确认上线时，使用单独的 `operation=set-latest` 切换；不能直接以默认 npm publish 提前移动 latest。
 
@@ -39,7 +41,7 @@ Agent CLI/npm `0.2.17` 已发布，增加Web来源和本人账号默认内容读
 - GitHub Release workflow：`.github/workflows/release.yml`
 - macOS 安装冒烟 workflow：`.github/workflows/macos-install-smoke.yml`
 - 默认服务端：生产 API `https://freenote.patch-x.cn`，具体默认值以 `internal/config/config.go` 为准
-- 当前 CLI/npm 已发布版本：`0.2.17`；npm 与 GitHub Release 已回读确认；MCP Registry 本轮未更新，保留 `0.2.15` 记录。
+- 当前可安装候选：CLI/npm `0.2.18`（npm `next`）；默认 `latest` 暂留 `0.2.16` 等待 WorkBuddy 审核；MCP Registry 本轮未更新。
 - 当前能力：继承 `0.2.16` 的登录/刷新及连接器兼容，增加Web与账号级内容查询、缓存和导出适配；npm／Skill／MCP ID、原凭据及远程代理路径保持。
 - 当前发布证据：`docs/evidence/2026-11-05-release-0.2.17.zh-CN.md`。
 - 0.2.13 已有验证：实际 npm README/Skill 与源码一致，Windows 发布包生产 stdio 查询、Windows/macOS 安装、Linux 制品校验通过。本次修正版按对应证据补验，既有业务结果不冒充新版验收；平台 UI 单列。

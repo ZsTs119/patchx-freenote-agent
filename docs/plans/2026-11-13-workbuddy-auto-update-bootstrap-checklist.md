@@ -2,7 +2,7 @@
 
 **日期：** 2026-11-13
 
-**状态：** 本地实现及计划内定向验证完成；Windows 真实启动、更新、回退和连接保持已验证。Mac/WorkBuddy 新包界面验收、候选公开发布及平台审核尚未完成，线上 latest 保持 0.2.16。
+**状态：** 实现、计划内定向验证及候选公开发布完成；GitHub v0.2.18、npm next=0.2.18 已验证，latest 保持 0.2.16。Mac/新版 WorkBuddy 界面验收、用户提交审核及审核后的 latest 切换仍待完成。
 
 **目标：** 更新一次 WorkBuddy 连接器后，Windows/macOS 新用户无需终端操作即可完成安装、浏览器授权和连接；后续 npm 与配套 Go 程序在下次连接时自动更新，更新失败继续使用已有可用版本。
 
@@ -131,16 +131,16 @@ Go 运行时代码原则上复用。只有为本轮安装路径或启动参数�
 - [x] 正式包以 `latest` 为目标；递增连接器版本，保持 `source=patchxfreenote`、当前示例和业务工具用途。
 - [x] 修改校验器：验证真实引导、同一 profile 和版本选择接续，不再强制所有命令使用固定 npm 版本的 npx 字符串。
 - [x] 审核期间正式包必须能在 `latest=0.2.16` 时完成基础安装和连接；复用旧包已具备的 `install`、`mcp ... --install-dir` 接口，安装与启动使用同一个版本目录，不要求旧 npm 提供新增命令。以已发布 tarball 验证，不只看当前源码。
-- [ ] 候选验证使用独立安装目录和显式通道覆盖，不修改用户 HOME 或正式可用版本记录。用同一引导源码模拟 `latest: 0.2.16 → 候选版 → 回退版`，并用 `next` 实包补验，过程中保持线上 latest 不变。
+- [x] 候选验证使用独立安装目录和显式通道覆盖，不修改用户 HOME 或正式可用版本记录。用同一引导源码模拟 `latest: 0.2.16 → 候选版 → 回退版`，并用 `next` 实包补验，过程中保持线上 latest 不变。
 - [x] 正式送审 ZIP 的默认目标仍为 latest，使用旧 latest 完成一次基础连接；记录实际 ZIP 和摘要，不能将改写为 next 的另一个包当作正式包验收结果。
 - [x] 生成并读取实际 WorkBuddy ZIP，核对引导片段、目标标签、profile、地址和包内说明；同步“升级一次连接器，后续下次连接自动更新”的说明。
 
 ### F. 候选发布与正式切换
 
-- [ ] 候选发行元数据统一为实际选定版本（建议 `0.2.18`）；先准备对应 GitHub 二进制和既有校验/来源材料，不再次覆盖 `v0.2.16` 资产。
-- [ ] npm publish 增加显式发布标签参数，候选默认使用 `next`；核对实际调度的 workflow ref 和 publish 命令确实包含该标签。发布前后回读并确认 `latest=0.2.16`，不能只修改本地 YAML 后仍运行旧工作流。
+- [x] 候选发行元数据统一为实际选定版本（建议 `0.2.18`）；先准备对应 GitHub 二进制和既有校验/来源材料，不再次覆盖 `v0.2.16` 资产。
+- [x] npm publish 增加显式发布标签参数，候选默认使用 `next`；核对实际调度的 workflow ref 和 publish 命令确实包含该标签。发布前后回读并确认 `latest=0.2.16`，不能只修改本地 YAML 后仍运行旧工作流。
 - [x] 发布工作流只执行本计划对应的定向测试入口；为本次改动选择两个专用测试文件，不触发现有 npm test 的无关 Skill/安装场景。仅调整本轮命中的选测路径，其他发行逻辑保持原状。
-- [ ] 发布候选 npm 后，用 registry 实际包验证目标入口，并记录候选 npm 版本、二进制版本和实际采用版本。
+- [x] 发布候选 npm 后，用 registry 实际包验证目标入口，并记录候选 npm 版本、二进制版本和实际采用版本。
 - [ ] 用户提交新 WorkBuddy 包，单独记录审核结果；审核前持续保持 `latest=0.2.16`。
 - [ ] 审核通过且新包可用后，再按确认的上线时点使用现有 `set-latest` 操作切换；回读标签，验证新连接采用目标版。
 
@@ -186,7 +186,7 @@ node scripts/package-channel.mjs --channel workbuddy --env production
 
 - [ ] 新版连接器具备自动环境准备，Windows/macOS 首次使用无需手工 mkdir 或终端初始化。
 - [ ] 已安装用户在下一次连接获得新 npm 和对应 Go 程序；失败能沿用旧版，状态查询快速，授权保留。
-- [ ] 候选 `next` 与生产 `latest` 的发布流程分离，审核前 `latest` 始终保持 `0.2.16`。
+- [x] 候选 `next` 与生产 `latest` 的发布流程分离，审核前 `latest` 始终保持 `0.2.16`。
 - [ ] 本计划的定向用例、真实客户端验收和实际制品记录齐全；剩余未验证事项如实列出。
 - [x] 交付 WorkBuddy ZIP、SHA-256、候选版本、简短升级说明和验证结果。
 
@@ -196,10 +196,10 @@ node scripts/package-channel.mjs --channel workbuddy --env production
 | 主 Agent 自审 | 2026-11-13 完成计划与实现自审：check/init/复查、超时回退、路径配对和候选过渡已实现并完成本机验证；仅保留两组必要自动化及制品检查。不是独立评审，真实新版 WorkBuddy 界面及 Mac 验收仍待完成 |
 | 程序与连接器实现 | 本地完成；Go 业务代码未改动；连接器 0.1.3、npm 候选 0.2.18 |
 | 定向测试 / Windows / Mac | 两组共 13 项通过；Windows 真实进程与公开旧版/本地候选接续通过；Mac 原生进程及新版 WorkBuddy 界面仍待用户验证 |
-| 候选 npm / GitHub 制品 | 本地 npm 0.2.18 tarball、Windows 候选已验证；未公开发布，后续使用 next 标签 |
+| 候选 npm / GitHub 制品 | GitHub v0.2.18 与 npm next=0.2.18 已发布，公开 next 的 Windows 安装、MCP 和二进制来源证明验证通过 |
 | WorkBuddy ZIP / 审核 | 0.1.3 ZIP 已生成并核对字节；本版未提交审核 |
-| npm latest | 要求保持 `0.2.16`，审核通过后单独确认切换 |
-| Git 提交 / 推送 / 线上切换 | 本轮均未执行 |
+| npm latest | 发布后官方 registry 回读仍为 `0.2.16`；审核通过后再单独确认切换 |
+| Git 提交 / 推送 / 线上切换 | 功能提交 e0679be 已推送原分支，tag v0.2.18 指向该提交；只发布 next，未切换 latest |
 
 参考：[WorkBuddy 官方连接器说明](https://open.workbuddy.cn/docs/connector)、[npm 标签发布说明](https://docs.npmjs.com/adding-dist-tags-to-packages/)、[此前授权闭环计划](2026-10-19-workbuddy-connector-auth-usage-checklist.md)。官方文档中的安装/状态超时与实际客户端调度，在 A 阶段一起核对；本计划不把固定最低版本检查误当作动态更新。
 
@@ -216,4 +216,15 @@ node scripts/package-channel.mjs --channel workbuddy --env production
 - 原始本机证据：`.tmp/workbuddy-auto-update-20261113/evidence/windows-runtime.json`、`connection-continuity.json`、`package-check.json`；这些是本机验证文件，不进入发布包。
 - 主 Agent 自审：已检查准备结果消费、更新后复查、超时前回退、同版本损坏重装、npm/Go 路径一致、stdout 和发布标签；这是自审，不是独立验收。
 
-待完成：Mac/新版 WorkBuddy 界面验收；Git 提交推送及 GitHub/npm next 公开发布；公开候选实包复验；用户提交审核与审核通过后的 latest 切换。上述项目仍保留未勾选，不以本机通过替代。
+待完成：Mac/新版 WorkBuddy 界面验收、用户提交审核与审核通过后的 latest 切换。上述项目保留未勾选，不以本机或 CI 通过替代。
+
+## 9. 候选公开发布记录（2026-11-13）
+
+- 已按用户明确授权提交并推送本轮 23 个文件；发行提交：`e0679be247f55f82c60f17fe8612b8fecbd808f6`，分支 `codex/workbuddy-connector-package`，未合并 main；v0.2.18 tag 保持指向发行提交。
+- [GitHub Release 构建与来源证明](https://github.com/ZsTs119/patchx-freenote-agent/actions/runs/43370809253)成功：六个平台二进制及 checksums 已发布，未执行全仓 Go 或其他业务测试。
+- [npm next 发布](https://github.com/ZsTs119/patchx-freenote-agent/actions/runs/43371217424)成功：使用 v0.2.18 workflow、publish_tag=next；两组 13 项定向测试通过，原整套 npm 测试跳过；发布前后 latest 保持一致。npm provenance 已生成。
+- 官方 registry 回读：`latest=0.2.16`、`next=0.2.18`。
+- 从公开 next 在新的 Windows 隔离目录安装，整体约 9,897 毫秒；实际 Go 版本 0.2.18、go1.22.12、源码提交与 tag 一致。生成的正式 MCP 引导入口配合 next 环境覆盖，initialize、19 个工具发现和账户读取均成功，stderr 为 0 字节。
+- Windows amd64 发行二进制 SHA-256：`1897c88b768614c4087ef5f774579061ce46ee1cef37a485a76d0582555171af`，与 Release digest 一致；gh attestation verify 通过，发行提交和二进制摘要均匹配。
+- [v0.2.18 Release](https://github.com/ZsTs119/patchx-freenote-agent/releases/tag/v0.2.18)同时提供 WorkBuddy 0.1.3 ZIP，内容及 SHA-256 与第 8 节一致；平台审核仍由用户提交。
+- 本机公开制品证据：`.tmp/workbuddy-auto-update-20261113/evidence/published-next.json`、`attestation-0.2.18.json`。生产 latest 尚未晋升，新连接器审核通过后另行处理。
