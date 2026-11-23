@@ -21,16 +21,13 @@
   "channels": {
     "workbuddy": {
       "format": "workbuddy-zip",
-      "cliPackageTag": "latest",
-      "bootstrap": "packages/workbuddy/patchxnote-agent/bootstrap.cjs",
       "connectorSource": "patchxfreenote",
       "manifest": "packages/workbuddy/patchxnote-agent/connector-meta.json",
       "manifestDestination": "connector-meta.json",
-      "archiveName": "{{DISPLAY_NAME}}-workbuddy-connector",
+      "archiveName": "Freenote-workbuddy-connector",
       "files": {
         "mcp.json": "packages/workbuddy/patchxnote-agent/mcp.json",
-        "cli.json": "packages/workbuddy/patchxnote-agent/cli.json",
-        "icon.svg": "packages/workbuddy/patchxnote-agent/icon.svg"
+        "icon.png": "packages/workbuddy/patchxnote-agent/icon.png"
       },
       "skillOverrides": {
         "SKILL.md": "packages/workbuddy/patchxnote-agent/skills/patchxnote-mcp/SKILL.md",

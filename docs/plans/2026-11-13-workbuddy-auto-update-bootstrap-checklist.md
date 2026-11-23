@@ -2,7 +2,9 @@
 
 **日期：** 2026-11-13
 
-**状态：** 实现、计划内定向验证及候选公开发布完成；GitHub v0.2.18、npm next=0.2.18 已验证，latest 保持 0.2.16。Mac/新版 WorkBuddy 界面验收、用户提交审核及审核后的 latest 切换仍待完成。
+> **2026-11-13 接续说明：** WorkBuddy `0.1.3` ZIP 已被平台上传解析器拒绝，原因包含 MCP/CLI 混装、CLI preAuth 和编码内联脚本。本文件保留既有实现与候选发布的历史证据；WorkBuddy 后续改造改按[远程 MCP 与平台 OAuth 计划](2026-11-13-workbuddy-remote-mcp-platform-oauth-checklist.md)执行。npm latest 继续保持 `0.2.16`，本计划中的后续标签切换不自动执行。
+
+**历史实施状态：** 实现、计划内定向验证及候选公开发布完成；GitHub v0.2.18、npm next=0.2.18 已验证，latest 保持 0.2.16。该结果不代表 WorkBuddy 平台解析、审核或新版真实客户端验收通过。
 
 **目标：** 更新一次 WorkBuddy 连接器后，Windows/macOS 新用户无需终端操作即可完成安装、浏览器授权和连接；后续 npm 与配套 Go 程序在下次连接时自动更新，更新失败继续使用已有可用版本。
 

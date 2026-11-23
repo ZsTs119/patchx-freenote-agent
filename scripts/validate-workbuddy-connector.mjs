@@ -3,12 +3,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { bootstrapCommand, runtimeActions } from "./lib/workbuddy-bootstrap.mjs";
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(scriptDir, "..");
-const defaultConnectorRoot = path.join(repoRoot, "packages", "workbuddy", "patchxnote-agent");
 const maxZipBytes = 20 * 1024 * 1024;
+const iconNames = ["icon.svg", "icon.png"];
 
 function fail(message) {
   throw new Error(message);
@@ -74,7 +73,7 @@ function readTextPackageFiles(connectorRoot) {
     }));
 }
 
-function validateConnectorMeta(meta) {
+function validateConnectorMeta(meta, expectedURL) {
   for (const field of ["name", "name_zh", "name_en", "description", "description_zh", "description_en", "source", "type", "version"]) {
     if (typeof meta[field] !== "string" || meta[field].trim() === "") {
       fail(`connector-meta.json field ${field} must be a non-empty string`);
@@ -99,15 +98,22 @@ function validateConnectorMeta(meta) {
       }
     }
   }
-  if (typeof meta.minWorkbuddyVersion !== "string" || compareVersion(meta.minWorkbuddyVersion, "5.0.0") < 0) {
-    fail("connector-meta.json minWorkbuddyVersion must be at least 5.0.0 for CLI preAuth");
+  if (typeof meta.minWorkbuddyVersion !== "string" || compareVersion(meta.minWorkbuddyVersion, "4.24.0") < 0) {
+    fail("connector-meta.json minWorkbuddyVersion must support server-side OAuth (4.24.0 or later)");
   }
-  if ("auth_mode" in meta) {
-    fail("connector-meta.json uses CLI preAuth, not a remote auth_mode");
+  if (meta.auth_mode !== "server-side" || meta.server_auth?.auth_type !== "mcp_oauth") {
+    fail("connector-meta.json must use server-side OAuth with mcp_oauth dynamic registration");
+  }
+  const oauth = meta.server_auth.data?.mcp_oauth;
+  if (oauth?.server_url !== expectedURL) {
+    fail("connector-meta.json OAuth server_url must match the selected MCP URL");
+  }
+  for (const field of ["client_id", "client_secret", "redirect_uri"]) {
+    if (field in oauth) fail(`connector-meta.json ${field} is assigned by dynamic registration, not the package`);
   }
 }
 
-function validateMCPConfig(config, expectedURL, expectedCLITag = "latest") {
+function validateMCPConfig(config, expectedURL) {
   if (!config || typeof config !== "object" || Array.isArray(config)) {
     fail("mcp.json must be an object");
   }
@@ -123,49 +129,33 @@ function validateMCPConfig(config, expectedURL, expectedCLITag = "latest") {
   if (!server || typeof server !== "object" || Array.isArray(server)) {
     fail("mcp.json server entry must be an object");
   }
-  if (config.preAuth !== "cli" || server.type !== "stdio" || server.command !== "node") {
-    fail("mcp.json must use CLI preAuth and the managed Node bootstrap");
+  if ("preAuth" in config) {
+    fail("mcp.json must not contain CLI preAuth");
   }
-  if (server.runtime?.type !== "node" || server.env?.PATCHXNOTE_MCP_MODE !== "remote") {
-    fail("mcp.json must declare Node and use the existing remote proxy mode");
+  if (server.type !== "streamableHttp" || server.url !== expectedURL || !server.url.startsWith("https://")) {
+    fail("mcp.json must use streamableHttp and the selected HTTPS MCP URL");
   }
-  const args = server.args;
-  if (!Array.isArray(args) || args[0] !== "-e" || !args[1]?.includes("brotliDecompressSync") ||
-      args[2] !== "--" || args[3] !== "run" || args[5] !== "serve" || args.length !== 6) {
-    fail("mcp.json must run the bundled bootstrap serve entry");
+  for (const field of ["command", "args", "runtime", "env"]) {
+    if (field in server) fail(`mcp.json remote server must not contain local ${field}`);
   }
-  const options = JSON.parse(Buffer.from(args[4], "base64").toString("utf8"));
-  const baseURL = expectedURL.replace(/\/mcp$/, "");
-  if (options.channel !== expectedCLITag || options.profile !== "workbuddy" || options.serverBaseURL !== baseURL || "url" in server) {
-    fail("mcp.json must follow the channel tag with the workbuddy profile and selected server");
-  }
-  return { loaderArgs: args.slice(0, 3), encodedOptions: args[4], baseURL };
 }
 
-function validateCLIConfig(config, { loaderArgs, encodedOptions, baseURL }) {
-  if (config.runtime?.type !== "node" || config.authWaitForExit !== true ||
-      config.authUrlDomain !== new URL(baseURL).hostname) {
-    fail("cli.json must declare Node and retain the browser callback process");
-  }
-  const matcher = new RegExp(config.statusMatch ?? "");
-  if (!matcher.test('{"authenticated":true}') || matcher.test('{"authenticated":false}')) {
-    fail("cli.json statusMatch must distinguish authenticated true from false");
-  }
-  if (config.versionCheck?.minVersion !== "1.0.0" ||
-      !new RegExp(config.versionCheck.versionPattern).test("workbuddy-ready=1.0.0")) {
-    fail("cli.json must check bootstrap readiness before authentication");
-  }
-  for (const platform of ["darwin", "linux", "win32"]) {
-    for (const [action, [mode, args]] of Object.entries(runtimeActions)) {
-      const value = action === "check" ? config.versionCheck.command[platform] : config[action]?.[platform];
-      if (value !== bootstrapCommand([...loaderArgs, mode, encodedOptions, ...args])) {
-        fail(`cli.json ${action}.${platform} differs from the shared bootstrap contract`);
-      }
-    }
-  }
+function findIcon(connectorRoot) {
+  const icons = iconNames.filter(name => fs.existsSync(path.join(connectorRoot, name)));
+  if (icons.length !== 1) fail("WorkBuddy package must contain one icon.svg or icon.png");
+  return assertFile(connectorRoot, icons[0]);
 }
 
 function validateIcon(iconPath) {
+  if (path.extname(iconPath) === ".png") {
+    const icon = fs.readFileSync(iconPath);
+    if (icon.length < 33 || !icon.subarray(0, 8).equals(Buffer.from("89504e470d0a1a0a", "hex")) ||
+        icon.readUInt32BE(8) !== 13 || icon.toString("ascii", 12, 16) !== "IHDR" ||
+        icon.readUInt32BE(16) === 0 || icon.readUInt32BE(20) === 0) {
+      fail("icon.png must contain a PNG image with non-zero dimensions");
+    }
+    return;
+  }
   const icon = fs.readFileSync(iconPath, "utf8");
   if (!/<svg\b/i.test(icon)) {
     fail("icon.svg must contain an svg element");
@@ -187,12 +177,18 @@ function validateIcon(iconPath) {
   }
 }
 
-function validateSkill(skillPath) {
+function validateSkill(skillPath, packageVersion) {
   const text = fs.readFileSync(skillPath, "utf8");
-  if (!/^---\n/.test(text)) {
+  const frontmatter = text.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
+  if (!frontmatter) {
     fail("WorkBuddy SKILL.md should include frontmatter");
   }
-  for (const required of ["WorkBuddy", "patchxnote_get_current_user", "patchxnote_list_memories", "{\"platform\":\"mobile\",\"limit\":5}"]) {
+  const skillVersion = frontmatter[1].match(/^[ \t]+version:[ \t]*["']?([^"'\s]+)["']?[ \t]*$/m)?.[1];
+  if (skillVersion !== `${packageVersion}-workbuddy`) {
+    fail("WorkBuddy Skill version must match the connector version with the -workbuddy suffix");
+  }
+  for (const required of ["WorkBuddy", "patchxnote_get_current_user", "patchxnote_get_quota_summary",
+    "patchxnote_list_memories", "patchxnote_render_webhook_message"]) {
     if (!text.includes(required)) {
       fail(`WorkBuddy SKILL.md must mention ${required}`);
     }
@@ -214,6 +210,7 @@ function validateSensitiveContent(connectorRoot) {
     [/\/home\/[A-Za-z0-9._-]+\//, "Linux local home path"]
   ];
   for (const { relativePath, text } of readTextPackageFiles(connectorRoot)) {
+    if (/\{\{[A-Z_]+\}\}/.test(text)) fail(`${relativePath} contains an unresolved template`);
     for (const [pattern, label] of patterns) {
       if (pattern.test(text)) {
         fail(`${relativePath} appears to contain ${label}`);
@@ -223,9 +220,17 @@ function validateSensitiveContent(connectorRoot) {
 }
 
 function validateNoUnexpectedFiles(connectorRoot) {
+  assertNoFile(connectorRoot, "cli.json");
   assertNoFile(connectorRoot, "token-schema.json");
+  const roots = new Set(["connector-meta.json", "mcp.json", ...iconNames, "skills"]);
+  for (const name of fs.readdirSync(connectorRoot)) {
+    if (!roots.has(name)) fail(`unexpected file in WorkBuddy remote package: ${name}`);
+  }
   const forbiddenNames = new Set([".git", "node_modules", "dist", ".env", ".patchnote"]);
   for (const filePath of walkFiles(connectorRoot)) {
+    if ([".js", ".cjs", ".mjs"].includes(path.extname(filePath).toLowerCase())) {
+      fail("WorkBuddy remote package must not include executable bootstrap scripts");
+    }
     const relativeParts = path.relative(connectorRoot, filePath).split(path.sep);
     for (const part of relativeParts) {
       if (forbiddenNames.has(part)) {
@@ -280,7 +285,7 @@ function readZipEntries(zipPath) {
   return entries;
 }
 
-function validateZipIfPresent(zipPath, connectorRoot) {
+function validateZipIfPresent(zipPath, connectorRoot, iconName) {
   if (!zipPath) {
     return;
   }
@@ -300,12 +305,12 @@ function validateZipIfPresent(zipPath, connectorRoot) {
     fail(`WorkBuddy zip must contain exactly ${expectedEntries.length} files, found ${entries.length}`);
   }
   const topLevel = new Set(entries.map(entry => entry.split("/")[0]));
-  for (const expectedTopLevel of ["connector-meta.json", "mcp.json", "cli.json", "icon.svg", "skills"]) {
+  for (const expectedTopLevel of ["connector-meta.json", "mcp.json", iconName, "skills"]) {
     if (!topLevel.has(expectedTopLevel)) {
       fail(`WorkBuddy zip top level is missing ${expectedTopLevel}`);
     }
   }
-  if (topLevel.size !== 5) {
+  if (topLevel.size !== 4) {
     fail(`WorkBuddy zip has unexpected top-level entries: ${[...topLevel].sort().join(", ")}`);
   }
   const forbiddenNames = new Set([".git", "node_modules", "dist", ".env", ".patchnote"]);
@@ -323,30 +328,28 @@ function validateZipIfPresent(zipPath, connectorRoot) {
 }
 
 export function validateWorkBuddyConnector({
-  connectorRoot = defaultConnectorRoot,
+  connectorRoot,
   expectedURL = "https://freenote.patch-x.cn/mcp",
-  expectedCLITag,
   zipPath
 } = {}) {
+  if (!connectorRoot) fail("Provide the generated WorkBuddy bundle directory");
   if (!fs.existsSync(connectorRoot) || !fs.statSync(connectorRoot).isDirectory()) {
     fail(`missing connector directory: ${path.relative(repoRoot, connectorRoot)}`);
   }
   const meta = readJSON(assertFile(connectorRoot, "connector-meta.json"));
   const mcpConfig = readJSON(assertFile(connectorRoot, "mcp.json"));
-  const cliConfig = readJSON(assertFile(connectorRoot, "cli.json"));
-  const iconPath = assertFile(connectorRoot, "icon.svg");
+  const iconPath = findIcon(connectorRoot);
   const skillPath = assertFile(connectorRoot, path.join("skills", "patchxnote-mcp", "SKILL.md"));
   for (const reference of ["onboarding.md", "workflows.md", "troubleshooting.md", "security-and-evidence.md", "source-of-truth.md"]) {
     assertFile(connectorRoot, path.join("skills", "patchxnote-mcp", "references", reference));
   }
-  validateConnectorMeta(meta);
-  const cliContract = validateMCPConfig(mcpConfig, expectedURL, expectedCLITag);
-  validateCLIConfig(cliConfig, cliContract);
+  validateConnectorMeta(meta, expectedURL);
+  validateMCPConfig(mcpConfig, expectedURL);
   validateIcon(iconPath);
-  validateSkill(skillPath);
+  validateSkill(skillPath, meta.version);
   validateNoUnexpectedFiles(connectorRoot);
   validateSensitiveContent(connectorRoot);
-  validateZipIfPresent(zipPath, connectorRoot);
+  validateZipIfPresent(zipPath, connectorRoot, path.basename(iconPath));
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

@@ -1,22 +1,31 @@
 {
-  "name": "PatchX Freenote",
-  "name_zh": "PatchX Freenote",
-  "name_en": "PatchX Freenote",
-  "description": "首次使用时引导浏览器登录授权，随后查询录音总结、记忆、额度和 AI 整理结果，将记录整理成可复制的笔记。",
-  "description_zh": "首次使用时引导浏览器登录授权，随后查询录音总结、记忆、额度和 AI 整理结果，将记录整理成可复制的笔记。",
-  "description_en": "Sign in through your browser, then read recording summaries, memories, quota and AI results, and turn records into copyable notes.",
+  "name": "Freenote",
+  "name_zh": "Freenote",
+  "name_en": "Freenote",
+  "description": "查询 Freenote 账号与额度、最近记录和总结，并将可读内容整理为 Markdown 笔记。使用前通过平台完成 OAuth 授权。",
+  "description_zh": "查询 Freenote 账号与额度、最近记录和总结，并将可读内容整理为 Markdown 笔记。使用前通过平台完成 OAuth 授权。",
+  "description_en": "Read your Freenote account, quota and recent records, then turn a readable summary into a Markdown note. Authorize through WorkBuddy before use.",
   "source": "patchxfreenote",
   "type": "mcp",
-  "version": "0.1.3",
+  "auth_mode": "server-side",
+  "server_auth": {
+    "auth_type": "mcp_oauth",
+    "data": {
+      "mcp_oauth": {
+        "server_url": "{{MCP_URL}}"
+      }
+    }
+  },
+  "version": "0.1.6",
   "minWorkbuddyVersion": "5.0.0",
   "examples_zh": [
-    "帮我登录并连接 PatchX Freenote，打开浏览器让我完成授权，然后检查连接是否成功。",
-    "帮我查看最近的手机端录音总结；如果尚未登录，请先引导我完成授权。",
-    "帮我把最近一次手机端录音总结整理成可复制的笔记；如果尚未登录，请先引导我完成授权。"
+    "查看我的账号状态和剩余额度。",
+    "列出我最近五条记录或总结，包含标题、时间和来源。",
+    "将我最近一条有可读总结的记录整理成 Markdown 笔记。"
   ],
   "examples_en": [
-    "Connect me to PatchX Freenote, open the browser for authorization if needed, and verify the connection.",
-    "Show my recent mobile recording summaries; help me authorize first if I am not signed in.",
-    "Turn my latest mobile recording summary into a copyable note; help me authorize first if I am not signed in."
+    "Show my account status and remaining quota.",
+    "List my five most recent records or summaries, including title, time and source.",
+    "Turn my most recent record with a readable summary into a Markdown note."
   ]
 }

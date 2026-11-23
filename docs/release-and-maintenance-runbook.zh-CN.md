@@ -1,12 +1,34 @@
 # PatchX Freenote Agent 发布与维护 Runbook
 
-## 0.2.18 / WorkBuddy 0.1.3 候选已发布（2026-11-13）
+## WorkBuddy 0.1.6 业务示例候选（2026-11-16）
+
+用户要求本连接器展示名为 Freenote，中英文名称及 WorkBuddy ZIP 文件名已同步；source 保持 patchxfreenote。更名后单独复验现有生成/实际 ZIP 对照用例，1/1 通过。
+
+生产候选为 `dist/channels/workbuddy/production/0.1.6/Freenote-workbuddy-connector-0.1.6.zip`，SHA256 为 `dc1c56ab5287967cee8c5144693503cbb7a9af130932908c55d8cc0ce3c4d47a`。保留既有 PNG 图标、source、远程 MCP 和平台 OAuth 配置；双语示例调整为账号/额度、最近记录或总结、可读总结转 Markdown 笔记。主 Skill 直接描述工具顺序、参数来源、异常处理与完成标准。
+
+仅运行 `node --test --test-concurrency=1 scripts/workbuddy-remote-connector.test.mjs`，9 项定向检查通过，含生产/测试 ZIP 实际内容对照、旧混合入口拒绝以及 Skill 版本和笔记工具接续；未连接测试服务器，未运行 Go、npm 或其他渠道测试。0.1.4/0.1.5 旧生产包摘要不变；0.1.6 的真实平台授权、三个业务示例、重连与质量评测待用户接续，不能以本地测试代替。详细证据见 [0.1.6 计划](plans/2026-11-16-workbuddy-quality-resubmission-checklist.md)。
+
+本轮只修改 Agent 仓库中的 WorkBuddy 包内容、对应校验及维护记录，未提交、推送、发布或修改 npm 标签；GoServer 工作由用户负责。
+
+## WorkBuddy 0.1.5 展示图更新（2026-11-16）
+
+当时生成的包为 `dist/channels/workbuddy/production/0.1.5/PatchX Freenote-workbuddy-connector-0.1.5.zip`。使用用户提供的产品图片，等比例转换为透明底 64×64 `icon.png`；MCP、OAuth、Skill 使用流程沿用 0.1.4，只递增包版本及对应版本说明。7 项 WorkBuddy 打包检查、ZIP 内容及 PNG 核对通过，旧 0.1.4 产物保留。此处仅记录本地包验证，平台上传由用户操作；摘要与证据见[远程 MCP 计划第 8 节](plans/2026-11-13-workbuddy-remote-mcp-platform-oauth-checklist.md#8-展示图替换2026-11-16)。
+
+## WorkBuddy 0.1.4 远程 MCP 候选（2026-11-13）
+
+WorkBuddy 包已改为远程 MCP + 平台 OAuth 动态注册，保持 `source=patchxfreenote`；生产 MCP URL 与 OAuth 发现地址均为 `https://freenote.patch-x.cn/mcp`。不再包含 CLI 安装、预授权或本地启动脚本。旧用户更新后可能需要在平台重新授权一次，业务修复由服务端发布生效。
+
+生产/测试 WorkBuddy 包已生成，`node --test --test-concurrency=1 scripts/workbuddy-remote-connector.test.mjs` 的 7 项定向测试通过，包含真实 ZIP 内容核对和本次上传错误回归。仅完成本地交付，平台解析、新授权、工具调用、刷新和 Windows/macOS 实测等待用户上传验证。具体产物、摘要与状态见[远程 MCP 计划](plans/2026-11-13-workbuddy-remote-mcp-platform-oauth-checklist.md)。
+
+npm `latest=0.2.16`、`next=0.2.18` 保持不变；本轮不提交、推送、发布 npm/GitHub 或部署服务。以下 0.1.3 记录保留历史证据，其 ZIP 已被平台解析器拒绝，不能继续作为送审候选。
+
+## 0.2.18 / WorkBuddy 0.1.3 候选发布记录（2026-11-13）
 
 本轮实现 WorkBuddy 自动准备目录、下一次连接更新 npm/Go、失败回退和安装器快速路径，业务与授权协议沿用现有实现。执行状态见 [自动更新计划](plans/2026-11-13-workbuddy-auto-update-bootstrap-checklist.md)。
 
 GitHub v0.2.18 与 npm next=0.2.18 已发布，latest 仍为 0.2.16。公开候选在 Windows 完成真实安装、MCP 初始化、19 个工具发现与账户读取，发行二进制来源证明通过；Mac/新版 WorkBuddy 界面和平台审核仍待用户验证。发行提交 e0679be；Release run 43370809253、npm run 43371217424 均成功。以下旧版记录保留历史语境。
 
-发布顺序：先准备对应 GitHub 二进制和来源材料，再使用更新后的 `publish-npm.yml`（显式指定实际 workflow ref）以 `publish_tag=next` 发布 npm 候选；发布前后核对 `latest` 未变。当前审核过渡期间 `latest` 保持 `0.2.16`。新 WorkBuddy 包审核通过并确认上线时，使用单独的 `operation=set-latest` 切换；不能直接以默认 npm publish 提前移动 latest。
+当时的候选发布顺序：先准备对应 GitHub 二进制和来源材料，再使用更新后的 `publish-npm.yml`（显式指定实际 workflow ref）以 `publish_tag=next` 发布 npm 候选；发布前后核对 `latest` 未变。当前 `latest` 保持 `0.2.16`；后续切换仍需明确授权，不随远程连接器审核自动执行。
 
 本轮只运行 `scripts/workbuddy-bootstrap.test.mjs` 和 `packages/npm/test/workbuddy-update.test.js` 两组串行定向测试，以及候选内容、实际启动与标签检查。发布元数据脚本继续核对配套资产。只有本轮文件范围命中 `runtime_workbuddy_update_only` 时使用此选择，其他发行保持原有选测路径。此次未修改 Go 业务代码，不执行 Go 业务测试。
 
@@ -41,7 +63,7 @@ Agent CLI/npm `0.2.17` 已发布，增加Web来源和本人账号默认内容读
 - GitHub Release workflow：`.github/workflows/release.yml`
 - macOS 安装冒烟 workflow：`.github/workflows/macos-install-smoke.yml`
 - 默认服务端：生产 API `https://freenote.patch-x.cn`，具体默认值以 `internal/config/config.go` 为准
-- 当前可安装候选：CLI/npm `0.2.18`（npm `next`）；默认 `latest` 暂留 `0.2.16` 等待 WorkBuddy 审核；MCP Registry 本轮未更新。
+- 当前可安装候选：CLI/npm `0.2.18`（npm `next`）；默认 `latest` 保持 `0.2.16`，后续按明确授权切换；MCP Registry 本轮未更新。
 - 当前能力：继承 `0.2.16` 的登录/刷新及连接器兼容，增加Web与账号级内容查询、缓存和导出适配；npm／Skill／MCP ID、原凭据及远程代理路径保持。
 - 当前发布证据：`docs/evidence/2026-11-05-release-0.2.17.zh-CN.md`。
 - 0.2.13 已有验证：实际 npm README/Skill 与源码一致，Windows 发布包生产 stdio 查询、Windows/macOS 安装、Linux 制品校验通过。本次修正版按对应证据补验，既有业务结果不冒充新版验收；平台 UI 单列。
@@ -600,14 +622,14 @@ node scripts/package-channel.mjs --channel workbuddy --env test
 
 | 渠道 | 取用方式 |
 | --- | --- |
-| `workbuddy` | 使用输出目录中的 `PatchX Freenote-workbuddy-connector-<version>.zip` 上传；ZIP 根目录包含 metadata、MCP 配置、CLI 前置授权配置、图标和 Skill。旁边的 `bundle/` 供查看生成内容。 |
+| `workbuddy` | 使用输出目录中的 `Freenote-workbuddy-connector-<version>.zip` 上传。ZIP 根目录包含平台 OAuth metadata、远程 MCP 配置、`icon.png` 和 Skill。旁边的 `bundle/` 供查看生成内容。 |
 | `codex` | 取用输出的 `bundle/`，其中包含 `.agents/plugins/marketplace.json` 与 `packages/plugins/openai/patchxfreenote/`。按平台提交方式选取插件目录或保留清单与目录关系。 |
 | `claude-code` | 取用输出的 `bundle/`，其中包含 `.claude-plugin/marketplace.json` 与 `packages/plugins/claude/patchxfreenote/`。按平台提交方式选取插件目录或保留清单与目录关系。 |
 | `coze` | 上传 `PatchXFreeNote-coze-plugin-<version>.zip` 到扣子“扩展 → 插件 → 上传插件包”；包根目录为 Agent Plugins 1.0.0 的 `plugin.json`、`mcp.json`、`skills/`，图标在 `assets/icon.svg`。 |
 
-渠道展示名称统一为 `PatchXFreeNote`，由配置中的 `common.branding.displayName` 控制，同时用于 ZIP 文件名前缀；插件 manifest 与 marketplace 的机器标识使用 `common.branding.pluginName`（当前为 `patchxfreenote`），生成目录和 marketplace 引用同步调整。生成副本的标题、描述、示例和图标说明使用新名称。`patchxnote-agent` npm 包、`patchxnote` CLI/MCP 服务标识、`patchxnote_*` 工具名和 `patchxnote-mcp` Skill 标识保持现有值。
+共享展示名称由 `common.branding.displayName` 控制，含 `{{DISPLAY_NAME}}` 的 ZIP 文件名也使用此值。WorkBuddy 的展示名称和 ZIP 文件名前缀为 `Freenote`，分别由其元信息和渠道配置指定。插件 manifest 与 marketplace 的机器标识使用 `common.branding.pluginName`（当前为 `patchxfreenote`），生成目录和 marketplace 引用同步调整。`patchxnote-agent` npm 包、`patchxnote` CLI/MCP 服务标识、`patchxnote_*` 工具名和 `patchxnote-mcp` Skill 标识保持现有值。
 
-WorkBuddy metadata 的 `source` 读取 `channels.workbuddy.connectorSource`，当前为 `patchxfreenote`；升级时保持该身份。0.1.2 起要求 WorkBuddy 至少 5.0.0，使用 `preAuth: "cli"`、`cli.json` 与 stdio；CLI 固定版本取自 `channels.workbuddy.cliPackageVersion`（当前 0.2.16），auth/status/unAuth/MCP 共用 `workbuddy` profile 和所选服务地址。CLI 授权使用现有本机 loopback 回调；旧远程连接器的 `workbuddy://workbuddy/mcp/connector%3Apatchxfreenote/oauth/callback` 属于历史路径，本轮不修改 GoServer 回调配置。Skill 中的 `{{CONNECTOR_SOURCE}}` 在构建时同步替换。
+WorkBuddy metadata 的 `source` 读取 `channels.workbuddy.connectorSource`，当前为 `patchxfreenote`；升级时保持该身份。0.1.4 继续要求 WorkBuddy 至少 5.0.0，使用 `auth_mode: "server-side"` 与 `server_auth.auth_type: "mcp_oauth"`，`mcp.json` 使用 `streamableHttp`。生成时 OAuth `server_url` 和 MCP `url` 同步到所选环境；客户端信息由平台动态注册取得，授权由平台管理。Skill 中的 `{{CONNECTOR_SOURCE}}` 同步替换。本轮不修改服务端回调或 npm 发布配置。
 
 生成器直接读取公共 Skill 源，不要求先执行副本同步。生产插件的公共 Skill 仅替换展示名称；WorkBuddy 使用配置中列出的已有渠道说明覆盖。测试插件额外调整生成副本中的环境提示、接入 reference 和现有命令的 `--server-base-url`，不会修改用户配置或公共源。生产服务的公开主页/下载链接仍保留其原用途。
 
@@ -619,7 +641,7 @@ WorkBuddy metadata 的 `source` 读取 `channels.workbuddy.connectorSource`，�
 
 扣子编程的 API/OpenAPI 插件创建属于另一入口，本 ZIP 面向上述“扩展 → 插件”导入。2026-09-14 已验证扣子生产包结构和官方 schema 使用的约束，尚未进行扣子平台导入、授权或上架；后续只变更某一渠道时，仅生成和检查对应产物，无需重新跑其他渠道或业务模块。
 
-仅修改本模块时，按本次改动涉及的渠道串行生成和检查；新增或修改环境处理时，再检查对应测试包。使用现有 JSON/解压工具读取实际产物，核对该格式的根目录、端点或 marketplace 引用。参数处理变更时，检查一个未知渠道和未知环境返回非零即可。不要连带运行未改动的 Go、npm 安装器、OAuth、MCP 业务或浏览器验收，也不新增独立测试/校验脚本。
+仅修改本模块时，按本次改动涉及的渠道串行生成和检查；新增或修改环境处理时，再检查对应测试包。使用现有 JSON/解压工具读取实际产物，核对该格式的根目录、端点或 marketplace 引用。参数处理变更时，检查一个未知渠道和未知环境返回非零即可。WorkBuddy 远程包的定向回归位于 `scripts/workbuddy-remote-connector.test.mjs`，测试已生成并校验生产/测试产物；无后续改动时可直接使用这些产物，不重复打包。不要连带运行未改动的 Go、npm 安装器、其他渠道或无关业务测试；本次实际平台 OAuth/MCP 验收按远程计划单独记录。
 
 本地生成与检查完成后记录结果；平台提交、审核和真实账号使用另外记录。实施和验证证据见 `docs/plans/2026-09-14-unified-channel-package-checklist.md`。
 

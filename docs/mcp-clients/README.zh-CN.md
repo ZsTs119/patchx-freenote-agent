@@ -50,6 +50,26 @@ npx -y patchxnote-agent@latest mcp login
 
 ## 平台闭环
 
+### WorkBuddy 0.1.6 候选（2026-11-16）
+
+平台展示名称为 **Freenote**，中英文名称一致；使用 `Freenote-workbuddy-connector-0.1.6.zip` 上传，连接器身份保持不变。
+
+source 仍为 `patchxfreenote`，远程 MCP / 平台 OAuth 配置与现有 PNG 图标保持。新版示例聚焦账号状态和额度、最近记录或总结、可读总结转 Markdown 笔记；核心工具顺序和输出要求已写入主 Skill，记录默认按账号查询并保留来源。
+
+当前仅完成本地候选：9 项 WorkBuddy 包定向检查和生产/测试 ZIP 内容核对通过，0.1.4/0.1.5 旧产物保留。用户需在平台完成本候选真实 OAuth，用有可读总结的账号验证三个示例和重连，再接续质量评测；尚未标记 `platform_accepted`。详见 [0.1.6 质量评测接续计划](../plans/2026-11-16-workbuddy-quality-resubmission-checklist.md)。npm latest 按约定保持 0.2.16，本次没有标签写操作。
+
+下文保留历史记录：0.1.4 已由用户提交，后因沙箱质量评测未达标被驳回，具体失败日志尚未取得；此前“无需授权”的初始化自测不能作为平台 OAuth 完成的证据。
+
+### WorkBuddy 0.1.4 候选（2026-11-13）
+
+连接器 `source=patchxfreenote` 使用远程 `streamableHttp` + `server-side` / `mcp_oauth`，由 WorkBuddy 云端动态注册并管理授权凭据。用户从平台连接入口登录，Windows/macOS 无需本地 Node、npm 或 Go 程序。原本本地登录的用户更新后可能需重新授权一次。
+
+当前证据：生产/测试 ZIP 与 7 项包生成/校验定向测试通过；生产 OAuth 资源和授权服务器 metadata 返回 200，未授权工具调用返回 401 并提供资源发现地址。公开初始化可用不等于用户已授权。平台上传解析、新授权、真实工具调用、令牌刷新和两端实测仍待用户验证，尚未标记为 `platform_accepted`。产物与后续结果见[远程 MCP 与平台 OAuth 计划](../plans/2026-11-13-workbuddy-remote-mcp-platform-oauth-checklist.md)。
+
+旧 0.1.3 混合包的本机运行证据不代表平台可接受，该包已被上传解析器拒绝。npm `latest=0.2.16`、`next=0.2.18` 保持；此远程候选不依赖 npm 标签。
+
+### 其他平台与通用入口
+
 飞书 Aily / 豆包工作伙伴、腾讯 Agent 平台、企业版 WorkBuddy 这类平台通常不能运行用户本机的 `npx`，所以它们走远程 MCP 网关：
 
 ```text

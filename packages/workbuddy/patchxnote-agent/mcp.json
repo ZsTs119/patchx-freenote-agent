@@ -1,19 +1,8 @@
 {
-  "preAuth": "cli",
   "mcpServers": {
     "patchxnote": {
-      "type": "stdio",
-      "command": "node",
-      "args": [
-        "{{WORKBUDDY_SERVE_ARGS}}"
-      ],
-      "runtime": {
-        "type": "node",
-        "version": "20"
-      },
-      "env": {
-        "PATCHXNOTE_MCP_MODE": "remote"
-      },
+      "type": "streamableHttp",
+      "url": "{{MCP_URL}}",
       "timeout": 30000
     }
   }
