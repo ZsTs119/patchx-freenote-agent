@@ -1,10 +1,10 @@
 {
-  "name": "Freenote",
-  "name_zh": "Freenote",
-  "name_en": "Freenote",
-  "description": "查询 Freenote 账号与额度、最近记录和总结，并将可读内容整理为 Markdown 笔记。使用前通过平台完成 OAuth 授权。",
-  "description_zh": "查询 Freenote 账号与额度、最近记录和总结，并将可读内容整理为 Markdown 笔记。使用前通过平台完成 OAuth 授权。",
-  "description_en": "Read your Freenote account, quota and recent records, then turn a readable summary into a Markdown note. Authorize through WorkBuddy before use.",
+  "name": "自由记 Freenote",
+  "name_zh": "自由记 Freenote",
+  "name_en": "自由记 Freenote",
+  "description": "查询 Freenote 个人记录和总结。公司老板还可查询员工企业记录、读取归档正文并导出 ZIP。通过 WorkBuddy 完成 OAuth 授权。",
+  "description_zh": "查询 Freenote 个人记录和总结。公司老板还可查询员工企业记录、读取归档正文并导出 ZIP。通过 WorkBuddy 完成 OAuth 授权。",
+  "description_en": "Read your Freenote records and summaries. Company owners can also read employees' company records and export them as ZIP files. Authorize through WorkBuddy.",
   "source": "patchxfreenote",
   "type": "mcp",
   "auth_mode": "server-side",
@@ -16,16 +16,20 @@
       }
     }
   },
-  "version": "0.1.6",
+  "version": "0.1.7",
   "minWorkbuddyVersion": "5.0.0",
   "examples_zh": [
     "查看我的账号状态和剩余额度。",
     "列出我最近五条记录或总结，包含标题、时间和来源。",
-    "将我最近一条有可读总结的记录整理成 Markdown 笔记。"
+    "将我最近一条有可读总结的记录整理成 Markdown 笔记。",
+    "查看某个员工全部日期的转写、纠错和 AI 总结。",
+    "导出某位离职员工的企业历史记录为 ZIP。"
   ],
   "examples_en": [
     "Show my account status and remaining quota.",
     "List my five most recent records or summaries, including title, time and source.",
-    "Turn my most recent record with a readable summary into a Markdown note."
+    "Turn my most recent record with a readable summary into a Markdown note.",
+    "Read an employee's company transcripts, corrections and AI summaries across all dates.",
+    "Export a former employee's company recording history as a ZIP file."
   ]
 }

@@ -85,6 +85,18 @@ test("generated production and test ZIPs use direct MCP and matching platform OA
         assert.doesNotMatch(content.toString("utf8"), /preAuth|npx\s|mcp (?:login|status)|--no-browser|brotliDecompressSync/, name);
       }
     }
+    const skill = entries.get("skills/patchxnote-mcp/SKILL.md").toString("utf8");
+    for (const tool of [
+      "patchxnote_list_enterprises",
+      "patchxnote_list_enterprise_members",
+      "patchxnote_list_enterprise_records",
+      "patchxnote_get_enterprise_record_content",
+      "patchxnote_export_enterprise_records",
+    ]) {
+      assert.ok(skill.includes(tool), `enterprise workflow is missing ${tool}`);
+    }
+    assert.ok(meta.examples_zh.some(example => example.includes("ZIP") && example.includes("离职")));
+    assert.ok(meta.examples_en.some(example => /former employee.*ZIP/i.test(example)));
     validateWorkBuddyConnector({ connectorRoot: bundle, expectedURL: url, zipPath });
   }
 });

@@ -22,6 +22,17 @@
 | 查看实际整理结果 | `patchxnote_get_model_io_parsed_result` / `patchxnote_get_model_io_packaged_result` | 使用实际返回的 `request_id` 或 `memory_id`，并明确 `platform` |
 | 用户明确要求查看处理输入/响应 | `patchxnote_get_model_io_source_text` / `patchxnote_get_model_io_provider_response` | 同上；仅按用户需要读取相应字段 |
 | 用户明确要求导出模型数据 | `patchxnote_export_model_io` | 先检查当前远程模式的内容返回能力，不能假定可写本地路径 |
+| 查看我管理的公司 | `patchxnote_list_enterprises` | 从结果取 `organization_id` |
+| 查找员工 | `patchxnote_list_enterprise_members` | `organization_id`，可选 `name`。结果包含有公司历史的离职员工 |
+| 列出员工录音 | `patchxnote_list_enterprise_records` | `organization_id`、`account_id`，可选 `date_from`、`date_to`、`cursor` |
+| 读取录音归档正文 | `patchxnote_get_enterprise_record_content` | `organization_id`、`ai_record_id`、`content_types`。继续读取时传 `cursor` |
+| 导出员工企业历史 | `patchxnote_export_enterprise_records` | 首次传公司、员工、可选日期和内容类型。随后只传 `export_id` 查询状态 |
+
+## 企业查询和 ZIP 导出
+
+日期使用上海自然日 `YYYY-MM-DD`，起止日都计入。省略日期覆盖员工在该公司的全部可读历史。查询跨页时沿用相同筛选条件，直到服务不再返回 `next_cursor`。正文类型分别是 `transcript`、`correction`、`summary` 和 `deep_research`，缺失的正文按 `missing` 标记呈现。
+
+导出时可指定内容类型，省略则包含全部类型。返回 `pending` 时保留任务 ID，继续用该 ID 查询。返回 `ready` 时交付服务端 `download_url`，返回 `failed` 时说明失败。ZIP 含录音清单和每条录音的 Markdown。
 
 ## 最近记录
 

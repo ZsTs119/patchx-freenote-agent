@@ -1,9 +1,9 @@
 ---
 name: patchxnote-mcp
-description: Use Freenote in WorkBuddy to check account and quota, list recent records and summaries, or turn a readable record into a Markdown note through the connected remote MCP tools.
+description: Use Freenote in WorkBuddy to read personal records and summaries, make Markdown notes, or query and export company employee records as a company owner.
 license: UNLICENSED
 metadata:
-  version: "0.1.6-workbuddy"
+  version: "0.1.7-workbuddy"
   author: PatchX Freenote
   repository: https://github.com/ZsTs119/patchx-freenote-agent
   tags: patchx-freenote, patchxnote, mcp, workbuddy, recordings, notes
@@ -15,7 +15,7 @@ metadata:
 
 ## 选择用户要完成的任务
 
-已有有效授权时直接执行对应工具，不要求每个任务都先查询账号或手机记录。以下三条流程包含日常使用所需步骤；其他能力的参数和用法见 references/workflows.md。
+已有有效授权时直接执行对应工具，不要求每个任务都先查询账号或手机记录。按下列流程选择个人或企业工具，其他能力见 references/workflows.md。
 
 ### 1. 查看我的账号状态和剩余额度
 
@@ -44,6 +44,12 @@ metadata:
 示意参数：memory_id 填列表返回的真实 ID，platform 填同一记录返回的来源；不要把参数示意或操作步骤当成最终笔记。默认渲染不传 out 路径或 save_draft=true。名称包含 webhook 的渲染工具只用于本次取正文，不因此执行发送。
 
 完成标准是直接展示笔记正文。只给 ID、元数据、下载建议或操作教程都不算完成。确实无可读内容时如实说明，不声称已生成笔记。
+
+### 4. 查询公司员工记录或导出 ZIP
+
+1. 调用 patchxnote_list_enterprises 获取可访问的公司。从结果选 organization_id，再用 patchxnote_list_enterprise_members 按姓名查在职或离职员工，取 account_id。多家公司或同名员工无法确定时请用户选择。
+2. 调用 patchxnote_list_enterprise_records 查询该公司和员工。用户要全部历史时省略日期，按 next_cursor 逐页读取。需要正文时，把实际返回的 ai_record_id 和所需 content_types 传给 patchxnote_get_enterprise_record_content，并沿 next_cursor 读取剩余正文。分别呈现转写、纠错、AI 总结和深度调研，缺失内容按服务结果说明。
+3. 用户明确要求导出时，用 patchxnote_export_enterprise_records 提交公司、员工和日期范围。省略日期即导出全部可读历史。取得 export_id 后用同一工具回查状态。完成时把 download_url 作为 ZIP 下载链接交付，仍在处理时保留任务 ID，失败时说明状态。链接只用于交付给发起查询的用户。
 
 ## 授权或连接中断时
 

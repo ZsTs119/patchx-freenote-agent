@@ -1,5 +1,9 @@
 # PatchX Freenote Agent 发布与维护 Runbook
 
+## WorkBuddy 0.1.7 企业查询与导出候选（2026-11-23）
+
+WorkBuddy 继续使用远程 MCP 和平台 OAuth。0.1.7 增补老板查询员工企业档案和导出 ZIP 的说明，连接器显示名为「自由记 Freenote」。更名和工具说明表格排版修正后分别重打生产和测试 ZIP。最终产物通过 9 项 WorkBuddy 打包检查，确认排版修正仅删除一行空行。服务端先提供新工具，再依次完成 0.1.6 原授权重连和 0.1.7 平台验收。候选摘要和联调状态见 [0.1.7 接入计划](plans/2026-11-23-workbuddy-enterprise-records-checklist-plan.md)。
+
 ## WorkBuddy 0.1.6 业务示例候选（2026-11-16）
 
 用户要求本连接器展示名为 Freenote，中英文名称及 WorkBuddy ZIP 文件名已同步；source 保持 patchxfreenote。更名后单独复验现有生成/实际 ZIP 对照用例，1/1 通过。
@@ -627,7 +631,7 @@ node scripts/package-channel.mjs --channel workbuddy --env test
 | `claude-code` | 取用输出的 `bundle/`，其中包含 `.claude-plugin/marketplace.json` 与 `packages/plugins/claude/patchxfreenote/`。按平台提交方式选取插件目录或保留清单与目录关系。 |
 | `coze` | 上传 `PatchXFreeNote-coze-plugin-<version>.zip` 到扣子“扩展 → 插件 → 上传插件包”；包根目录为 Agent Plugins 1.0.0 的 `plugin.json`、`mcp.json`、`skills/`，图标在 `assets/icon.svg`。 |
 
-共享展示名称由 `common.branding.displayName` 控制，含 `{{DISPLAY_NAME}}` 的 ZIP 文件名也使用此值。WorkBuddy 的展示名称和 ZIP 文件名前缀为 `Freenote`，分别由其元信息和渠道配置指定。插件 manifest 与 marketplace 的机器标识使用 `common.branding.pluginName`（当前为 `patchxfreenote`），生成目录和 marketplace 引用同步调整。`patchxnote-agent` npm 包、`patchxnote` CLI/MCP 服务标识、`patchxnote_*` 工具名和 `patchxnote-mcp` Skill 标识保持现有值。
+共享展示名称由 `common.branding.displayName` 控制，含 `{{DISPLAY_NAME}}` 的 ZIP 文件名也使用此值。WorkBuddy 的展示名称由其元信息指定，0.1.7 为「自由记 Freenote」。ZIP 文件名前缀由 WorkBuddy 渠道配置指定，当前为 `Freenote`。插件 manifest 与 marketplace 的机器标识使用 `common.branding.pluginName`（当前为 `patchxfreenote`），生成目录和 marketplace 引用同步调整。`patchxnote-agent` npm 包、`patchxnote` CLI/MCP 服务标识、`patchxnote_*` 工具名和 `patchxnote-mcp` Skill 标识保持现有值。
 
 WorkBuddy metadata 的 `source` 读取 `channels.workbuddy.connectorSource`，当前为 `patchxfreenote`；升级时保持该身份。0.1.4 继续要求 WorkBuddy 至少 5.0.0，使用 `auth_mode: "server-side"` 与 `server_auth.auth_type: "mcp_oauth"`，`mcp.json` 使用 `streamableHttp`。生成时 OAuth `server_url` 和 MCP `url` 同步到所选环境；客户端信息由平台动态注册取得，授权由平台管理。Skill 中的 `{{CONNECTOR_SOURCE}}` 同步替换。本轮不修改服务端回调或 npm 发布配置。
 
